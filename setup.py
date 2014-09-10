@@ -23,7 +23,7 @@ from setuptools import setup, find_packages
 setup(
     name='bankid',
     version=bankid.__version__,
-    description=bankid.description,
+    description="BankID client for Python",
     author='Henrik Blidh',
     author_email='henrik.blidh@nedomkull.com',
     license='MIT',
