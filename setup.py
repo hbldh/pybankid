@@ -21,7 +21,7 @@ import bankid
 from setuptools import setup, find_packages
 
 setup(
-    name='bankid',
+    name='pybankid',
     version=bankid.__version__,
     description="BankID client for Python",
     author='Henrik Blidh',
