@@ -1,0 +1,12 @@
+*.pyc
+*~
+*.so
+.idea
+build/
+_build/
+_static/
+_templates/
+.vagrant
+
+cert.pem
+key.pem
