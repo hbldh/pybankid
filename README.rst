@@ -13,7 +13,7 @@ For more details about BankID implementation, see the `official documentation
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 
-.. note::
+.. highlights::
     
     Test the use of this module using the BankID test server solution. See
     the documentation linked to above.
