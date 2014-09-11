@@ -34,7 +34,8 @@ First, create a BankIDClient:
 .. code-block:: python
 
     >>> from bankid.client import BankIDClient
-    >>> client = BankIDClient(certificates=('certificate.pem', 'key.pem'))
+    >>> client = BankIDClient(certificates=('path/to/certificate.pem',
+                                            'path/to/key.pem'))
 
 Connection to test server is the default in the client. If production 
 server is desired, send in the ``test_server=False`` keyword in the init

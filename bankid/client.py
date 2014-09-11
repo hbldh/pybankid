@@ -55,7 +55,7 @@ class BankIDClient(object):
         headers = {"Content-Type": "text/xml;charset=UTF-8",
                    "SOAPAction": ""}
         t = RequestsTransport(cert=self.certs)
-        self.client = Client(url=self.wsdl_url, location=self.api_url,
+        self.client = Client(self.wsdl_url, location=self.api_url,
                              headers=headers, transport=t)
 
     def authenticate(self, personal_number, **kwargs):
