@@ -11,7 +11,7 @@ name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 1
-_version_patch = 0
+_version_patch = 1
 #_version_extra = 'dev'
 #_version_extra = 'a'
 _version_extra = ''  # Uncomment this for full releases
@@ -62,4 +62,3 @@ classifiers = [
     'Intended Audience :: Developers',
     'Topic :: Utilities'
     ]
-
