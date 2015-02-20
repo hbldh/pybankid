@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-:mod:`setup.py` -- NMMLib Setup file
-======================================
+:mod:`setup`
+============
 
 .. module:: setup
    :platform: Unix, Windows
-   :synopsis: The Python Packaging setup file for NMMLib.
+   :synopsis: Setup file for pybankid.
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
 
