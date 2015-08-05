@@ -29,7 +29,7 @@ setup(
     license='MIT',
     url='https://github.com/hbldh/pybankid',
     packages=find_packages(),
-    package_data={},
+    package_data={'': ['*.pem']},
     install_requires=[
         'requests>=2.2.1',
         'suds>=0.4',
