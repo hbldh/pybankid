@@ -31,6 +31,7 @@ from suds.transport.http import HttpAuthenticated
 from suds.transport import Reply
 from suds import WebFault
 from suds.sax.text import Text
+from pkg_resources import resource_filename
 
 from bankid.exceptions import get_error_class
 from bankid.warnings import BankIDWarning
@@ -45,16 +46,21 @@ class BankIDClient(object):
     def __init__(self, certificates, test_server=True):
         self.certs = certificates
 
+
         if test_server:
             self.api_url = 'https://appapi.test.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
+            self.verify_cert = resource_filename('bankid.certs','appapi.test.bankid.com.pem')
         else:
             self.api_url = 'https://appapi.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
+            self.verify_cert = resource_filename('bankid.certs','appapi.bankid.com.pem')
+
+
 
         headers = {"Content-Type": "text/xml;charset=UTF-8",
                    "SOAPAction": ""}
-        t = RequestsTransport(cert=self.certs)
+        t = RequestsTransport(cert=self.certs, verify_cert=self.verify_cert)
         self.client = Client(self.wsdl_url, location=self.api_url,
                              headers=headers, transport=t)
 
@@ -179,6 +185,7 @@ class RequestsTransport(HttpAuthenticated):
     """
     def __init__(self, **kwargs):
         self.cert = kwargs.pop('cert', None)
+        self.verify_cert = kwargs.pop('verify_cert', None)
         # super won't work because HttpAuthenticated
         # does not use new style class
         HttpAuthenticated.__init__(self, **kwargs)
@@ -188,7 +195,7 @@ class RequestsTransport(HttpAuthenticated):
         self.addcredentials(request)
         resp = requests.get(request.url, data=request.message,
                             headers=request.headers,
-                            cert=self.cert, verify=False)
+                            cert=self.cert, verify=self.verify_cert)
         result = StringIO.StringIO(resp.content.decode('utf-8'))
         return result
 
@@ -197,7 +204,6 @@ class RequestsTransport(HttpAuthenticated):
         self.addcredentials(request)
         resp = requests.post(request.url, data=request.message,
                              headers=request.headers,
-                             cert=self.cert, verify=False)
+                             cert=self.cert, verify=self.verify_cert)
         result = Reply(resp.status_code, resp.headers, resp.content)
         return result
-
