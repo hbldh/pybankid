@@ -19,7 +19,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-import os
 import warnings
 import StringIO
 import base64
@@ -36,27 +35,20 @@ from pkg_resources import resource_filename
 from bankid.exceptions import get_error_class
 from bankid.warnings import BankIDWarning
 
-_CERT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_CERTS = (os.path.join(_CERT_PATH, 'cert.pem'),
-          os.path.join(_CERT_PATH, 'key.pem'))
-
 
 class BankIDClient(object):
 
     def __init__(self, certificates, test_server=True):
         self.certs = certificates
 
-
         if test_server:
             self.api_url = 'https://appapi.test.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename('bankid.certs','appapi.test.bankid.com.pem')
+            self.verify_cert = resource_filename('bankid.certs', 'appapi.test.bankid.com.pem')
         else:
             self.api_url = 'https://appapi.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename('bankid.certs','appapi.bankid.com.pem')
-
-
+            self.verify_cert = resource_filename('bankid.certs', 'appapi.bankid.com.pem')
 
         headers = {"Content-Type": "text/xml;charset=UTF-8",
                    "SOAPAction": ""}
@@ -140,10 +132,6 @@ class BankIDClient(object):
 
             Not implemented due to that the method is deprecated.
 
-        :param kwargs:
-        :type kwargs:
-        :return:
-        :rtype:
         """
         raise NotImplementedError(
             "FileSign is deprecated and therefore not implemented.")

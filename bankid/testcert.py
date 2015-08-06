@@ -26,15 +26,15 @@ import sys
 import requests
 
 _TEST_CERT_PASSWORD = 'qwerty123'
-_CERT_URL = "http://www.bankid.com/Global/wwwbankidcom/RP/FPTestcert1.pfx"
+_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/fptestcert1.P12"
 
 
 def create_test_server_cert_and_key(destination_path):
-    """Fetch the Pfx certificate from BankID servers, split it into
+    """Fetch the P12 certificate from BankID servers, split it into
     a certificate part and a key part and save them as separate files,
     stored in PEM format.
 
-    :param destination_path: The directory to save certificate and key to.
+    :param destination_path: The directory to save certificate and key files to.
     :type destination_path: unicode
     :returns: The path tuple ``(cert_path, key_path)``.
     :rtype: tuple
@@ -45,24 +45,35 @@ def create_test_server_cert_and_key(destination_path):
             "Test certificate fetching in Windows not supported. "
             "See documentation for details.")
 
-    # Paths to temporary files.
-    cert_tmp_path = os.path.abspath(
-        os.path.join(tempfile.gettempdir(),
-                     os.path.basename(_CERT_URL)))
-    conv_tmp_path = os.path.abspath(
-        os.path.join(tempfile.gettempdir(),
-                     'certificate.pem'))
+    certificate, key = split_test_cert_and_key()
 
     # Paths to output files.
-    out_cert_path = os.path.abspath(
-        os.path.join(os.path.abspath(destination_path),
-                     'cert.pem'))
-    out_key_path = os.path.abspath(
-        os.path.join(os.path.abspath(destination_path),
-                     'key.pem'))
+    out_cert_path = os.path.join(os.path.abspath(destination_path), 'cert.pem')
+    out_key_path = os.path.join(os.path.abspath(destination_path), 'key.pem')
 
-    # Fetch pfx certificate and store in temporary folder.
-    r = requests.get(_CERT_URL)
+    with open(out_cert_path, 'wt') as f:
+        f.write(certificate)
+    with open(out_key_path, 'wt') as f:
+        f.write(key)
+
+    # Return path tuples.
+    return out_cert_path, out_key_path
+
+
+def split_test_cert_and_key():
+    """Fetch the P12 certificate from BankID servers, split it into
+    a certificate part and a key part and return the two components as text data.
+    
+    :returns: Tuple of certificate and key string data.
+    :rtype: tuple
+    
+    """
+    # Paths to temporary files.
+    cert_tmp_path = os.path.join(tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL))
+    conv_tmp_path = os.path.join(tempfile.gettempdir(), 'certificate.pem')
+
+    # Fetch P12 certificate and store in temporary folder.
+    r = requests.get(_TEST_CERT_URL)
     with open(cert_tmp_path, 'wb') as f:
         f.write(r.content)
 
@@ -76,7 +87,7 @@ def create_test_server_cert_and_key(destination_path):
     p = subprocess.Popen(pipeline_1, stdout=subprocess.PIPE)
     p.communicate()
 
-    # Open the newly created pem certificate in temporary folder.
+    # Open the newly created PEM certificate in the temporary folder.
     with open(conv_tmp_path, 'rt') as f:
         cert_and_key = f.read()
 
@@ -86,11 +97,6 @@ def create_test_server_cert_and_key(destination_path):
     certificate = cert_and_key[:s.end()]
     key = cert_and_key[s.end():]
 
-    with open(out_cert_path, 'wt') as f:
-        f.write(certificate)
-    with open(out_key_path, 'wt') as f:
-        f.write(key)
-
     # Try to remove all temporary files.
     try:
         os.remove(cert_tmp_path)
@@ -98,13 +104,11 @@ def create_test_server_cert_and_key(destination_path):
     except:
         pass
 
-    # Return path tuples.
-    return out_cert_path, out_key_path
-
+    return certificate, key
 
 def main():
     paths = create_test_server_cert_and_key(os.path.expanduser('~'))
-    print('Saved cerificate as {0}'.format(paths[0]))
+    print('Saved certificate as {0}'.format(paths[0]))
     print('Saved key as {0}'.format(paths[1]))
 
 if __name__ == "__main__":

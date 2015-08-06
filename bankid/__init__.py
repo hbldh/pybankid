@@ -12,21 +12,21 @@ name = 'pybankid'
 _version_major = 0
 _version_minor = 1
 _version_patch = 3
-#_version_extra = 'dev'
+_version_extra = 'dev0'
 #_version_extra = 'a'
-_version_extra = ''  # Uncomment this for full releases
+#_version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
 _ver = [_version_major, _version_minor, _version_patch]
 
 __version__ = '.'.join(map(str, _ver))
 if _version_extra:
-    __version__ = __version__ + '-' + str(_version_extra)
+    __version__ = __version__ + '.' + str(_version_extra)
 
 version = __version__  # backwards compatibility name
 version_info = (_version_major, _version_minor, _version_patch, _version_extra)
 
-description = "BankID client in Python"
+description = "BankID client for Python"
 
 long_description = \
 """PyBankID is a client for performing BankID signing.
