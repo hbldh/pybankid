@@ -70,7 +70,8 @@ def split_test_cert_and_key():
     """
     # Paths to temporary files.
     cert_tmp_path = os.path.join(tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL))
-    conv_tmp_path = os.path.join(tempfile.gettempdir(), 'certificate.pem')
+    cert_conv_tmp_path = os.path.join(tempfile.gettempdir(), 'certificate.pem')
+    key_conv_tmp_path = os.path.join(tempfile.gettempdir(), 'key.pem')
 
     # Fetch P12 certificate and store in temporary folder.
     r = requests.get(_TEST_CERT_URL)
@@ -82,25 +83,32 @@ def split_test_cert_and_key():
         'openssl', 'pkcs12',
         '-in', "{0}".format(cert_tmp_path),
         '-passin', 'pass:{0}'.format(_TEST_CERT_PASSWORD),
-        '-out', "{0}".format(conv_tmp_path),
-        '-passout', 'pass:{0}'.format(_TEST_CERT_PASSWORD)]
+        '-out', "{0}".format(cert_conv_tmp_path),
+        '-clcerts', '-nokeys'
+    ]
     p = subprocess.Popen(pipeline_1, stdout=subprocess.PIPE)
+    p.communicate()
+    pipeline_2 = [
+        'openssl', 'pkcs12',
+        '-in', "{0}".format(cert_tmp_path),
+        '-passin', 'pass:{0}'.format(_TEST_CERT_PASSWORD),
+        '-out', "{0}".format(key_conv_tmp_path),
+        '-nocerts', '-nodes'
+    ]
+    p = subprocess.Popen(pipeline_2, stdout=subprocess.PIPE)
     p.communicate()
 
     # Open the newly created PEM certificate in the temporary folder.
-    with open(conv_tmp_path, 'rt') as f:
-        cert_and_key = f.read()
-
-    # Split it into a certificate part and a private key part.
-    # Save these parts to separate files.
-    s = re.search('-----END CERTIFICATE-----', cert_and_key)
-    certificate = cert_and_key[:s.end()]
-    key = cert_and_key[s.end():]
+    with open(cert_conv_tmp_path, 'rt') as f:
+        certificate = f.read()
+    with open(key_conv_tmp_path, 'rt') as f:
+        key = f.read()
 
     # Try to remove all temporary files.
     try:
         os.remove(cert_tmp_path)
-        os.remove(conv_tmp_path)
+        os.remove(cert_conv_tmp_path)
+        os.remove(key_conv_tmp_path)
     except:
         pass
 
