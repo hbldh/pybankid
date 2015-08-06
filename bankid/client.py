@@ -50,8 +50,10 @@ class BankIDClient(object):
             self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
             self.verify_cert = resource_filename('bankid.certs', 'appapi.bankid.com.pem')
 
-        headers = {"Content-Type": "text/xml;charset=UTF-8",
-                   "SOAPAction": ""}
+        headers = {
+            "Content-Type": "text/xml;charset=UTF-8",
+            "SOAPAction": ""
+        }
         t = RequestsTransport(cert=self.certs, verify_cert=self.verify_cert)
         self.client = Client(self.wsdl_url, location=self.api_url,
                              headers=headers, transport=t)
@@ -162,7 +164,6 @@ class BankIDClient(object):
 
         return out
 
-
 class RequestsTransport(HttpAuthenticated):
     """A Requests-based transport for suds, enabling the use of https and
     certificates when communicating with the SOAP service.
@@ -172,26 +173,26 @@ class RequestsTransport(HttpAuthenticated):
 
     """
     def __init__(self, **kwargs):
-        self.cert = kwargs.pop('cert', None)
-        self.verify_cert = kwargs.pop('verify_cert', None)
-        # super won't work because HttpAuthenticated
-        # does not use new style class
+        self.requests_session = requests.Session()
+        self.requests_session.cert = kwargs.pop('cert', None)
+        self.requests_session.verify = kwargs.pop('verify_cert', None)
+        # `super` won't work because HttpAuthenticated does not use new style class.
         HttpAuthenticated.__init__(self, **kwargs)
 
     def open(self, request):
         """Fetches the WSDL specification using certificates."""
         self.addcredentials(request)
-        resp = requests.get(request.url, data=request.message,
-                            headers=request.headers,
-                            cert=self.cert, verify=self.verify_cert)
+        resp = self.requests_session.get(request.url,
+                                         data=request.message,
+                                         headers=request.headers)
         result = StringIO.StringIO(resp.content.decode('utf-8'))
         return result
 
     def send(self, request):
         """Posts to SOAP service using certificates."""
         self.addcredentials(request)
-        resp = requests.post(request.url, data=request.message,
-                             headers=request.headers,
-                             cert=self.cert, verify=self.verify_cert)
+        resp = self.requests_session.post(request.url,
+                                          data=request.message,
+                                          headers=request.headers)
         result = Reply(resp.status_code, resp.headers, resp.content)
         return result
