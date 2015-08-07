@@ -31,11 +31,16 @@ def get_error_class(exc):
 
 
 class BankIDError(Exception):
-    """Parent error for all PyBankID errors."""
+    """Parent exception class for all PyBankID errors."""
 
     def __init__(self, *args, **kwargs):
         super(BankIDError, self).__init__(*args, **kwargs)
         self.rfa = None
+
+
+class BankIDWarning(Warning):
+    """Warning class for PyBankID."""
+    pass
 
 
 class InvalidParametersError(BankIDError):
@@ -217,6 +222,7 @@ class StartFailedError(BankIDError):
         # TODO: Dual cause, in which only one requires RFA. Remove?
         self.rfa = 17
 
+
 _ERROR_CODE_TO_CLASS = {
     'INVALID_PARAMETERS': InvalidParametersError,
     'ALREADY_IN_PROGRESS': AlreadyInProgressError,
@@ -230,4 +236,3 @@ _ERROR_CODE_TO_CLASS = {
     'CANCELLED': CancelledError,
     'START_FAILED': StartFailedError,
 }
-

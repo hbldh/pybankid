@@ -19,7 +19,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-import os
 import warnings
 import StringIO
 import base64
@@ -33,12 +32,7 @@ from suds import WebFault
 from suds.sax.text import Text
 from pkg_resources import resource_filename
 
-from bankid.exceptions import get_error_class
-from bankid.warnings import BankIDWarning
-
-_CERT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_CERTS = (os.path.join(_CERT_PATH, 'cert.pem'),
-          os.path.join(_CERT_PATH, 'key.pem'))
+from bankid.exceptions import get_error_class, BankIDWarning
 
 
 class BankIDClient(object):
@@ -46,20 +40,19 @@ class BankIDClient(object):
     def __init__(self, certificates, test_server=True):
         self.certs = certificates
 
-
         if test_server:
             self.api_url = 'https://appapi.test.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename('bankid.certs','appapi.test.bankid.com.pem')
+            self.verify_cert = resource_filename('bankid.certs', 'appapi.test.bankid.com.pem')
         else:
             self.api_url = 'https://appapi.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename('bankid.certs','appapi.bankid.com.pem')
+            self.verify_cert = resource_filename('bankid.certs', 'appapi.bankid.com.pem')
 
-
-
-        headers = {"Content-Type": "text/xml;charset=UTF-8",
-                   "SOAPAction": ""}
+        headers = {
+            "Content-Type": "text/xml;charset=UTF-8",
+            "SOAPAction": ""
+        }
         t = RequestsTransport(cert=self.certs, verify_cert=self.verify_cert)
         self.client = Client(self.wsdl_url, location=self.api_url,
                              headers=headers, transport=t)
@@ -140,10 +133,6 @@ class BankIDClient(object):
 
             Not implemented due to that the method is deprecated.
 
-        :param kwargs:
-        :type kwargs:
-        :return:
-        :rtype:
         """
         raise NotImplementedError(
             "FileSign is deprecated and therefore not implemented.")
@@ -174,7 +163,6 @@ class BankIDClient(object):
 
         return out
 
-
 class RequestsTransport(HttpAuthenticated):
     """A Requests-based transport for suds, enabling the use of https and
     certificates when communicating with the SOAP service.
@@ -184,26 +172,26 @@ class RequestsTransport(HttpAuthenticated):
 
     """
     def __init__(self, **kwargs):
-        self.cert = kwargs.pop('cert', None)
-        self.verify_cert = kwargs.pop('verify_cert', None)
-        # super won't work because HttpAuthenticated
-        # does not use new style class
+        self.requests_session = requests.Session()
+        self.requests_session.cert = kwargs.pop('cert', None)
+        self.requests_session.verify = kwargs.pop('verify_cert', None)
+        # `super` won't work because HttpAuthenticated does not use new style class.
         HttpAuthenticated.__init__(self, **kwargs)
 
     def open(self, request):
         """Fetches the WSDL specification using certificates."""
         self.addcredentials(request)
-        resp = requests.get(request.url, data=request.message,
-                            headers=request.headers,
-                            cert=self.cert, verify=self.verify_cert)
+        resp = self.requests_session.get(request.url,
+                                         data=request.message,
+                                         headers=request.headers)
         result = StringIO.StringIO(resp.content.decode('utf-8'))
         return result
 
     def send(self, request):
         """Posts to SOAP service using certificates."""
         self.addcredentials(request)
-        resp = requests.post(request.url, data=request.message,
-                             headers=request.headers,
-                             cert=self.cert, verify=self.verify_cert)
+        resp = self.requests_session.post(request.url,
+                                          data=request.message,
+                                          headers=request.headers)
         result = Reply(resp.status_code, resp.headers, resp.content)
         return result

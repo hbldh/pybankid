@@ -1,6 +1,9 @@
 PyBankID
 ========
 
+.. image:: https://travis-ci.org/hbldh/pybankid.svg?branch=master
+    :target: https://travis-ci.org/hbldh/pybankid
+
 PyBankID is a client for performing BankID signing.
 
 The Swedish BankID solution for digital signing uses a SOAP
@@ -9,7 +12,7 @@ client for making authentication, signing and collect requests to
 the BankID servers.
 
 For more details about BankID implementation, see the `official documentation
-<http://www.bankid.com/rp/info/>`_. There, one can find information 
+<https://www.bankid.com/bankid_i_dina_tjanster/rp_info>`_. There, one can find information
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 
@@ -73,6 +76,22 @@ with the ``collect`` method:
                   'surname': u'Namnsson'}}
     
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
+
+Testing
+-------
+
+The PyBankID solution can be tested with ``nosetests``:
+
+.. code-block:: bash
+
+    nosetests tests/ --logging-level=INFO
+
+The logging level option is needed due to an issue with the `suds
+<https://fedorahosted.org/suds/>`_ module, where a debug level line
+breaks the tests.
+
+Only one test is run against the actual BankID test server, to see that the client
+can connect and that all urls are up to date.
 
 Documentation
 -------------
