@@ -26,13 +26,13 @@ import uuid
 
 import bankid.client
 import bankid.testcert
-import bankid.exceptions as bidexc
 
 
 def get_random_personal_number():
+    """Simple random Swedish personal number generator."""
 
     def _luhn_digit(id_):
-        """Calcualte Luhn control digit for personal number.
+        """Calculate Luhn control digit for personal number.
 
         Code adapted from [Faker]
         (https://github.com/joke2k/faker/blob/master/faker/providers/ssn/sv_SE/__init__.py)
@@ -63,6 +63,9 @@ def get_random_personal_number():
     return pn + str(_luhn_digit(pn[2:]))
 
 class TestClientOnTestServer(object):
+    """Test Suite testing once against the actual BankID test server to
+    test that connection can be made with BankIDClient.
+    """
 
     def __init__(self):
         self.cert_file = None
@@ -80,26 +83,13 @@ class TestClientOnTestServer(object):
         except:
             pass
 
-    def test_connectivity(self):
-        """Create an authentication order on the BankID test server."""
-        c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
-        try:
-            ut = c.authenticate(get_random_personal_number())
-        except bidexc.AlreadyInProgressError:
-            # This can happen when testing is done frequently or on Travis CI.
-            pass
-        except bidexc.BankIDError as e:
-            # Any other BankID error should yield a testing error.
-            raise e
-        else:
-            # UUID.__init__ performs the UUID compliance assertion.
-            val = uuid.UUID(ut.get('orderRef'), version=4)
-
     def test_authentication_and_collect(self):
         """Authenticate call and then collect with the returned orderRef UUID."""
         
         c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
         out = c.authenticate(get_random_personal_number())
         assert isinstance(out, dict)
-        collect_status = c.collect(out.get('orderRef'))
+        # UUID.__init__ performs the UUID compliance assertion.
+        order_ref = uuid.UUID(out.get('orderRef'), version=4)
+        collect_status = c.collect(order_ref)
         assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
