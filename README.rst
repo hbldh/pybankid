@@ -1,6 +1,9 @@
 PyBankID
 ========
 
+.. image:: https://travis-ci.org/hbldh/pybankid.svg?branch=master
+    :target: https://travis-ci.org/hbldh/pybankid
+
 PyBankID is a client for performing BankID signing.
 
 The Swedish BankID solution for digital signing uses a SOAP
