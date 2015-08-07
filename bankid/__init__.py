@@ -53,7 +53,6 @@ download_url = 'https://github.com/hbldh/pybankid/downloads'
 platforms = ['Linux', 'Mac OSX', 'Windows XP/Vista/7/8']
 keywords = ['BankID', 'SOAP']
 classifiers = [
-    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
     'License :: OSI Approved :: MIT License',
     'Operating System :: POSIX :: Linux',
