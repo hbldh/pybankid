@@ -38,6 +38,11 @@ class BankIDError(Exception):
         self.rfa = None
 
 
+class BankIDWarning(Warning):
+    """Warning class for PyBankID."""
+    pass
+
+
 class InvalidParametersError(BankIDError):
     """User induced error.
 
@@ -231,4 +236,3 @@ _ERROR_CODE_TO_CLASS = {
     'CANCELLED': CancelledError,
     'START_FAILED': StartFailedError,
 }
-

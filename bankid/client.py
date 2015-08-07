@@ -32,8 +32,7 @@ from suds import WebFault
 from suds.sax.text import Text
 from pkg_resources import resource_filename
 
-from bankid.exceptions import get_error_class
-from bankid.warnings import BankIDWarning
+from bankid.exceptions import get_error_class, BankIDWarning
 
 
 class BankIDClient(object):

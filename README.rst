@@ -9,7 +9,7 @@ client for making authentication, signing and collect requests to
 the BankID servers.
 
 For more details about BankID implementation, see the `official documentation
-<http://www.bankid.com/rp/info/>`_. There, one can find information 
+<https://www.bankid.com/bankid_i_dina_tjanster/rp_info>`_. There, one can find information
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 

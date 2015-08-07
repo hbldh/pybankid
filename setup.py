@@ -31,10 +31,7 @@ setup(
     url=bankid.url,
     packages=find_packages(),
     package_data={'': ['*.pem']},
-    install_requires=[
-        'requests>=2.7.0',
-        'suds>=0.4',
-    ],
+    install_requires=[line.strip() for line in open("requirements.txt")],
     dependency_links=[],
     ext_modules=[],
     entry_points={
