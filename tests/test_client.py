@@ -96,6 +96,8 @@ class TestClientOnTestServer(object):
             val = uuid.UUID(ut.get('orderRef'), version=4)
 
     def test_authentication_and_collect(self):
+        """Authenticate call and then collect with the returned orderRef UUID."""
+        
         c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
         out = c.authenticate(get_random_personal_number())
         assert isinstance(out, dict)
