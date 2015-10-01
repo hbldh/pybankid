@@ -6,7 +6,7 @@
 
 .. module:: test_client
    :platform: Unix, Windows
-   :synopsis: 
+   :synopsis:
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
 
@@ -62,6 +62,7 @@ def get_random_personal_number():
     pn = "{0:04d}{1:02d}{2:02d}{3:03d}".format(year, month, day, suffix)
     return pn + str(_luhn_digit(pn[2:]))
 
+
 class TestClientOnTestServer(object):
     """Test Suite testing once against the actual BankID test server to
     test that connection can be made with BankIDClient.
@@ -85,7 +86,7 @@ class TestClientOnTestServer(object):
 
     def test_authentication_and_collect(self):
         """Authenticate call and then collect with the returned orderRef UUID."""
-        
+
         c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
         out = c.authenticate(get_random_personal_number())
         assert isinstance(out, dict)

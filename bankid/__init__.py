@@ -12,8 +12,8 @@ name = 'pybankid'
 _version_major = 0
 _version_minor = 1
 _version_patch = 4
-#_version_extra = 'dev4'
-#_version_extra = 'b1'
+# _version_extra = 'dev4'
+# _version_extra = 'b1'
 _version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
@@ -28,8 +28,8 @@ version_info = (_version_major, _version_minor, _version_patch, _version_extra)
 
 description = "BankID client for Python"
 
-long_description = \
-"""PyBankID is a client for performing BankID signing.
+long_description = """
+PyBankID is a client for performing BankID signing.
 
 The Swedish BankID solution for digital signing uses a SOAP
 connection solution, and this module aims at providing a simplifying
@@ -43,8 +43,9 @@ site <https://github.com/hbldh/pybankid/>`_.
 
 license = 'MIT'
 
-authors = {'hbldh': ('Henrik Blidh', 'henrik.blidh@nedomkull.com'),
-           }
+authors = {
+    'hbldh': ('Henrik Blidh', 'henrik.blidh@nedomkull.com'),
+}
 author = 'Henrik Blidh'
 author_email = 'henrik.blidh@nedomkull.com'
 url = 'https://github.com/hbldh/pybankid/'

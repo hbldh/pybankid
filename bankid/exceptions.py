@@ -6,7 +6,7 @@
 
 .. module:: exceptions
    :platform: Unix, Windows
-   :synopsis: 
+   :synopsis:
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
 
@@ -20,10 +20,11 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import re
+import six
 
 
 def get_error_class(exc):
-    s = re.search("Server raised fault: '([\w_]+)'", unicode(exc))
+    s = re.search("Server raised fault: '([\w_]+)'", six.text_type(exc))
     if s:
         return _ERROR_CODE_TO_CLASS[s.groups()[0]]
     else:

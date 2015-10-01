@@ -20,7 +20,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import warnings
-import StringIO
+import six
 import base64
 import datetime
 
@@ -153,7 +153,7 @@ class BankIDClient(object):
         try:
             for k in doc:
                 if isinstance(doc[k], Text):
-                    out[k] = unicode(doc[k])
+                    out[k] = doc[k].decode('utf8')
                 elif isinstance(doc[k], datetime.datetime):
                     out[k] = doc[k]
                 else:
@@ -162,6 +162,7 @@ class BankIDClient(object):
             out = doc
 
         return out
+
 
 class RequestsTransport(HttpAuthenticated):
     """A Requests-based transport for suds, enabling the use of https and
@@ -184,7 +185,7 @@ class RequestsTransport(HttpAuthenticated):
         resp = self.requests_session.get(request.url,
                                          data=request.message,
                                          headers=request.headers)
-        result = StringIO.StringIO(resp.content.decode('utf-8'))
+        result = six.BytesIO(six.binary_type(resp.content.decode('utf-8'), 'utf-8'))
         return result
 
     def send(self, request):
