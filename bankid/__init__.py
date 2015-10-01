@@ -11,10 +11,10 @@ name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 1
-_version_patch = 4
+_version_patch = 5
 # _version_extra = 'dev4'
-# _version_extra = 'b1'
-_version_extra = ''  # Uncomment this for full releases
+_version_extra = 'alpha0'
+# _version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
 _ver = [_version_major, _version_minor, _version_patch]

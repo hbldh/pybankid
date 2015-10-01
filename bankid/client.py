@@ -185,7 +185,7 @@ class RequestsTransport(HttpAuthenticated):
         resp = self.requests_session.get(request.url,
                                          data=request.message,
                                          headers=request.headers)
-        result = six.BytesIO(six.binary_type(resp.content.decode('utf-8'), 'utf-8'))
+        result = six.BytesIO(six.b(resp.content.decode('utf-8')))
         return result
 
     def send(self, request):
