@@ -26,7 +26,7 @@ import sys
 import requests
 
 _TEST_CERT_PASSWORD = 'qwerty123'
-_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/fptestcert1.P12"
+_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
 
 
 def create_test_server_cert_and_key(destination_path):
@@ -63,10 +63,10 @@ def create_test_server_cert_and_key(destination_path):
 def split_test_cert_and_key():
     """Fetch the P12 certificate from BankID servers, split it into
     a certificate part and a key part and return the two components as text data.
-    
+
     :returns: Tuple of certificate and key string data.
     :rtype: tuple
-    
+
     """
     # Paths to temporary files.
     cert_tmp_path = os.path.join(tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL))
@@ -113,6 +113,7 @@ def split_test_cert_and_key():
         pass
 
     return certificate, key
+
 
 def main():
     paths = create_test_server_cert_and_key(os.path.expanduser('~'))

@@ -84,14 +84,7 @@ The PyBankID solution can be tested with ``nosetests``:
 
 .. code-block:: bash
 
-    nosetests tests/ --logging-level=INFO
-
-The logging level option is needed due to an issue with the `suds
-<https://fedorahosted.org/suds/>`_ module, where a debug level line
-breaks the tests.
-
-Only one test is run against the actual BankID test server, to see that the client
-can connect and that all urls are up to date.
+    nosetests tests/
 
 Documentation
 -------------

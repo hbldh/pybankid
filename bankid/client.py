@@ -20,7 +20,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import warnings
-import StringIO
+import six
 import base64
 import datetime
 
@@ -37,7 +37,7 @@ from bankid.exceptions import get_error_class, BankIDWarning
 
 class BankIDClient(object):
 
-    def __init__(self, certificates, test_server=True):
+    def __init__(self, certificates, test_server=False):
         self.certs = certificates
 
         if test_server:
@@ -76,7 +76,7 @@ class BankIDClient(object):
             out = self.client.service.Authenticate(
                 personalNumber=personal_number, **kwargs)
         except WebFault as e:
-            raise get_error_class(e)("Could not complete Authenticate order.")
+            raise get_error_class(e, "Could not complete Authenticate order.")
 
         return self._dictify(out)
 
@@ -102,7 +102,7 @@ class BankIDClient(object):
                 userVisibleData=base64.b64encode(user_visible_data),
                 personalNumber=personal_number, **kwargs)
         except WebFault as e:
-            raise get_error_class(e)("Could not complete Sign order.")
+            raise get_error_class(e, "Could not complete Sign order.")
 
         return self._dictify(out)
 
@@ -121,7 +121,7 @@ class BankIDClient(object):
         try:
             out = self.client.service.Collect(orderRef=order_ref)
         except WebFault as e:
-            raise get_error_class(e)("Could not complete Collect call.")
+            raise get_error_class(e, "Could not complete Collect call.")
 
         return self._dictify(out)
 
@@ -153,7 +153,7 @@ class BankIDClient(object):
         try:
             for k in doc:
                 if isinstance(doc[k], Text):
-                    out[k] = unicode(doc[k])
+                    out[k] = doc[k].decode('utf8')
                 elif isinstance(doc[k], datetime.datetime):
                     out[k] = doc[k]
                 else:
@@ -162,6 +162,7 @@ class BankIDClient(object):
             out = doc
 
         return out
+
 
 class RequestsTransport(HttpAuthenticated):
     """A Requests-based transport for suds, enabling the use of https and
@@ -184,7 +185,7 @@ class RequestsTransport(HttpAuthenticated):
         resp = self.requests_session.get(request.url,
                                          data=request.message,
                                          headers=request.headers)
-        result = StringIO.StringIO(resp.content.decode('utf-8'))
+        result = six.BytesIO(six.b(resp.content.decode('utf-8')))
         return result
 
     def send(self, request):
