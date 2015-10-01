@@ -10,8 +10,8 @@ name = 'pybankid'
 # release.  'dev' as a _version_extra string means this is a development
 # version.
 _version_major = 0
-_version_minor = 1
-_version_patch = 5
+_version_minor = 2
+_version_patch = 0
 # _version_extra = 'dev4'
 _version_extra = 'alpha0'
 # _version_extra = ''  # Uncomment this for full releases
@@ -55,11 +55,13 @@ platforms = ['Linux', 'Mac OSX', 'Windows XP/Vista/7/8']
 keywords = ['BankID', 'SOAP']
 classifiers = [
     'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3.3',
+    'Programming Language :: Python :: 3.4',
     'License :: OSI Approved :: MIT License',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Microsoft :: Windows',
     'Operating System :: MacOS :: MacOS X',
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
     'Topic :: Utilities'
-    ]
+]

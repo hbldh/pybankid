@@ -37,7 +37,7 @@ from bankid.exceptions import get_error_class, BankIDWarning
 
 class BankIDClient(object):
 
-    def __init__(self, certificates, test_server=True):
+    def __init__(self, certificates, test_server=False):
         self.certs = certificates
 
         if test_server:
@@ -76,7 +76,7 @@ class BankIDClient(object):
             out = self.client.service.Authenticate(
                 personalNumber=personal_number, **kwargs)
         except WebFault as e:
-            raise get_error_class(e)("Could not complete Authenticate order.")
+            raise get_error_class(e, "Could not complete Authenticate order.")
 
         return self._dictify(out)
 
@@ -102,7 +102,7 @@ class BankIDClient(object):
                 userVisibleData=base64.b64encode(user_visible_data),
                 personalNumber=personal_number, **kwargs)
         except WebFault as e:
-            raise get_error_class(e)("Could not complete Sign order.")
+            raise get_error_class(e, "Could not complete Sign order.")
 
         return self._dictify(out)
 
@@ -121,7 +121,7 @@ class BankIDClient(object):
         try:
             out = self.client.service.Collect(orderRef=order_ref)
         except WebFault as e:
-            raise get_error_class(e)("Could not complete Collect call.")
+            raise get_error_class(e, "Could not complete Collect call.")
 
         return self._dictify(out)
 

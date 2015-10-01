@@ -19,16 +19,15 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-import re
 import six
 
 
-def get_error_class(exc):
-    s = re.search("Server raised fault: '([\w_]+)'", six.text_type(exc))
-    if s:
-        return _ERROR_CODE_TO_CLASS[s.groups()[0]]
+def get_error_class(exc, exception_text):
+    error_class = _ERROR_CODE_TO_CLASS.get(six.text_type(exc.fault.faultstring))
+    if error_class is None:
+        return BankIDError("{0}: {1}".format(exc, exception_text))
     else:
-        raise exc
+        return error_class(exception_text)
 
 
 class BankIDError(Exception):

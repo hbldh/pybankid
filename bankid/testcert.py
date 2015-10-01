@@ -26,7 +26,7 @@ import sys
 import requests
 
 _TEST_CERT_PASSWORD = 'qwerty123'
-_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/fptestcert1.P12"
+_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
 
 
 def create_test_server_cert_and_key(destination_path):
