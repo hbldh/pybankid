@@ -29,6 +29,8 @@ setup(
     long_description=bankid.long_description,
     license=bankid.license,
     url=bankid.url,
+    classifiers=bankid.classifiers,
+    platforms=bankid.platforms,
     packages=find_packages(),
     package_data={'': ['*.pem']},
     install_requires=[line.strip() for line in open("requirements.txt")],

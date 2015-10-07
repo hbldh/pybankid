@@ -12,15 +12,9 @@ client for making authentication, signing and collect requests to
 the BankID servers.
 
 For more details about BankID implementation, see the `official documentation
-<https://www.bankid.com/bankid_i_dina_tjanster/rp_info>`_. There, one can find information
+<https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_. There, one can find information
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
-
-.. highlights::
-    
-    Test the use of this module using the BankID test server solution. See
-    the documentation linked to above.
-
 
 Installation
 ------------
@@ -41,24 +35,32 @@ First, create a BankIDClient:
     >>> client = BankIDClient(certificates=('path/to/certificate.pem',
                                             'path/to/key.pem'))
 
-Connection to test server is the default in the client. If production 
-server is desired, send in the ``test_server=False`` keyword in the init
+Connection to production server is the default in the client. If test
+server is desired, send in the ``test_server=True`` keyword in the init
 of the client.
 
 A sign order is then placed by
 
 .. code-block:: python
 
-    >>> client.sign(user_visible_data="The information to sign.", 
+    >>> client.sign(user_visible_data="The information to sign.",
                     personal_number="YYYYMMDDXXXX")
-    {'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52', 
+    {'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
      'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
 
-The status of the order can then be studied by polling 
-with the ``collect`` method:
+and an authentication order is initiated by
 
 .. code-block:: python
-    
+
+    >>> client.authenticate(personal_number="YYYYMMDDXXXX")
+    {'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
+     'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
+
+The status of an order can then be studied by polling
+with the ``collect`` method using the received ``orderRef``:
+
+.. code-block:: python
+
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
     {'progressStatus': u'OUTSTANDING_TRANSACTION'}
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
@@ -74,7 +76,7 @@ with the ``collect`` method:
                   'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
                   'personalNumber': u'YYYYMMDDXXXX',
                   'surname': u'Namnsson'}}
-    
+
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
 
 Testing
