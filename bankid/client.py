@@ -19,6 +19,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import os
 import warnings
 import six
 import base64
@@ -33,6 +34,15 @@ from suds.sax.text import Text
 from pkg_resources import resource_filename
 
 from bankid.exceptions import get_error_class, BankIDWarning
+
+# Handling Python 2.7 verification of certificates with urllib3.
+# See README.rst for details.
+try:
+    import requests.packages.urllib3.contrib.pyopenssl
+    requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
+except ImportError:
+    if os.environ.get('PYBANKID_DISABLE_WARNINGS', False):
+        requests.packages.urllib3.disable_warnings()
 
 
 class BankIDClient(object):
@@ -152,8 +162,9 @@ class BankIDClient(object):
         out = {}
         try:
             for k in doc:
+                k = six.text_type(k)
                 if isinstance(doc[k], Text):
-                    out[k] = doc[k].decode('utf8')
+                    out[k] = six.text_type(doc[k])
                 elif isinstance(doc[k], datetime.datetime):
                     out[k] = doc[k]
                 else:

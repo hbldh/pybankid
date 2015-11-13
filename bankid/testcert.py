@@ -86,7 +86,9 @@ def split_test_cert_and_key():
         '-out', "{0}".format(cert_conv_tmp_path),
         '-clcerts', '-nokeys'
     ]
-    p = subprocess.Popen(pipeline_1, stdout=subprocess.PIPE)
+    p = subprocess.Popen(pipeline_1,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     p.communicate()
     pipeline_2 = [
         'openssl', 'pkcs12',
@@ -95,7 +97,9 @@ def split_test_cert_and_key():
         '-out', "{0}".format(key_conv_tmp_path),
         '-nocerts', '-nodes'
     ]
-    p = subprocess.Popen(pipeline_2, stdout=subprocess.PIPE)
+    p = subprocess.Popen(pipeline_2,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     p.communicate()
 
     # Open the newly created PEM certificate in the temporary folder.

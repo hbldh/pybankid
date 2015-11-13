@@ -12,15 +12,13 @@ client for making authentication, signing and collect requests to
 the BankID servers.
 
 For more details about BankID implementation, see the `official documentation
-<https://www.bankid.com/bankid_i_dina_tjanster/rp_info>`_. There, one can find information
+<https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_. There, one can find information
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 
-.. highlights::
-    
-    Test the use of this module using the BankID test server solution. See
-    the documentation linked to above.
-
+An [example web application using PyBankID](https://github.com/hbldh/pybankid-example-app)
+exists and can be found in deployed state on
+[Heroku](https://bankid-example-app.herokuapp.com/).
 
 Installation
 ------------
@@ -41,41 +39,60 @@ First, create a BankIDClient:
     >>> client = BankIDClient(certificates=('path/to/certificate.pem',
                                             'path/to/key.pem'))
 
-Connection to test server is the default in the client. If production 
-server is desired, send in the ``test_server=False`` keyword in the init
+Connection to production server is the default in the client. If test
+server is desired, send in the ``test_server=True`` keyword in the init
 of the client.
 
 A sign order is then placed by
 
 .. code-block:: python
 
-    >>> client.sign(user_visible_data="The information to sign.", 
+    >>> client.sign(user_visible_data="The information to sign.",
                     personal_number="YYYYMMDDXXXX")
-    {'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52', 
-     'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
+    {u'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
+     u'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
 
-The status of the order can then be studied by polling 
-with the ``collect`` method:
+and an authentication order is initiated by
 
 .. code-block:: python
-    
+
+    >>> client.authenticate(personal_number="YYYYMMDDXXXX")
+    {u'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
+     u'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
+
+The status of an order can then be studied by polling
+with the ``collect`` method using the received ``orderRef``:
+
+.. code-block:: python
+
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
-    {'progressStatus': u'OUTSTANDING_TRANSACTION'}
+    {u'progressStatus': u'OUTSTANDING_TRANSACTION'}
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
-    {'progressStatus': u'USER_SIGN'}
+    {u'progressStatus': u'USER_SIGN'}
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
-    {'ocspResponse': u'MIIHfgoBAKCCB3cw[...]',
-     'progressStatus': u'COMPLETE',
-     'signature': u'PD94bWwgdmVyc2lvbj0[...]',
-     'userInfo': {'givenName': u'Namn',
-                  'ipAddress': u'195.84.248.212',
-                  'name': u'Namn Namsson',
-                  'notAfter': datetime.datetime(2016, 9, 9, 22, 59, 59),
-                  'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
-                  'personalNumber': u'YYYYMMDDXXXX',
-                  'surname': u'Namnsson'}}
-    
+    {u'ocspResponse': u'MIIHfgoBAKCCB3cw[...]',
+     u'progressStatus': u'COMPLETE',
+     u'signature': u'PD94bWwgdmVyc2lvbj0[...]',
+     u'userInfo': {u'givenName': u'Namn',
+                  u'ipAddress': u'195.84.248.212',
+                  u'name': u'Namn Namsson',
+                  u'notAfter': datetime.datetime(2016, 9, 9, 22, 59, 59),
+                  u'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
+                  u'personalNumber': u'YYYYMMDDXXXX',
+                  u'surname': u'Namnsson'}}
+
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
+
+Python 2, urllib3 and certificate verification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An `InsecurePlatformWarning` is issued when using the client in Python 2 (See
+[urllib3 documentation](https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning)).
+This can be remedied by installing pyopenssl according to
+[this issue](https://github.com/kennethreitz/requests/issues/749) and
+the [docstrings in requests](https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py).
+
+Optionally, the environment variable `PYBANKID_DISABLE_WARNINGS` can be set to disable these warnings.
 
 Testing
 -------

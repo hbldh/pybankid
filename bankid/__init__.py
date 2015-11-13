@@ -11,9 +11,9 @@ name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 2
-_version_patch = 0
+_version_patch = 1
 # _version_extra = 'dev4'
-# _version_extra = 'alpha0'
+# _version_extra = 'b2'
 _version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
@@ -54,14 +54,19 @@ download_url = 'https://github.com/hbldh/pybankid/downloads'
 platforms = ['Linux', 'Mac OSX', 'Windows XP/Vista/7/8']
 keywords = ['BankID', 'SOAP']
 classifiers = [
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2'
     'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
     'License :: OSI Approved :: MIT License',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Microsoft :: Windows',
     'Operating System :: MacOS :: MacOS X',
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
-    'Topic :: Utilities'
+    'Topic :: Security',
+    'Topic :: Utilities',
 ]
