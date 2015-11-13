@@ -41,7 +41,7 @@ try:
     import requests.packages.urllib3.contrib.pyopenssl
     requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
 except ImportError:
-    if os.environ.get('PYBANKID_DISABLE_WARNINGS', False):
+    if bool(os.environ.get('PYBANKID_DISABLE_WARNINGS', False)):
         requests.packages.urllib3.disable_warnings()
 
 

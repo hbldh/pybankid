@@ -11,7 +11,7 @@ name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 2
-_version_patch = 1
+_version_patch = 2
 # _version_extra = 'dev4'
 # _version_extra = 'b2'
 _version_extra = ''  # Uncomment this for full releases
