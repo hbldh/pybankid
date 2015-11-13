@@ -16,9 +16,8 @@ For more details about BankID implementation, see the `official documentation
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 
-An [example web application using PyBankID](https://github.com/hbldh/pybankid-example-app)
-exists and can be found in deployed state on
-[Heroku](https://bankid-example-app.herokuapp.com/).
+An `example web application using PyBankID <https://github.com/hbldh/pybankid-example-app>`_
+exists and can be found in deployed state on `Heroku <https://bankid-example-app.herokuapp.com/>`_.
 
 Installation
 ------------
@@ -26,7 +25,7 @@ To install PyBankID, install it from this GitHub repository via pip:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/hbldh/pybankid.git
+    pip install git+https://github.com/hbldh/pybankid.git#egg=pybankid
 
 Usage
 -----
@@ -87,10 +86,10 @@ Python 2, urllib3 and certificate verification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An `InsecurePlatformWarning` is issued when using the client in Python 2 (See
-[urllib3 documentation](https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning)).
+`urllib3 documentation <https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning>`_).
 This can be remedied by installing pyopenssl according to
-[this issue](https://github.com/kennethreitz/requests/issues/749) and
-the [docstrings in requests](https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py).
+`this issue <https://github.com/kennethreitz/requests/issues/749>`_ and
+`docstrings in requests <https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py>`_.
 
 Optionally, the environment variable `PYBANKID_DISABLE_WARNINGS` can be set to disable these warnings.
 
