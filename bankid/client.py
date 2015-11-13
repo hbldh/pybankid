@@ -36,10 +36,7 @@ from pkg_resources import resource_filename
 from bankid.exceptions import get_error_class, BankIDWarning
 
 # Handling Python 2.7 verification of certificates with urllib3.
-# A InsecurePlatformWarning is issued at every
-# See https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning
-# See https://github.com/kennethreitz/requests/issues/749
-# and https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py
+# See README.rst for details.
 try:
     import requests.packages.urllib3.contrib.pyopenssl
     requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
