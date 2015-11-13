@@ -16,6 +16,10 @@ For more details about BankID implementation, see the `official documentation
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 
+An [example web application using PyBankID](https://github.com/hbldh/pybankid-example-app)
+exists and can be found in deployed state on
+[Heroku](https://bankid-example-app.herokuapp.com/).
+
 Installation
 ------------
 To install PyBankID, install it from this GitHub repository via pip:
@@ -45,16 +49,16 @@ A sign order is then placed by
 
     >>> client.sign(user_visible_data="The information to sign.",
                     personal_number="YYYYMMDDXXXX")
-    {'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
-     'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
+    {u'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
+     u'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
 
 and an authentication order is initiated by
 
 .. code-block:: python
 
     >>> client.authenticate(personal_number="YYYYMMDDXXXX")
-    {'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
-     'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
+    {u'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
+     u'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
 
 The status of an order can then be studied by polling
 with the ``collect`` method using the received ``orderRef``:
@@ -62,20 +66,20 @@ with the ``collect`` method using the received ``orderRef``:
 .. code-block:: python
 
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
-    {'progressStatus': u'OUTSTANDING_TRANSACTION'}
+    {u'progressStatus': u'OUTSTANDING_TRANSACTION'}
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
-    {'progressStatus': u'USER_SIGN'}
+    {u'progressStatus': u'USER_SIGN'}
     >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
-    {'ocspResponse': u'MIIHfgoBAKCCB3cw[...]',
-     'progressStatus': u'COMPLETE',
-     'signature': u'PD94bWwgdmVyc2lvbj0[...]',
-     'userInfo': {'givenName': u'Namn',
-                  'ipAddress': u'195.84.248.212',
-                  'name': u'Namn Namsson',
-                  'notAfter': datetime.datetime(2016, 9, 9, 22, 59, 59),
-                  'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
-                  'personalNumber': u'YYYYMMDDXXXX',
-                  'surname': u'Namnsson'}}
+    {u'ocspResponse': u'MIIHfgoBAKCCB3cw[...]',
+     u'progressStatus': u'COMPLETE',
+     u'signature': u'PD94bWwgdmVyc2lvbj0[...]',
+     u'userInfo': {u'givenName': u'Namn',
+                  u'ipAddress': u'195.84.248.212',
+                  u'name': u'Namn Namsson',
+                  u'notAfter': datetime.datetime(2016, 9, 9, 22, 59, 59),
+                  u'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
+                  u'personalNumber': u'YYYYMMDDXXXX',
+                  u'surname': u'Namnsson'}}
 
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
 
