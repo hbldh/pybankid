@@ -31,7 +31,7 @@ setup(
     url=bankid.url,
     classifiers=bankid.classifiers,
     platforms=bankid.platforms,
-    packages=find_packages(),
+    packages=find_packages(exclude=('tests', )),
     package_data={'': ['*.pem']},
     install_requires=[line.strip() for line in open("requirements.txt")],
     dependency_links=[],

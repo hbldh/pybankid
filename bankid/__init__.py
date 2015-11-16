@@ -11,10 +11,10 @@ name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 2
-_version_patch = 2
+_version_patch = 3
 # _version_extra = 'dev4'
-# _version_extra = 'b2'
-_version_extra = ''  # Uncomment this for full releases
+_version_extra = 'a1'
+#_version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
 _ver = [_version_major, _version_minor, _version_patch]
@@ -38,7 +38,6 @@ the BankID servers.
 
 The latest development version is available at the project's `GitHub
 site <https://github.com/hbldh/pybankid/>`_.
-
 """
 
 license = 'MIT'
@@ -49,13 +48,13 @@ authors = {
 author = 'Henrik Blidh'
 author_email = 'henrik.blidh@nedomkull.com'
 url = 'https://github.com/hbldh/pybankid/'
-download_url = 'https://github.com/hbldh/pybankid/downloads'
+download_url = 'https://github.com/hbldh/pybankid/tarball/' + '.'.join(map(str, _ver))
 
 platforms = ['Linux', 'Mac OSX', 'Windows XP/Vista/7/8']
 keywords = ['BankID', 'SOAP']
 classifiers = [
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2'
+    'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',
