@@ -26,9 +26,7 @@ import uuid
 
 from nose.tools import raises
 
-import bankid.client
-import bankid.testcert
-import bankid.exceptions
+import bankid
 
 
 def get_random_personal_number():
@@ -76,7 +74,7 @@ class TestClientOnTestServer(object):
         self.key_file = None
 
     def setup(self):
-        certificate, key = bankid.testcert.create_test_server_cert_and_key(tempfile.gettempdir())
+        certificate, key = bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
         self.certificate_file = certificate
         self.key_file = key
 
@@ -90,7 +88,7 @@ class TestClientOnTestServer(object):
     def test_authentication_and_collect(self):
         """Authenticate call and then collect with the returned orderRef UUID."""
 
-        c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
+        c = bankid.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
         out = c.authenticate(get_random_personal_number())
         assert isinstance(out, dict)
         # UUID.__init__ performs the UUID compliance assertion.
@@ -100,7 +98,7 @@ class TestClientOnTestServer(object):
 
     @raises(bankid.exceptions.InvalidParametersError)
     def test_invalid_orderref_raises_error(self):
-        c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
+        c = bankid.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
         collect_status = c.collect('invalid-uuid')
 
     @raises(bankid.exceptions.AlreadyInProgressError)

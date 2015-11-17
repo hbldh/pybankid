@@ -19,7 +19,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import os
-import re
 import tempfile
 import subprocess
 import sys
@@ -29,7 +28,7 @@ _TEST_CERT_PASSWORD = 'qwerty123'
 _TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
 
 
-def create_test_server_cert_and_key(destination_path):
+def create_bankid_test_server_cert_and_key(destination_path):
     """Fetch the P12 certificate from BankID servers, split it into
     a certificate part and a key part and save them as separate files,
     stored in PEM format.
@@ -48,8 +47,10 @@ def create_test_server_cert_and_key(destination_path):
     certificate, key = split_test_cert_and_key()
 
     # Paths to output files.
-    out_cert_path = os.path.join(os.path.abspath(destination_path), 'cert.pem')
-    out_key_path = os.path.join(os.path.abspath(destination_path), 'key.pem')
+    out_cert_path = os.path.join(os.path.abspath(
+        os.path.expanduser(destination_path)), 'cert.pem')
+    out_key_path = os.path.join(os.path.abspath(
+        os.path.expanduser(destination_path)), 'key.pem')
 
     with open(out_cert_path, 'wt') as f:
         f.write(certificate)
@@ -120,7 +121,7 @@ def split_test_cert_and_key():
 
 
 def main():
-    paths = create_test_server_cert_and_key(os.path.expanduser('~'))
+    paths = create_bankid_test_server_cert_and_key(os.path.expanduser('~'))
     print('Saved certificate as {0}'.format(paths[0]))
     print('Saved key as {0}'.format(paths[1]))
 
