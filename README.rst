@@ -21,11 +21,11 @@ exists and can be found in deployed state on `Heroku <https://bankid-example-app
 
 Installation
 ------------
-To install PyBankID, install it from this GitHub repository via pip:
+PyBankID can be installed though pip:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/hbldh/pybankid.git#egg=pybankid
+    pip install pybankid
 
 Usage
 -----
@@ -34,7 +34,7 @@ First, create a BankIDClient:
 
 .. code-block:: python
 
-    >>> from bankid.client import BankIDClient
+    >>> from bankid import BankIDClient
     >>> client = BankIDClient(certificates=('path/to/certificate.pem',
                                             'path/to/key.pem'))
 
