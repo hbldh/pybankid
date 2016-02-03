@@ -2,11 +2,15 @@
 # -*- coding: utf-8 -*-
 """Release data for the PyBankID project."""
 
-from .client import BankIDClient
-import bankid.exceptions as exceptions
-from .testcert import create_bankid_test_server_cert_and_key
+# A quick and dirty fix for installations on Heroku.
+try:
+    from .client import BankIDClient
+    import bankid.exceptions as exceptions
+    from .testcert import create_bankid_test_server_cert_and_key
 
-__all__ = ['BankIDClient', 'exceptions', 'create_bankid_test_server_cert_and_key', 'version']
+    __all__ = ['BankIDClient', 'exceptions', 'create_bankid_test_server_cert_and_key', 'version']
+except ImportError:
+    pass
 
 # Name of the package for release purposes.  This is the name which labels
 # the tarballs and RPMs made by distutils, so it's best to lowercase it.
@@ -17,10 +21,10 @@ _name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 3
-_version_patch = 0
+_version_patch = 1
 # _version_extra = 'dev4'
-# _version_extra = 'a1'
-_version_extra = ''  # Uncomment this for full releases
+_version_extra = 'rc1'
+#_version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
 _ver = [_version_major, _version_minor, _version_patch]
