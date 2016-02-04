@@ -3,6 +3,10 @@ PyBankID
 
 .. image:: https://travis-ci.org/hbldh/pybankid.svg?branch=master
     :target: https://travis-ci.org/hbldh/pybankid
+.. image:: http://img.shields.io/pypi/v/pybankid.svg
+    :target: https://pypi.python.org/pypi/pybankid/
+.. image:: http://img.shields.io/pypi/dm/pybankid.svg
+    :target: https://pypi.python.org/pypi/pybankid/
 
 PyBankID is a client for performing BankID signing.
 

@@ -36,33 +36,21 @@ if _version_extra:
 version = __version__  # backwards compatibility name
 version_info = (_version_major, _version_minor, _version_patch, _version_extra)
 
-_description = "BankID client for Python"
-
-_long_description = """
-PyBankID is a client for performing BankID signing.
-
-The Swedish BankID solution for digital signing uses a SOAP
-connection solution, and this module aims at providing a simplifying
-client for making authentication, signing and collect requests to
-the BankID servers.
-
-The latest development version is available at the project's `GitHub
-site <https://github.com/hbldh/pybankid/>`_.
-"""
+__description__ = "BankID client for Python"
 
 __license__ = 'MIT'
 
-_authors = {
+__authors__ = {
     'hbldh': ('Henrik Blidh', 'henrik.blidh@nedomkull.com'),
 }
-_author = 'Henrik Blidh'
-_author_email = 'henrik.blidh@nedomkull.com'
-_url = 'https://github.com/hbldh/pybankid/'
-_download_url = 'https://github.com/hbldh/pybankid/tarball/' + '.'.join(map(str, _ver))
+__author__ = 'Henrik Blidh'
+__author_email__ = 'henrik.blidh@nedomkull.com'
+__url__ = 'https://github.com/hbldh/pybankid/'
+__download_url__ = 'https://github.com/hbldh/pybankid/tarball/' + '.'.join(map(str, _ver))
 
-_platforms = ['Linux', 'Mac OSX', 'Windows XP/Vista/7/8']
-_keywords = ['BankID', 'SOAP']
-_classifiers = [
+__platforms__ = ['Linux', 'Mac OSX', 'Windows XP/Vista/7/8']
+__keywords__ = ['BankID', 'SOAP']
+__classifiers__ = [
     'Programming Language :: Python',
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.7',
