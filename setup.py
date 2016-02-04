@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-:mod:`setup`
-============
+PyBankID
+========
 
-.. module:: setup
-   :platform: Unix, Windows
-   :synopsis: Setup file for pybankid.
+PyBankID is a client for performing BankID signing.
 
-.. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
+The Swedish BankID solution for digital signing uses a SOAP
+connection solution, and this module aims at providing a simplifying
+client for making authentication, signing and collect requests to
+the BankID servers.
 
+The latest development version is available at the project's `GitHub
+site <https://github.com/hbldh/pybankid/>`_.
+
+Created by hbldh <henrik.blidh@nedomkull.com>
 Created on 2013-09-14, 19:31
 
 """
@@ -17,20 +22,29 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-import bankid
+import os
 from setuptools import setup, find_packages
+import bankid
+
+# Get the long description from the README file
+try:
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.rst')) as f:
+        long_description = f.read()
+except:
+    long_description = __doc__
+
 
 setup(
     name='pybankid',
     version=bankid.__version__,
-    author=bankid._author,
-    author_email=bankid._author_email,
-    description=bankid._description,
-    long_description=bankid._long_description,
+    author=bankid.__author__,
+    author_email=bankid.__author_email__,
+    description=bankid.__description__,
+    long_description=long_description,
     license=bankid.__license__,
-    url=bankid._url,
-    classifiers=bankid._classifiers,
-    platforms=bankid._platforms,
+    url=bankid.__url__,
+    classifiers=bankid.__classifiers__,
+    platforms=bankid.__platforms__,
     packages=find_packages(exclude=('tests', )),
     package_data={'': ['*.pem']},
     install_requires=[
