@@ -22,7 +22,7 @@ _name = 'pybankid'
 _version_major = 0
 _version_minor = 3
 _version_patch = 3
-_version_extra = 'dev1'
+_version_extra = 'dev2'
 # _version_extra = 'a1'
 # _version_extra = ''  # Uncomment this for full releases
 

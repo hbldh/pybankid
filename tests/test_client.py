@@ -19,17 +19,16 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-import os
 import random
 import tempfile
 import uuid
 
-from nose.tools import raises
+import pytest
 
 import bankid
 
 
-def get_random_personal_number():
+def _get_random_personal_number():
     """Simple random Swedish personal number generator."""
 
     def _luhn_digit(id_):
@@ -64,46 +63,33 @@ def get_random_personal_number():
     return pn + str(_luhn_digit(pn[2:]))
 
 
-class TestClientOnTestServer(object):
-    """Test Suite testing once against the actual BankID test server to
-    test that connection can be made with BankIDClient.
-    """
 
-    def __init__(self):
-        self.certificate_file = None
-        self.key_file = None
+@pytest.fixture(scope="module")
+def get_test_cert_and_key():
+    return bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
 
-    def setup(self):
-        certificate, key = bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
-        self.certificate_file = certificate
-        self.key_file = key
 
-    def teardown(self):
-        try:
-            os.remove(self.certificate_file)
-            os.remove(self.key_file)
-        except:
-            pass
+def test_authentication_and_collect():
+    """Authenticate call and then collect with the returned orderRef UUID."""
 
-    def test_authentication_and_collect(self):
-        """Authenticate call and then collect with the returned orderRef UUID."""
+    c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    out = c.authenticate(_get_random_personal_number())
+    assert isinstance(out, dict)
+    # UUID.__init__ performs the UUID compliance assertion.
+    order_ref = uuid.UUID(out.get('orderRef'), version=4)
+    collect_status = c.collect(out.get('orderRef'))
+    assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
 
-        c = bankid.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
-        out = c.authenticate(get_random_personal_number())
-        assert isinstance(out, dict)
-        # UUID.__init__ performs the UUID compliance assertion.
-        order_ref = uuid.UUID(out.get('orderRef'), version=4)
-        collect_status = c.collect(out.get('orderRef'))
-        assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
 
-    @raises(bankid.exceptions.InvalidParametersError)
-    def test_invalid_orderref_raises_error(self):
-        c = bankid.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
-        collect_status = c.collect('invalid-uuid')
+@pytest.mark.xfail(raises=bankid.exceptions.InvalidParametersError)
+def test_invalid_orderref_raises_error():
+    c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    collect_status = c.collect('invalid-uuid')
 
-    @raises(bankid.exceptions.AlreadyInProgressError)
-    def test_already_in_progress_raises_error(self):
-        c = bankid.client.BankIDClient(certificates=(self.certificate_file, self.key_file), test_server=True)
-        pn = get_random_personal_number()
-        out = c.authenticate(pn)
-        out2 = c.authenticate(pn)
+
+@pytest.mark.xfail(raises=bankid.exceptions.AlreadyInProgressError)
+def test_already_in_progress_raises_error():
+    c = bankid.client.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    pn = _get_random_personal_number()
+    out = c.authenticate(pn)
+    out2 = c.authenticate(pn)
