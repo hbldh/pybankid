@@ -19,6 +19,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import os
 import random
 import tempfile
 import uuid
@@ -26,6 +27,7 @@ import uuid
 import pytest
 
 import bankid
+import bankid.testcert
 
 
 def _get_random_personal_number():
@@ -34,8 +36,7 @@ def _get_random_personal_number():
     def _luhn_digit(id_):
         """Calculate Luhn control digit for personal number.
 
-        Code adapted from [Faker]
-        (https://github.com/joke2k/faker/blob/master/faker/providers/ssn/sv_SE/__init__.py)
+        Code adapted from `Faker <https://github.com/joke2k/faker/blob/master/faker/providers/ssn/sv_SE/__init__.py>`_.
 
         :param id_: The partial number to calculate checksum of.
         :type id_: str
@@ -63,7 +64,6 @@ def _get_random_personal_number():
     return pn + str(_luhn_digit(pn[2:]))
 
 
-
 @pytest.fixture(scope="module")
 def get_test_cert_and_key():
     return bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
@@ -81,15 +81,45 @@ def test_authentication_and_collect():
     assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
 
 
-@pytest.mark.xfail(raises=bankid.exceptions.InvalidParametersError)
+def test_sign_and_collect():
+    """Sign call and then collect with the returned orderRef UUID."""
+
+    c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    out = c.sign("The data to be signed", _get_random_personal_number())
+    assert isinstance(out, dict)
+    # UUID.__init__ performs the UUID compliance assertion.
+    order_ref = uuid.UUID(out.get('orderRef'), version=4)
+    collect_status = c.collect(out.get('orderRef'))
+    assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
+
+
 def test_invalid_orderref_raises_error():
     c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
-    collect_status = c.collect('invalid-uuid')
+    with pytest.raises(bankid.exceptions.InvalidParametersError):
+        collect_status = c.collect('invalid-uuid')
 
 
-@pytest.mark.xfail(raises=bankid.exceptions.AlreadyInProgressError)
 def test_already_in_progress_raises_error():
     c = bankid.client.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
     pn = _get_random_personal_number()
     out = c.authenticate(pn)
-    out2 = c.authenticate(pn)
+    with pytest.raises(bankid.exceptions.AlreadyInProgressError):
+        out2 = c.authenticate(pn)
+
+
+def test_file_sign_not_implemented():
+    c = bankid.client.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    with pytest.raises(NotImplementedError):
+        out = c.file_sign()
+
+
+def test_test_cert_main():
+    bankid.testcert.main()
+    assert os.path.exists(os.path.expanduser('~/cert.pem'))
+    assert os.path.exists(os.path.expanduser('~/key.pem'))
+
+    try:
+        os.remove(os.path.expanduser('~/cert.pem'))
+        os.remove(os.path.expanduser('~/key.pem'))
+    except:
+        pass

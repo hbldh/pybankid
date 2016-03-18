@@ -34,7 +34,7 @@ def create_bankid_test_server_cert_and_key(destination_path):
     stored in PEM format.
 
     :param destination_path: The directory to save certificate and key files to.
-    :type destination_path: unicode
+    :type destination_path: str
     :returns: The path tuple ``(cert_path, key_path)``.
     :rtype: tuple
 

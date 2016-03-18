@@ -46,6 +46,9 @@ except ImportError:
 
 
 class BankIDClient(object):
+    """The client to use for communicating with BankID servers.
+
+    """
 
     def __init__(self, certificates, test_server=False):
         self.certs = certificates
@@ -68,11 +71,11 @@ class BankIDClient(object):
                              headers=headers, transport=t)
 
     def authenticate(self, personal_number, **kwargs):
-        """Request an authentication order. The :py:mod:`collect` method
+        """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
         :param personal_number: The Swedish personal number in format YYYYMMDDXXXX.
-        :type personal_number: unicode
+        :type personal_number: str
         :return: The OrderResponse parsed to a dictionary.
         :rtype: dict
         :raises BankIDError: raises a subclass of this error
@@ -91,13 +94,13 @@ class BankIDClient(object):
         return self._dictify(out)
 
     def sign(self, user_visible_data, personal_number=None, **kwargs):
-        """Request an signing order. The :py:mod:`collect` method
+        """Request an signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
         :param user_visible_data: The information that the end user is requested to sign.
-        :type user_visible_data: unicode
+        :type user_visible_data: str
         :param personal_number: The Swedish personal number in format YYYYMMDDXXXX.
-        :type personal_number: unicode
+        :type personal_number: str
         :return: The OrderResponse parsed to a dictionary.
         :rtype: dict
         :raises BankIDError: raises a subclass of this error
@@ -121,7 +124,7 @@ class BankIDClient(object):
         order reference.
 
         :param order_ref: The UUID string specifying which order to collect status from.
-        :type order_ref: unicode
+        :type order_ref: str
         :return: The CollectResponse parsed to a dictionary.
         :rtype: dict
         :raises BankIDError: raises a subclass of this error
@@ -136,12 +139,14 @@ class BankIDClient(object):
         return self._dictify(out)
 
     def file_sign(self, **kwargs):
-        """Request a file signing order. The :py:mod:`collect` method
+        """Request a file signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
         .. note::
 
             Not implemented due to that the method is deprecated.
+
+        :raises NotImplementedError: This method is not implemented.
 
         """
         raise NotImplementedError(
@@ -179,8 +184,8 @@ class RequestsTransport(HttpAuthenticated):
     """A Requests-based transport for suds, enabling the use of https and
     certificates when communicating with the SOAP service.
 
-    Code has been adapted from
-    http://stackoverflow.com/questions/6277027/suds-over-https-with-cert
+    Code has been adapted from this `Stack Overflow post
+    <http://stackoverflow.com/questions/6277027/suds-over-https-with-cert>`_.
 
     """
     def __init__(self, **kwargs):

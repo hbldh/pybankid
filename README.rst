@@ -104,13 +104,8 @@ Optionally, the environment variable `PYBANKID_DISABLE_WARNINGS` can be set to d
 Testing
 -------
 
-The PyBankID solution can be tested with ``nosetests``:
+The PyBankID solution can be tested with `pytest <https://pytest.org/>`_:
 
 .. code-block:: bash
 
-    nosetests tests/
-
-Documentation
--------------
-
-No documentation is available yet. Read the docstrings until then.
+    py.test tests/
