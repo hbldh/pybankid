@@ -111,8 +111,9 @@ class BankIDClient(object):
             warnings.warn("Requirement Alternatives option is not tested.", BankIDWarning)
 
         try:
+
             out = self.client.service.Sign(
-                userVisibleData=base64.b64encode(user_visible_data),
+                userVisibleData=six.text_type(base64.b64encode(six.b(user_visible_data)), encoding='utf-8'),
                 personalNumber=personal_number, **kwargs)
         except WebFault as e:
             raise get_error_class(e, "Could not complete Sign order.")
@@ -169,7 +170,7 @@ class BankIDClient(object):
             for k in doc:
                 k = six.text_type(k)
                 if isinstance(doc[k], Text):
-                    out[k] = six.text_type(doc[k])
+                    out[k] = six.text_type(doc[k], encoding='utf-8')
                 elif isinstance(doc[k], datetime.datetime):
                     out[k] = doc[k]
                 else:

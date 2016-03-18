@@ -24,7 +24,7 @@ PyBankID can be installed though pip:
 
 .. code-block:: bash
 
-    pip install pybankid
+    $ pip install pybankid
 
 Usage
 -----
@@ -35,7 +35,7 @@ First, create a BankIDClient:
 
     >>> from bankid import BankIDClient
     >>> client = BankIDClient(certificates=('path/to/certificate.pem',
-                                            'path/to/key.pem'))
+    >>>                                     'path/to/key.pem'))
 
 Connection to production server is the default in the client. If test
 server is desired, send in the ``test_server=True`` keyword in the init
@@ -46,7 +46,7 @@ A sign order is then placed by
 .. code-block:: python
 
     >>> client.sign(user_visible_data="The information to sign.",
-                    personal_number="YYYYMMDDXXXX")
+    >>>             personal_number="YYYYMMDDXXXX")
     {u'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
      u'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
 
@@ -81,6 +81,15 @@ with the ``collect`` method using the received ``orderRef``:
 
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
 
+API documentation
+-----------------
+
+.. toctree::
+   :maxdepth: 2
+
+   client
+   exceptions
+   testcert
 
 
 Indices and tables
