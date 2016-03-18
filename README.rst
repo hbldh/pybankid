@@ -3,6 +3,9 @@ PyBankID
 
 .. image:: https://travis-ci.org/hbldh/pybankid.svg?branch=master
     :target: https://travis-ci.org/hbldh/pybankid
+.. image:: https://readthedocs.org/projects/pybankid/badge/?version=latest
+    :target: http://pybankid.readthedocs.org/en/latest/?badge=latest
+    :alt: Documentation Status
 .. image:: http://img.shields.io/pypi/v/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
 .. image:: http://img.shields.io/pypi/dm/pybankid.svg

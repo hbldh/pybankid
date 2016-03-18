@@ -1,8 +1,3 @@
-.. Docstring for this page.
-
-Created by: hbldh <henrik.blidh@swedwise.com>
-Created on 2016-03-18, 11:34
-
 .. _usage:
 
 Getting Started
@@ -31,11 +26,11 @@ PyBankID can be installed though pip:
 Dependencies
 ------------
 
-PyBankID makes use of the following external modules::
+PyBankID makes use of the following external modules:
 
-    * `requests>=2.7.0 <http://docs.python-requests.org/>`_
-    * `suds-jurko>=0.6 <https://pypi.python.org/pypi/suds-jurko/0.6>`_
-    * `six>=1.9.0 <https://pythonhosted.org/six/>`_
+* `requests>=2.7.0 <http://docs.python-requests.org/>`_
+* `suds-jurko>=0.6 <https://pypi.python.org/pypi/suds-jurko/0.6>`_
+* `six>=1.9.0 <https://pythonhosted.org/six/>`_
 
 Usage
 -----
