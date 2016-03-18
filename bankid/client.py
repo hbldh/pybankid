@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:mod:`bankid`
-==================
-
-.. module:: bankid
-   :platform: Unix, Windows
-   :synopsis:
+:mod:`bankid.client` -- BankID Client
+=====================================
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
-
 Created on 2014-09-09, 16:55
 
 """

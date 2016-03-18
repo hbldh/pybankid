@@ -5,8 +5,9 @@ Created on 2016-03-18, 09:04
 
 .. _testcert:
 
-Test Cerificate methods
-=======================
+Test Certificate methods
+========================
+========================
 
 .. automodule:: bankid.testcert
    :members:

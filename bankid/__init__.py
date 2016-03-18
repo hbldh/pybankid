@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Release data for the PyBankID project."""
 
-# A quick and dirty fix for installations on Heroku.
+# A quick and dirty fix for installation and importing.
 try:
     from .client import BankIDClient
     import bankid.exceptions as exceptions

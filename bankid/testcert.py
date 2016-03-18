@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:mod:`bankid`
-==================
-
-.. module:: bankid
-   :platform: Unix, Windows
-   :synopsis:
+:mod:`bankid.testcert` -- Test Certificate fetching
+===================================================
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
-
 Created on 2014-09-09, 16:55
 
 """
