@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Release data for the PyBankID project."""
 
-# A quick and dirty fix for installations on Heroku.
+# A quick and dirty fix for installation and importing.
 try:
     from .client import BankIDClient
     import bankid.exceptions as exceptions
@@ -23,8 +23,8 @@ _version_major = 0
 _version_minor = 3
 _version_patch = 4
 # _version_extra = 'dev1'
-_version_extra = 'a1'
-#_version_extra = ''  # Uncomment this for full releases
+# _version_extra = 'a1'
+_version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
 _ver = [_version_major, _version_minor, _version_patch]

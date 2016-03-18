@@ -3,14 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyBankID's documentation!
-====================================
+PyBankID Documentation
+======================
 
-Contents:
+PyBankID is a client for performing BankID authentication and signing.
+
+The Swedish BankID solution for digital signing uses a SOAP
+connection solution, and this module aims at providing a simplifying
+client for making authentication, signing and collect requests to
+the BankID servers.
 
 .. toctree::
    :maxdepth: 2
 
+   usage
+   client
+   exceptions
+   testcert
 
 
 Indices and tables

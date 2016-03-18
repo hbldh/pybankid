@@ -1,18 +1,14 @@
-PyBankID
-========
+.. Docstring for this page.
 
-.. image:: https://travis-ci.org/hbldh/pybankid.svg?branch=master
-    :target: https://travis-ci.org/hbldh/pybankid
-.. image:: http://img.shields.io/pypi/v/pybankid.svg
-    :target: https://pypi.python.org/pypi/pybankid/
-.. image:: http://img.shields.io/pypi/dm/pybankid.svg
-    :target: https://pypi.python.org/pypi/pybankid/
-.. image:: http://img.shields.io/pypi/l/pybankid.svg
-    :target: https://pypi.python.org/pypi/pybankid/
-.. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
-    :target: https://coveralls.io/github/hbldh/pybankid?branch=master
+Created by: hbldh <henrik.blidh@swedwise.com>
+Created on 2016-03-18, 11:34
 
-PyBankID is a client for performing BankID signing.
+.. _usage:
+
+Getting Started
+===============
+
+PyBankID is a client for performing BankID authentication and signing.
 
 The Swedish BankID solution for digital signing uses a SOAP
 connection solution, and this module aims at providing a simplifying
@@ -24,16 +20,22 @@ For more details about BankID implementation, see the `official documentation
 about how the BankID methods are defined, how to set up the test environment
 and obtain the SSL certificate for the test server.
 
-An `example web application using PyBankID <https://github.com/hbldh/pybankid-example-app>`_
-exists and can be found in deployed state on `Heroku <https://bankid-example-app.herokuapp.com/>`_.
-
 Installation
 ------------
 PyBankID can be installed though pip:
 
 .. code-block:: bash
 
-    pip install pybankid
+    $ pip install pybankid
+
+Dependencies
+------------
+
+PyBankID makes use of the following external modules::
+
+    * `requests>=2.7.0 <http://docs.python-requests.org/>`_
+    * `suds-jurko>=0.6 <https://pypi.python.org/pypi/suds-jurko/0.6>`_
+    * `six>=1.9.0 <https://pythonhosted.org/six/>`_
 
 Usage
 -----
@@ -44,7 +46,7 @@ First, create a BankIDClient:
 
     >>> from bankid import BankIDClient
     >>> client = BankIDClient(certificates=('path/to/certificate.pem',
-                                            'path/to/key.pem'))
+    >>>                                     'path/to/key.pem'))
 
 Connection to production server is the default in the client. If test
 server is desired, send in the ``test_server=True`` keyword in the init
@@ -55,7 +57,7 @@ A sign order is then placed by
 .. code-block:: python
 
     >>> client.sign(user_visible_data="The information to sign.",
-                    personal_number="YYYYMMDDXXXX")
+    >>>             personal_number="YYYYMMDDXXXX")
     {u'autoStartToken': u'798c1ea1-e67a-4df6-a2f6-164ac223fd52',
      u'orderRef': u'a9b791c3-459f-492b-bf61-23027876140b'}
 
@@ -89,23 +91,3 @@ with the ``collect`` method using the received ``orderRef``:
                   u'surname': u'Namnsson'}}
 
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
-
-Python 2, urllib3 and certificate verification
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-An `InsecurePlatformWarning` is issued when using the client in Python 2 (See
-`urllib3 documentation <https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning>`_).
-This can be remedied by installing pyopenssl according to
-`this issue <https://github.com/kennethreitz/requests/issues/749>`_ and
-`docstrings in requests <https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py>`_.
-
-Optionally, the environment variable `PYBANKID_DISABLE_WARNINGS` can be set to disable these warnings.
-
-Testing
--------
-
-The PyBankID solution can be tested with `pytest <https://pytest.org/>`_:
-
-.. code-block:: bash
-
-    py.test tests/
