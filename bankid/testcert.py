@@ -98,7 +98,7 @@ def split_test_cert_and_key():
                          stderr=subprocess.PIPE)
     p.communicate()
 
-    # Open the newly created PEM certificate in the temporary folder.
+    # Open the newly created PEM certificate and key in the temporary folder.
     with open(cert_conv_tmp_path, 'rt') as f:
         certificate = f.read()
     with open(key_conv_tmp_path, 'rt') as f:
