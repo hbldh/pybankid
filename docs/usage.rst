@@ -86,3 +86,14 @@ with the ``collect`` method using the received ``orderRef``:
                   u'surname': u'Namnsson'}}
 
 The ``collect`` should be used sparingly, as not to burden the server unnecessarily.
+
+Python 2, urllib3 and certificate verification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An ``InsecurePlatformWarning`` is issued when using the client in Python 2 (See
+`urllib3 documentation <https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning>`_).
+This can be remedied by installing ``pyopenssl`` according to
+`this issue <https://github.com/kennethreitz/requests/issues/749>`_ and
+`docstrings in requests <https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py>`_.
+
+Optionally, the environment variable ``PYBANKID_DISABLE_WARNINGS`` can be set to disable these warnings.
