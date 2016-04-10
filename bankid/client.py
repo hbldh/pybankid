@@ -5,6 +5,7 @@
 =====================================
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
+
 Created on 2014-09-09, 16:55
 
 """
@@ -106,7 +107,6 @@ class BankIDClient(object):
             warnings.warn("Requirement Alternatives option is not tested.", BankIDWarning)
 
         try:
-
             out = self.client.service.Sign(
                 userVisibleData=six.text_type(base64.b64encode(six.b(user_visible_data)), encoding='utf-8'),
                 personalNumber=personal_number, **kwargs)

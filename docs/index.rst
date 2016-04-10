@@ -33,7 +33,7 @@ the BankID servers.
    usage
    client
    exceptions
-   testcert
+   certutils
 
 
 Indices and tables
