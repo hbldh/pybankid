@@ -25,9 +25,13 @@ import tempfile
 import uuid
 
 import pytest
+try:
+    from unittest import mock
+except:
+    import mock
 
 import bankid
-import bankid.testcert
+import bankid.certutils
 
 
 def _get_random_personal_number():
@@ -65,14 +69,16 @@ def _get_random_personal_number():
 
 
 @pytest.fixture(scope="module")
-def get_test_cert_and_key():
-    return bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
+def cert_and_key():
+    cert, key = bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
+    return cert, key
 
 
-def test_authentication_and_collect():
+def test_authentication_and_collect(cert_and_key):
     """Authenticate call and then collect with the returned orderRef UUID."""
 
-    c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    c = bankid.BankIDClient(certificates=cert_and_key, test_server=True)
+    assert 'appapi.test.bankid.com.pem' in c.verify_cert
     out = c.authenticate(_get_random_personal_number())
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
@@ -81,10 +87,10 @@ def test_authentication_and_collect():
     assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
 
 
-def test_sign_and_collect():
+def test_sign_and_collect(cert_and_key):
     """Sign call and then collect with the returned orderRef UUID."""
 
-    c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+    c = bankid.BankIDClient(certificates=cert_and_key, test_server=True)
     out = c.sign("The data to be signed", _get_random_personal_number())
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
@@ -93,33 +99,49 @@ def test_sign_and_collect():
     assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
 
 
-def test_invalid_orderref_raises_error():
-    c = bankid.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+def test_invalid_orderref_raises_error(cert_and_key):
+    c = bankid.BankIDClient(certificates=cert_and_key, test_server=True)
     with pytest.raises(bankid.exceptions.InvalidParametersError):
         collect_status = c.collect('invalid-uuid')
 
 
-def test_already_in_progress_raises_error():
-    c = bankid.client.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+def test_already_in_progress_raises_error(cert_and_key):
+    c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=True)
     pn = _get_random_personal_number()
     out = c.authenticate(pn)
     with pytest.raises(bankid.exceptions.AlreadyInProgressError):
         out2 = c.authenticate(pn)
 
 
-def test_file_sign_not_implemented():
-    c = bankid.client.BankIDClient(certificates=get_test_cert_and_key(), test_server=True)
+def test_file_sign_not_implemented(cert_and_key):
+    c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=True)
     with pytest.raises(NotImplementedError):
         out = c.file_sign()
 
 
-def test_test_cert_main():
-    bankid.testcert.main()
-    assert os.path.exists(os.path.expanduser('~/cert.pem'))
+def test_correct_prod_server_urls(cert_and_key):
+    bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
+    c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=False)
+    assert c.api_url == 'https://appapi.bankid.com/rp/v4'
+    assert c.wsdl_url == 'https://appapi.bankid.com/rp/v4?wsdl'
+    assert 'appapi.bankid.com.pem' in c.verify_cert
+
+
+def test_correct_prod_server_urls_2(cert_and_key):
+    bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
+    c = bankid.client.BankIDClient(certificates=cert_and_key)
+    assert c.api_url == 'https://appapi.bankid.com/rp/v4'
+    assert c.wsdl_url == 'https://appapi.bankid.com/rp/v4?wsdl'
+    assert 'appapi.bankid.com.pem' in c.verify_cert
+
+
+def test_certutils_main():
+    bankid.certutils.main()
+    assert os.path.exists(os.path.expanduser('~/certificate.pem'))
     assert os.path.exists(os.path.expanduser('~/key.pem'))
 
     try:
-        os.remove(os.path.expanduser('~/cert.pem'))
+        os.remove(os.path.expanduser('~/certificate.pem'))
         os.remove(os.path.expanduser('~/key.pem'))
     except:
         pass

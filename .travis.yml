@@ -21,9 +21,10 @@ branches:
     - develop
 install:
   - "pip install pytest"
+  - "pip install mock"
   - "pip install pytest-cov"
   - "pip install python-coveralls"
-  - "pip install -r requirements.txt"
+  - "pip install -e ."
 script: py.test tests/ --cov bankid --cov-report term-missing
 after_success:
   - coveralls

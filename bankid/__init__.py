@@ -6,7 +6,7 @@
 try:
     from .client import BankIDClient
     import bankid.exceptions as exceptions
-    from .testcert import create_bankid_test_server_cert_and_key
+    from .certutils import create_bankid_test_server_cert_and_key
 
     __all__ = ['BankIDClient', 'exceptions', 'create_bankid_test_server_cert_and_key', 'version']
 except ImportError:
@@ -21,7 +21,7 @@ _name = 'pybankid'
 # version.
 _version_major = 0
 _version_minor = 3
-_version_patch = 4
+_version_patch = 5
 # _version_extra = 'dev1'
 # _version_extra = 'a1'
 _version_extra = ''  # Uncomment this for full releases
