@@ -54,6 +54,7 @@ setup(
     ],
     dependency_links=[],
     ext_modules=[],
-    entry_points={
-    }
+    extras_require={
+        'security': ['pyOpenSSL>=0.13', 'ndg-httpsclient', 'pyasn1'],
+    },
 )

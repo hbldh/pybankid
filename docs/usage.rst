@@ -17,11 +17,30 @@ and obtain the SSL certificate for the test server.
 
 Installation
 ------------
+
 PyBankID can be installed though pip:
 
 .. code-block:: bash
 
     $ pip install pybankid
+
+The remedy the ``InsecurePlatformWarning`` problem detailed below (
+`Python 2, urllib3 and certificate verification`_), you can install
+``pybankid`` with the ``security`` extras:
+
+.. code-block:: bash
+
+    $ pip install pybankid[security]
+
+This installs the ``pyopenssl``, ``ndg-httpsclient`` and ``pyasn1`` packages
+as well.
+This does however require the installation of some additional system packages:
+
+.. code-block:: bash
+
+    $ sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+
+See the `cryptography package's documentation for details <https://cryptography.io/en/latest/installation/#building-cryptography-on-linux>`_.
 
 Dependencies
 ------------
