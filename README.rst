@@ -8,8 +8,6 @@ PyBankID
     :alt: Documentation Status
 .. image:: http://img.shields.io/pypi/v/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
-.. image:: http://img.shields.io/pypi/dm/pybankid.svg
-    :target: https://pypi.python.org/pypi/pybankid/
 .. image:: http://img.shields.io/pypi/l/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
 .. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
