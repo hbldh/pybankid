@@ -36,7 +36,7 @@ PyBankID can be installed though pip:
 
     pip install pybankid
 
-The remedy the ``InsecurePlatformWarning`` problem detailed below
+To remedy the ``InsecurePlatformWarning`` problem detailed below
 (`Python 2, urllib3 and certificate verification`_), you can install
 ``pybankid`` with the ``security`` extras:
 
