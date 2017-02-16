@@ -8,6 +8,8 @@ PyBankID
     :alt: Documentation Status
 .. image:: http://img.shields.io/pypi/v/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
+.. image:: http://img.shields.io/pypi/dm/pybankid.svg
+    :target: https://pypi.python.org/pypi/pybankid/
 .. image:: http://img.shields.io/pypi/l/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
 .. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
@@ -36,8 +38,8 @@ PyBankID can be installed though pip:
 
     pip install pybankid
 
-To remedy the ``InsecurePlatformWarning`` problem detailed below
-(`Python 2, urllib3 and certificate verification`_), you can install
+The remedy the ``InsecurePlatformWarning`` problem detailed below (
+`Python 2, urllib3 and certificate verification`_), you can install
 ``pybankid`` with the ``security`` extras:
 
 .. code-block:: bash
