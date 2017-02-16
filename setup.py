@@ -22,36 +22,50 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-import os
+import re
 from setuptools import setup, find_packages
-import bankid
 
-# Get the long description from the README file
-try:
-    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.rst')) as f:
-        long_description = f.read()
-except:
-    long_description = __doc__
+
+with open('bankid/version.py', 'r') as fd:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        fd.read(), re.MULTILINE).group(1)
+
+
+def read(f):
+    return open(f, encoding='utf-8').read()
 
 
 setup(
     name='pybankid',
-    version=bankid.__version__,
-    author=bankid.__author__,
-    author_email=bankid.__author_email__,
-    description=bankid.__description__,
-    long_description=long_description,
-    license=bankid.__license__,
-    url=bankid.__url__,
-    classifiers=bankid.__classifiers__,
-    platforms=bankid.__platforms__,
+    version=version,
+    author='Henrik Blidh',
+    author_email='henrik.blidh@nedomkull.com',
+    description="BankID client for Python",
+    long_description=read('README.rst'),
+    license='MIT',
+    url='https://github.com/hbldh/pybankid/',
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: MacOS :: MacOS X',
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Topic :: Security',
+        'Topic :: Utilities',
+    ],
+    platforms=['Linux', 'Mac OSX', 'Windows XP/Vista/7/8'],
     packages=find_packages(exclude=('tests', )),
     package_data={'': ['*.pem']},
-    install_requires=[
-        'requests>=2.7.0',
-        'suds-jurko>=0.6',
-        'six>=1.9.0'
-    ],
+    install_requires=read('requirements.txt').strip().splitlines(),
     dependency_links=[],
     ext_modules=[],
     extras_require={

@@ -163,9 +163,9 @@ class BankIDClient(object):
         out = {}
         try:
             for k in doc:
-                k = six.text_type(k)
+                k = _to_unicode(k)
                 if isinstance(doc[k], Text):
-                    out[k] = six.text_type(doc[k], encoding='utf-8')
+                    out[k] = _to_unicode(doc[k])
                 elif isinstance(doc[k], datetime.datetime):
                     out[k] = doc[k]
                 else:
@@ -174,6 +174,15 @@ class BankIDClient(object):
             out = doc
 
         return out
+
+
+def _to_unicode(s):
+    if isinstance(s, Text):
+        return six.text_type(s.unescape())
+    elif isinstance(s, six.text_type):
+        return s
+    elif isinstance(s, six.binary_type):
+        return s.decode('utf-8')
 
 
 class RequestsTransport(HttpAuthenticated):
