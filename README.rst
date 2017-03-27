@@ -103,7 +103,7 @@ with the ``collect`` method using the received ``orderRef``:
      u'signature': u'PD94bWwgdmVyc2lvbj0[...]',
      u'userInfo': {u'givenName': u'Namn',
                   u'ipAddress': u'195.84.248.212',
-                  u'name': u'Namn Namsson',
+                  u'name': u'Namn Namnsson',
                   u'notAfter': datetime.datetime(2016, 9, 9, 22, 59, 59),
                   u'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
                   u'personalNumber': u'YYYYMMDDXXXX',
