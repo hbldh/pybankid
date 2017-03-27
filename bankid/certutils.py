@@ -70,16 +70,34 @@ def split_certificate(certificate_path, destination_folder, password=None):
 
     """
     try:
-        p = subprocess.Popen(["openssl", 'version'], stdout=subprocess.PIPE)
+        # Attempt Linux call first
+        p = subprocess.Popen(['openssl', 'version'], stdout=subprocess.PIPE)
         sout, serr = p.communicate()
         if not sout.decode().lower().startswith('openssl'):
             raise NotImplementedError(
                 "OpenSSL executable could not be found. "
                 "Splitting cannot be performed.")
+        print(sout.strip())
+        openssl_executable = 'openssl'
     except:
-        raise NotImplementedError(
-            "OpenSSL executable could not be found. "
-            "Splitting cannot be performed.")
+        try:
+            # Attempt to call on standard Git for Windows path.
+            p = subprocess.Popen(['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
+                                 stdout=subprocess.PIPE)
+            sout, serr = p.communicate()
+            if not sout.decode().lower().startswith('openssl'):
+                raise NotImplementedError(
+                    "OpenSSL executable could not be found. "
+                    "Splitting cannot be performed.")
+            print(sout.strip())
+            openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
+        except:
+            raise NotImplementedError(
+                "OpenSSL executable could not be found. "
+                "Splitting cannot be performed.")
+
+    if not os.path.exists(os.path.abspath(os.path.expanduser(destination_folder))):
+        os.makedirs(os.path.abspath(os.path.expanduser(destination_folder)))
 
     # Paths to output files.
     out_cert_path = os.path.join(os.path.abspath(
@@ -89,7 +107,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
 
     # Use openssl for converting to pem format.
     pipeline_1 = [
-        'openssl', 'pkcs12',
+        openssl_executable, 'pkcs12',
         '-in', "{0}".format(certificate_path),
         '-passin' if password is not None else '',
         'pass:{0}'.format(password) if password is not None else '',
@@ -101,7 +119,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
                          stderr=subprocess.PIPE)
     p.communicate()
     pipeline_2 = [
-        'openssl', 'pkcs12',
+        openssl_executable, 'pkcs12',
         '-in', "{0}".format(certificate_path),
         '-passin' if password is not None else '',
         'pass:{0}'.format(password) if password is not None else '',

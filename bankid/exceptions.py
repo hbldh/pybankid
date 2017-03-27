@@ -19,7 +19,7 @@ import six
 
 
 def get_error_class(exc, exception_text):
-    error_class = _ERROR_CODE_TO_CLASS.get(six.text_type(exc.fault.faultstring))
+    error_class = _ERROR_CODE_TO_CLASS.get(six.text_type(exc.message))
     if error_class is None:
         return BankIDError("{0}: {1}".format(exc, exception_text))
     else:
