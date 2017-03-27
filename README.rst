@@ -32,13 +32,17 @@ exists and can be found in deployed state on `Heroku <https://bankid-example-app
 
 Installation
 ------------
+
+**Since version 0.5.0, PyBankID depends on `Zeep <http://docs.python-zeep.org/en/master/>`_
+instead of `suds-jurko <https://bitbucket.org/jurko/suds>`_.**
+
 PyBankID can be installed though pip:
 
 .. code-block:: bash
 
     pip install pybankid
 
-The remedy the ``InsecurePlatformWarning`` problem detailed below (
+The remedy to the ``InsecurePlatformWarning`` problem detailed below (
 `Python 2, urllib3 and certificate verification`_), you can install
 ``pybankid`` with the ``security`` extras:
 

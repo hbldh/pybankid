@@ -33,6 +33,9 @@ class BankIDError(Exception):
         super(BankIDError, self).__init__(*args, **kwargs)
         self.rfa = None
 
+    def __str__(self):
+        return self.__doc__
+
 
 class BankIDWarning(Warning):
     """Warning class for PyBankID."""
