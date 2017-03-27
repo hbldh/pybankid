@@ -47,7 +47,7 @@ def create_bankid_test_server_cert_and_key(destination_path):
                                          destination_path,
                                          password=_TEST_CERT_PASSWORD)
     # Try to remove temporary file.
-    try:
+    try:  # pragma: no cover
         os.remove(cert_tmp_path)
     except:
         pass
@@ -69,7 +69,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
     :rtype: tuple
 
     """
-    try:
+    try:  # pragma: no cover
         # Attempt Linux call first
         p = subprocess.Popen(['openssl', 'version'], stdout=subprocess.PIPE)
         sout, serr = p.communicate()
@@ -96,7 +96,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
                 "OpenSSL executable could not be found. "
                 "Splitting cannot be performed.")
 
-    if not os.path.exists(os.path.abspath(os.path.expanduser(destination_folder))):
+    if not os.path.exists(os.path.abspath(os.path.expanduser(destination_folder))):  # pragma: no cover
         os.makedirs(os.path.abspath(os.path.expanduser(destination_folder)))
 
     # Paths to output files.
