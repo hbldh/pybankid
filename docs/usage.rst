@@ -18,6 +18,15 @@ and obtain the SSL certificate for the test server.
 Installation
 ------------
 
+.. note::
+
+    Since version 0.5.0, PyBankID depends on the SOAP package `Zeep <http://docs.python-zeep.org/en/master/>`_
+    instead of `suds-jurko <https://bitbucket.org/jurko/suds>`_.
+
+    The reason for this is that the `suds-jurko <https://bitbucket.org/jurko/suds>`_ fork does not seem to be
+    actively maintained, something that the new `Zeep <http://docs.python-zeep.org/en/master/>`_ library
+    seems to be.
+
 PyBankID can be installed though pip:
 
 .. code-block:: bash
@@ -98,7 +107,7 @@ with the ``collect`` method using the received ``orderRef``:
      u'signature': u'PD94bWwgdmVyc2lvbj0[...]',
      u'userInfo': {u'givenName': u'Namn',
                   u'ipAddress': u'195.84.248.212',
-                  u'name': u'Namn Namsson',
+                  u'name': u'Namn Namnsson',
                   u'notAfter': datetime.datetime(2016, 9, 9, 22, 59, 59),
                   u'notBefore': datetime.datetime(2014, 9, 9, 23, 0),
                   u'personalNumber': u'YYYYMMDDXXXX',

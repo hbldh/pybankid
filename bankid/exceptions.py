@@ -19,7 +19,7 @@ import six
 
 
 def get_error_class(exc, exception_text):
-    error_class = _ERROR_CODE_TO_CLASS.get(six.text_type(exc.fault.faultstring))
+    error_class = _ERROR_CODE_TO_CLASS.get(six.text_type(exc.message))
     if error_class is None:
         return BankIDError("{0}: {1}".format(exc, exception_text))
     else:
@@ -32,6 +32,9 @@ class BankIDError(Exception):
     def __init__(self, *args, **kwargs):
         super(BankIDError, self).__init__(*args, **kwargs)
         self.rfa = None
+
+    def __str__(self):
+        return self.__doc__
 
 
 class BankIDWarning(Warning):
