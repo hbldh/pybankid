@@ -49,7 +49,7 @@ def create_bankid_test_server_cert_and_key(destination_path):
     # Try to remove temporary file.
     try:  # pragma: no cover
         os.remove(cert_tmp_path)
-    except:
+    except:  # pragma: no cover
         pass
 
     # Return path tuples.
@@ -79,8 +79,8 @@ def split_certificate(certificate_path, destination_folder, password=None):
                 "Splitting cannot be performed.")
         print(sout.strip())
         openssl_executable = 'openssl'
-    except:
-        try:
+    except:   # pragma: no cover
+        try:   # pragma: no cover
             # Attempt to call on standard Git for Windows path.
             p = subprocess.Popen(['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
                                  stdout=subprocess.PIPE)
@@ -91,7 +91,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
                     "Splitting cannot be performed.")
             print(sout.strip())
             openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
-        except:
+        except:   # pragma: no cover
             raise NotImplementedError(
                 "OpenSSL executable could not be found. "
                 "Splitting cannot be performed.")
@@ -141,5 +141,5 @@ def main():
     print('Saved key as {0}'.format(paths[1]))
     return paths
 
-if __name__ == "__main__":
+if __name__ == "__main__":    # pragma: no cover
     main()
