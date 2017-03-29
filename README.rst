@@ -33,7 +33,7 @@ exists and can be found in deployed state on `Heroku <https://bankid-example-app
 Installation
 ------------
 
-**Since version 0.5.0, PyBankID depends on `Zeep <http://docs.python-zeep.org/en/master/>`_
+**Since version 0.5.1, PyBankID depends on `Zeep <http://docs.python-zeep.org/en/master/>`_
 instead of `suds-jurko <https://bitbucket.org/jurko/suds>`_.**
 
 PyBankID can be installed though pip:
