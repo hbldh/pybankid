@@ -8,8 +8,6 @@ PyBankID
     :alt: Documentation Status
 .. image:: http://img.shields.io/pypi/v/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
-.. image:: http://img.shields.io/pypi/dm/pybankid.svg
-    :target: https://pypi.python.org/pypi/pybankid/
 .. image:: http://img.shields.io/pypi/l/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
 .. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
@@ -63,7 +61,7 @@ See the `cryptography package's documentation for details <https://cryptography.
 Usage
 -----
 
-First, create a BankIDClient:
+First, create a ``BankIDClient``:
 
 .. code-block:: python
 
@@ -74,6 +72,11 @@ First, create a BankIDClient:
 Connection to production server is the default in the client. If test
 server is desired, send in the ``test_server=True`` keyword in the init
 of the client.
+
+    The production server for the BankID server is undergoing an update. Until
+    June 2019 there are two endpoints that can be used, and PyBankID will use
+    the newer one unless ``legacy_mode=True`` is entered at ``BankIDClient``
+    creation.
 
 A sign order is then placed by
 

@@ -75,6 +75,11 @@ Connection to production server is the default in the client. If test
 server is desired, send in the ``test_server=True`` keyword in the init
 of the client.
 
+    The production server for the BankID server is undergoing an update. Until
+    June 2019 there are two endpoints that can be used, and PyBankID will use
+    the newer one unless ``legacy_mode=True`` is entered at ``BankIDClient``
+    creation.
+
 A sign order is then placed by
 
 .. code-block:: python
