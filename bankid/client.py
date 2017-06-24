@@ -41,19 +41,37 @@ except ImportError:
 class BankIDClient(object):
     """The client to use for communicating with BankID servers.
 
+    :param certificates: Tuple of string paths to the certificate to use and
+        the key to sign with.
+    :type certificates: tuple
+    :param test_server: Use the test server for authenticating and signing.
+    :type test_server: bool
+    :param legacy_mode: Use the old production server endpoint (will be removed
+        in June 2019)
+    :type legacy_mode: bool
+
     """
 
-    def __init__(self, certificates, test_server=False):
+    def __init__(self, certificates, test_server=False, legacy_mode=False):
         self.certs = certificates
 
         if test_server:
             self.api_url = 'https://appapi.test.bankid.com/rp/v4'
             self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename('bankid.certs', 'appapi.test.bankid.com.pem')
+            self.verify_cert = resource_filename(
+                'bankid.certs', 'appapi.test.bankid.com.pem')
         else:
-            self.api_url = 'https://appapi.bankid.com/rp/v4'
-            self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename('bankid.certs', 'appapi.bankid.com.pem')
+            if legacy_mode:
+                # Use the old appapi.bankid.com endpoint.
+                self.api_url = 'https://appapi.bankid.com/rp/v4'
+                self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
+                self.verify_cert = resource_filename(
+                    'bankid.certs', 'appapi.bankid.com.pem')
+            else:
+                self.api_url = 'https://appapi2.bankid.com/rp/v4'
+                self.wsdl_url = 'https://appapi2.bankid.com/rp/v4?wsdl'
+                self.verify_cert = resource_filename(
+                    'bankid.certs', 'appapi2.bankid.com.pem')
 
         headers = {
             "Content-Type": "text/xml;charset=UTF-8",

@@ -129,20 +129,33 @@ def test_file_sign_not_implemented(cert_and_key):
         out = c.file_sign()
 
 
-def test_correct_prod_server_urls(cert_and_key):
+@pytest.mark.parametrize("legacy_mode,endpoint", [
+    (False, 'appapi2.bankid.com'),
+    (True, 'appapi.bankid.com'),
+])
+def test_correct_prod_server_urls(cert_and_key, legacy_mode, endpoint):
     bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
-    c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=False)
-    assert c.api_url == 'https://appapi.bankid.com/rp/v4'
-    assert c.wsdl_url == 'https://appapi.bankid.com/rp/v4?wsdl'
-    assert 'appapi.bankid.com.pem' in c.verify_cert
+    c = bankid.client.BankIDClient(
+        certificates=cert_and_key,
+        test_server=False,
+        legacy_mode=legacy_mode)
+    assert c.api_url == 'https://{0}/rp/v4'.format(endpoint)
+    assert c.wsdl_url == 'https://{0}/rp/v4?wsdl'.format(endpoint)
+    assert '{0}.pem'.format(endpoint) in c.verify_cert
 
 
-def test_correct_prod_server_urls_2(cert_and_key):
+@pytest.mark.parametrize("legacy_mode,endpoint", [
+    (False, 'appapi2.bankid.com'),
+    (True, 'appapi.bankid.com'),
+])
+def test_correct_prod_server_urls_2(cert_and_key, legacy_mode, endpoint):
     bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
-    c = bankid.client.BankIDClient(certificates=cert_and_key)
-    assert c.api_url == 'https://appapi.bankid.com/rp/v4'
-    assert c.wsdl_url == 'https://appapi.bankid.com/rp/v4?wsdl'
-    assert 'appapi.bankid.com.pem' in c.verify_cert
+    c = bankid.client.BankIDClient(
+        certificates=cert_and_key,
+        legacy_mode=legacy_mode)
+    assert c.api_url == 'https://{0}/rp/v4'.format(endpoint)
+    assert c.wsdl_url == 'https://{0}/rp/v4?wsdl'.format(endpoint)
+    assert '{0}.pem'.format(endpoint) in c.verify_cert
 
 
 def test_certutils_main():
