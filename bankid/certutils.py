@@ -20,6 +20,8 @@ import tempfile
 import subprocess
 import requests
 
+from bankid.exceptions import BankIDError
+
 _TEST_CERT_PASSWORD = 'qwerty123'
 _TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
 
@@ -69,34 +71,31 @@ def split_certificate(certificate_path, destination_folder, password=None):
     :rtype: tuple
 
     """
-    try:  # pragma: no cover
-        # Attempt Linux call first
+    try:
+        # Attempt Linux and Darwin call first.
         p = subprocess.Popen(['openssl', 'version'], stdout=subprocess.PIPE)
         sout, serr = p.communicate()
-        if not sout.decode().lower().startswith('openssl'):
-            raise NotImplementedError(
-                "OpenSSL executable could not be found. "
-                "Splitting cannot be performed.")
+        openssl_executable_version = sout.decode().lower()
+        if not (openssl_executable_version.startswith('openssl') or
+                    openssl_executable_version.startswith('libressl')):
+            raise BankIDError("OpenSSL executable could not be found. "
+                              "Splitting cannot be performed.")
         print(sout.strip())
         openssl_executable = 'openssl'
-    except:   # pragma: no cover
-        try:   # pragma: no cover
-            # Attempt to call on standard Git for Windows path.
-            p = subprocess.Popen(['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
-                                 stdout=subprocess.PIPE)
-            sout, serr = p.communicate()
-            if not sout.decode().lower().startswith('openssl'):
-                raise NotImplementedError(
-                    "OpenSSL executable could not be found. "
-                    "Splitting cannot be performed.")
-            print(sout.strip())
-            openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
-        except:   # pragma: no cover
-            raise NotImplementedError(
-                "OpenSSL executable could not be found. "
-                "Splitting cannot be performed.")
+    except BankIDError:
+        # Attempt to call on standard Git for Windows path.
+        p = subprocess.Popen(
+            ['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
+            stdout=subprocess.PIPE)
+        sout, serr = p.communicate()
+        if not sout.decode().lower().startswith('openssl'):
+            raise BankIDError("OpenSSL executable could not be found. "
+                              "Splitting cannot be performed.")
+        print(sout.strip())
+        openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
 
-    if not os.path.exists(os.path.abspath(os.path.expanduser(destination_folder))):  # pragma: no cover
+    if not os.path.exists(os.path.abspath(
+            os.path.expanduser(destination_folder))):
         os.makedirs(os.path.abspath(os.path.expanduser(destination_folder)))
 
     # Paths to output files.
