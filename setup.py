@@ -36,6 +36,12 @@ def read(f):
     return open(f, encoding='utf-8').read()
 
 
+REQUIRES = [
+    "requests",
+    "zeep",
+    "six"
+]
+
 setup(
     name='pybankid',
     version=version,
@@ -64,7 +70,7 @@ setup(
     platforms=['any'],
     packages=find_packages(exclude=('tests', )),
     package_data={'': ['*.pem']},
-    install_requires=read('requirements.txt').strip().splitlines(),
+    install_requires=REQUIRES,
     dependency_links=[],
     ext_modules=[],
     extras_require={
