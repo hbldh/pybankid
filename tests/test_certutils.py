@@ -6,7 +6,8 @@ import bankid
 
 
 def test_certutils_main():
-    bankid.certutils.main()
+    bankid.certutils.main(verbose=False)
+
     assert os.path.exists(os.path.expanduser('~/certificate.pem'))
     assert os.path.exists(os.path.expanduser('~/key.pem'))
 

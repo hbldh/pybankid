@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:mod:`bankid.client` -- BankID Client
-=====================================
+:mod:`bankid.jsonclient` -- BankID JSON Client
+==============================================
 
 .. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
 
-Created on 2014-09-09, 16:55
+Created on 2018-02-19
 
 """
 
@@ -22,13 +22,13 @@ import base64
 import requests
 from pkg_resources import resource_filename
 
-from bankid.exceptions import get_json_error_class, BankIDWarning
+from bankid.exceptions import get_json_error_class
 
 try:
     # Python 3
     from urllib import parse as urlparse
 except ImportError:
-    # Ptyhon 2
+    # Python 2
     import urlparse
 
 
@@ -43,7 +43,7 @@ except ImportError:
 
 
 class BankIDJSONClient(object):
-    """The client to use for communicating with BankID servers.
+    """The client to use for communicating with BankID servers via the v.5 API.
 
     :param certificates: Tuple of string paths to the certificate to use and
         the key to sign with.
@@ -65,14 +65,12 @@ class BankIDJSONClient(object):
             self.verify_cert = resource_filename(
                 'bankid.certs', 'appapi2.bankid.com.pem')
 
-        headers = {
-            "Content-Type": "application/json"
-        }
-
         self.client = requests.Session()
         self.client.verify = self.verify_cert
         self.client.cert = self.certs
-        self.client.headers = headers
+        self.client.headers = {
+            "Content-Type": "application/json"
+        }
 
         self._auth_endpoint = urlparse.urljoin(self.api_url, 'auth')
         self._sign_endpoint = urlparse.urljoin(self.api_url, 'sign')
@@ -93,9 +91,11 @@ class BankIDJSONClient(object):
                 "autoStartToken":"7c40b5c9-fa74-49cf-b98c-bfe651f9a7c6"
             }
 
-        :param end_user_ip: IP address of the user requesting the authentication.
+        :param end_user_ip: IP address of the user requesting
+            the authentication.
         :type end_user_ip: str
-        :param personal_number: The Swedish personal number in format YYYYMMDDXXXX.
+        :param personal_number: The Swedish personal number in
+            format YYYYMMDDXXXX.
         :type personal_number: str
         :param requirement: An optional dictionary stating how the signature
             must be created and verified. See BankID Relying Party Guidelines,

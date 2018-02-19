@@ -74,14 +74,15 @@ def split_certificate(certificate_path, destination_folder, password=None):
     """
     try:
         # Attempt Linux and Darwin call first.
-        p = subprocess.Popen(['openssl', 'version'], stdout=subprocess.PIPE)
+        p = subprocess.Popen(['openssl', 'version'],
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
         sout, serr = p.communicate()
         openssl_executable_version = sout.decode().lower()
         if not (openssl_executable_version.startswith('openssl') or
                     openssl_executable_version.startswith('libressl')):
             raise BankIDError("OpenSSL executable could not be found. "
                               "Splitting cannot be performed.")
-        print(sout.strip())
         openssl_executable = 'openssl'
     except BankIDError:
         # Attempt to call on standard Git for Windows path.
@@ -135,10 +136,11 @@ def split_certificate(certificate_path, destination_folder, password=None):
     return out_cert_path, out_key_path
 
 
-def main():
+def main(verbose=True):
     paths = create_bankid_test_server_cert_and_key(os.path.expanduser('~'))
-    print('Saved certificate as {0}'.format(paths[0]))
-    print('Saved key as {0}'.format(paths[1]))
+    if verbose:
+        print('Saved certificate as {0}'.format(paths[0]))
+        print('Saved key as {0}'.format(paths[1]))
     return paths
 
 
