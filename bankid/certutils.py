@@ -23,7 +23,8 @@ import requests
 from bankid.exceptions import BankIDError
 
 _TEST_CERT_PASSWORD = 'qwerty123'
-_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
+_TEST_CERT_URL = \
+    "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
 
 
 def create_bankid_test_server_cert_and_key(destination_path):
@@ -139,6 +140,7 @@ def main():
     print('Saved certificate as {0}'.format(paths[0]))
     print('Saved key as {0}'.format(paths[1]))
     return paths
+
 
 if __name__ == "__main__":    # pragma: no cover
     main()

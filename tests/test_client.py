@@ -19,9 +19,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-import os
 import random
-import tempfile
 import uuid
 
 import pytest
@@ -31,9 +29,6 @@ except:
     import mock
 
 import bankid
-import bankid.certutils
-import bankid.version
-import bankid.exceptions
 
 
 def _get_random_personal_number():
@@ -68,12 +63,6 @@ def _get_random_personal_number():
     suffix = random.randint(0, 999)
     pn = "{0:04d}{1:02d}{2:02d}{3:03d}".format(year, month, day, suffix)
     return pn + str(_luhn_digit(pn[2:]))
-
-
-@pytest.fixture(scope="module")
-def cert_and_key():
-    cert, key = bankid.create_bankid_test_server_cert_and_key(tempfile.gettempdir())
-    return cert, key
 
 
 def test_authentication_and_collect(cert_and_key):
@@ -156,55 +145,3 @@ def test_correct_prod_server_urls_2(cert_and_key, legacy_mode, endpoint):
     assert c.api_url == 'https://{0}/rp/v4'.format(endpoint)
     assert c.wsdl_url == 'https://{0}/rp/v4?wsdl'.format(endpoint)
     assert '{0}.pem'.format(endpoint) in c.verify_cert
-
-
-def test_certutils_main():
-    bankid.certutils.main()
-    assert os.path.exists(os.path.expanduser('~/certificate.pem'))
-    assert os.path.exists(os.path.expanduser('~/key.pem'))
-
-    try:
-        os.remove(os.path.expanduser('~/certificate.pem'))
-        os.remove(os.path.expanduser('~/key.pem'))
-    except:
-        pass
-
-
-@pytest.mark.parametrize("exception_class,rfa", [
-    (bankid.exceptions.AccessDeniedRPError, None),
-    (bankid.exceptions.AlreadyInProgressError, 3),
-    (bankid.exceptions.CancelledError, 3),
-    (bankid.exceptions.InvalidParametersError, None),
-    (bankid.exceptions.InternalError, 5),
-    (bankid.exceptions.RetryError, 5),
-    (bankid.exceptions.ClientError, 12),
-    (bankid.exceptions.ExpiredTransactionError, 8),
-    (bankid.exceptions.CertificateError, 3),
-    (bankid.exceptions.UserCancelError, 6),
-    (bankid.exceptions.StartFailedError, 17),
-])
-def test_exceptions(exception_class, rfa):
-    e = exception_class()
-    assert e.rfa == rfa
-    assert isinstance(e, bankid.exceptions.BankIDError)
-
-
-@pytest.mark.parametrize("exception_class,message", [
-    (bankid.exceptions.AccessDeniedRPError, 'ACCESS_DENIED_RP'),
-    (bankid.exceptions.AlreadyInProgressError, 'ALREADY_IN_PROGRESS'),
-    (bankid.exceptions.InvalidParametersError, 'INVALID_PARAMETERS'),
-    (bankid.exceptions.InternalError, 'INTERNAL_ERROR'),
-    (bankid.exceptions.RetryError, 'RETRY'),
-    (bankid.exceptions.ClientError, 'CLIENT_ERR'),
-    (bankid.exceptions.ExpiredTransactionError, 'EXPIRED_TRANSACTION'),
-    (bankid.exceptions.CertificateError, 'CERTIFICATE_ERR'),
-    (bankid.exceptions.UserCancelError, 'USER_CANCEL'),
-    (bankid.exceptions.CancelledError, 'CANCELLED'),
-    (bankid.exceptions.StartFailedError, 'START_FAILED'),
-    (bankid.exceptions.BankIDError, 'Incorrect message string'),
-])
-def test_error_class_factory(exception_class, message):
-    from collections import namedtuple
-    nt = namedtuple('m', ['message', ])
-    e_class = bankid.exceptions.get_error_class(nt(message=message), 'Test error')
-    assert isinstance(e_class, exception_class)

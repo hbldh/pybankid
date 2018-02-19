@@ -1,1 +1,3 @@
 include LICENSE README.rst requirements.txt setup.cfg
+recursive-include tests *.py
+

@@ -1,8 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .client import BankIDClient
-import bankid.exceptions as exceptions
-from .certutils import create_bankid_test_server_cert_and_key
+import warnings as _warnings
 
-__all__ = ['BankIDClient', 'exceptions', 'create_bankid_test_server_cert_and_key', 'version']
+from requests.packages.urllib3.exceptions import SubjectAltNameWarning as _sanw
+
+from .client import BankIDClient
+from .jsonclient import BankIDJSONClient
+from .certutils import create_bankid_test_server_cert_and_key
+from .__version__ import __version__, version
+import bankid.exceptions
+
+__all__ = [
+    'BankIDClient', 'BankIDJSONClient', 'exceptions',
+    'create_bankid_test_server_cert_and_key',
+    '__version__', 'version'
+]
+
+_warnings.simplefilter('ignore', _sanw)
