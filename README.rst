@@ -13,7 +13,8 @@ PyBankID
 .. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
     :target: https://coveralls.io/github/hbldh/pybankid?branch=master
 
-PyBankID is a client for performing BankID signing.
+PyBankID is a client for providing BankID services as a Relying Party, i.e. 
+providing authentication and signing functionality to end users.
 
 The Swedish BankID solution for digital signing uses a SOAP
 connection solution, and this module aims at providing a simplifying
@@ -31,16 +32,14 @@ exists and can be found in deployed state on `Heroku <https://bankid-example-app
 Installation
 ------------
 
-**Since version 0.5.1, PyBankID depends on** `Zeep <http://docs.python-zeep.org/en/master/>`_ **instead of** `suds-jurko <https://bitbucket.org/jurko/suds>`_.
-
 PyBankID can be installed though pip:
 
 .. code-block:: bash
 
     pip install pybankid
 
-The remedy to the ``InsecurePlatformWarning`` problem detailed below (
-`Python 2, urllib3 and certificate verification`_), you can install
+The remedy to the ``InsecurePlatformWarning`` problem detailed below 
+(`Python 2, urllib3 and certificate verification`_), you can install
 ``pybankid`` with the ``security`` extras:
 
 .. code-block:: bash
