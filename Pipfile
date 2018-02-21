@@ -12,6 +12,8 @@ python_version = "3.5"
 
 [dev-packages]
 
+sphinx = "*"
+sphinx-rtd-theme = "*"
 
 
 [packages]

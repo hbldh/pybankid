@@ -28,7 +28,7 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = 'pybankid'
-DESCRIPTION = 'BankID client for Python'
+DESCRIPTION = 'BankID Relying Party client for Python'
 URL = 'https://github.com/hbldh/pybankid'
 EMAIL = 'henrik.blidh@nedomkull.com'
 AUTHOR = 'Henrik Blidh'

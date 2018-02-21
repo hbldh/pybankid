@@ -4,9 +4,7 @@
 :mod:`bankid.client` -- BankID Client
 =====================================
 
-.. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
-
-Created on 2014-09-09, 16:55
+Created on 2014-09-09 by hbldh
 
 """
 
@@ -88,7 +86,8 @@ class BankIDClient(object):
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
-        :param personal_number: The Swedish personal number in format YYYYMMDDXXXX.
+        :param personal_number: The Swedish personal number
+            in format YYYYMMDDXXXX.
         :type personal_number: str
         :return: The OrderResponse parsed to a dictionary.
         :rtype: dict
@@ -111,9 +110,11 @@ class BankIDClient(object):
         """Request an signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
-        :param user_visible_data: The information that the end user is requested to sign.
+        :param user_visible_data: The information that the end user is
+            requested to sign.
         :type user_visible_data: str
-        :param personal_number: The Swedish personal number in format YYYYMMDDXXXX.
+        :param personal_number: The Swedish personal number in
+            format YYYYMMDDXXXX.
         :type personal_number: str
         :return: The OrderResponse parsed to a dictionary.
         :rtype: dict
@@ -122,12 +123,14 @@ class BankIDClient(object):
 
         """
         if 'requirementAlternatives' in kwargs:
-            warnings.warn("Requirement Alternatives option is not tested.", BankIDWarning)
+            warnings.warn("Requirement Alternatives option is not tested.",
+                          BankIDWarning)
 
         if isinstance(user_visible_data, six.text_type):
-            data = base64.b64encode(user_visible_data.encode('utf-8')).decode('utf-8')
+            data = base64.b64encode(
+                user_visible_data.encode('utf-8')).decode('ascii')
         else:
-            data = base64.b64encode(user_visible_data).decode('utf-8')
+            data = base64.b64encode(user_visible_data).decode('ascii')
 
         try:
             out = self.client.service.Sign(
@@ -142,7 +145,8 @@ class BankIDClient(object):
         """Collect the progress status of the order with the specified
         order reference.
 
-        :param order_ref: The UUID string specifying which order to collect status from.
+        :param order_ref: The UUID string specifying which order to
+            collect status from.
         :type order_ref: str
         :return: The CollectResponse parsed to a dictionary.
         :rtype: dict
@@ -172,7 +176,8 @@ class BankIDClient(object):
             "FileSign is deprecated and therefore not implemented.")
 
     def _dictify(self, doc):
-        """Transforms the replies to a regular Python dict with strings and datetimes.
+        """Transforms the replies to a regular Python dict with
+        strings and datetimes.
 
         Tested with BankID version 2.5 return data.
 
@@ -181,4 +186,5 @@ class BankIDClient(object):
         :rtype: dict
 
         """
-        return {k: (self._dictify(doc[k]) if hasattr(doc[k], '_xsd_type') else doc[k]) for k in doc}
+        return {k: (self._dictify(doc[k]) if hasattr(doc[k], '_xsd_type')
+                    else doc[k]) for k in doc}

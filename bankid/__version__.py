@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-version.py
------------
+:mod:`bankid.__version__` - Version
+===================================
 
-:copyright: 2016-11-28 by hbldh <henrik.blidh@nedomkull.com>
+Created 2016-11-28 by hbldh
 
 """
 
@@ -12,5 +12,5 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-__version__ = '0.7.0rc1'
+__version__ = '0.7.0rc2'
 version = __version__  # backwards compatibility name

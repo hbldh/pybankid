@@ -4,9 +4,7 @@
 :mod:`bankid.certutils` -- Certificate Utilities
 ================================================
 
-Created by hbldh <henrik.blidh@nedomkull.com>
-
-Created on 2016-04-10
+Created 2016-04-10 by hbldh
 
 """
 

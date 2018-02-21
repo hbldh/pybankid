@@ -30,8 +30,8 @@ def get_json_error_class(response):
     data = response.json()
     error_class = _JSON_ERROR_CODE_TO_CLASS.get(
         data.get('errorCode'), BankIDError)
-    return error_class("{0}: {1} | {2}".format(
-        response.status_code, data.get('errorCode'), data.get("details")))
+    return error_class("{0}: {1}".format(
+        data.get('errorCode'), data.get("details")))
 
 
 class BankIDError(Exception):
@@ -55,8 +55,8 @@ class InvalidParametersError(BankIDError):
     **Reason:** Invalid parameter. Invalid use of method.
 
     **Action by RP:** RP must not try the same request again.
-        This is an internal error within RP's system and must not be '
-        communicated to the user as a BankID error.
+    This is an internal error within RP's system and must not be '
+    communicated to the user as a BankID error.
 
     """
 
@@ -102,8 +102,8 @@ class MaintenanceError(BankIDError):
     """The service is temporarily out of service.
 
     **Action by RP:** RP may try again without informing the user.
-        If this error is returned repeatedly, RP must inform the user.
-        Message RFA5.
+    If this error is returned repeatedly, RP must inform the user.
+    Message RFA5.
 
     """
 
@@ -187,7 +187,8 @@ class CertificateError(BankIDError):
 
     **Code:** ``CERTIFICATE_ERR``
 
-    **Reason:** This error is returned if:
+    **Reason:**
+    This error is returned if:
         1) The user has entered wrong security code
            too many times in her mobile device. The
            Mobile BankID cannot be used.
@@ -269,8 +270,8 @@ class UnauthorizedError(BankIDError):
     """RP does not have access to the service.
 
     **Action by RP:** RP must not try the same request again.
-        This is an internal error within RP's system and must not be '
-        communicated to the user as a BankID error.
+    This is an internal error within RP's system and must not be '
+    communicated to the user as a BankID error.
 
     """
     pass
@@ -280,8 +281,8 @@ class NotFoundError(BankIDError):
     """An erroneously URL path was used.
 
     **Action by RP:** RP must not try the same request again.
-        This is an internal error within RP's system and must not be '
-        communicated to the user as a BankID error.
+    This is an internal error within RP's system and must not be '
+    communicated to the user as a BankID error.
 
     """
     pass
@@ -291,8 +292,8 @@ class RequestTimeoutError(BankIDError):
     """It took too long time to transmit the request.
 
     **Action by RP:** RP must not automatically try again.
-        This error may occur if the processing at RP or the communication is too
-        slow. RP must inform the user. Message RFA5
+    This error may occur if the processing at RP or the communication is too
+    slow. RP must inform the user. Message RFA5
 
     """
     def __init__(self, *args, **kwargs):

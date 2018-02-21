@@ -4,9 +4,7 @@
 :mod:`bankid.jsonclient` -- BankID JSON Client
 ==============================================
 
-.. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
-
-Created on 2018-02-19
+Created on 2018-02-19 by hbldh
 
 """
 
@@ -84,7 +82,7 @@ class BankIDJSONClient(object):
 
         Example data returned:
 
-        .. code-block::
+        .. code-block:: json
 
             {
                 "orderRef":"131daac9-16c6-4618-beb0-365768f37288",
@@ -128,7 +126,7 @@ class BankIDJSONClient(object):
 
         Example data returned:
 
-        .. code-block::
+        .. code-block:: json
 
             {
                 "orderRef":"131daac9-16c6-4618-beb0-365768f37288",
@@ -186,7 +184,7 @@ class BankIDJSONClient(object):
         Example collect results returned while authentication or signing is
         still pending:
 
-        .. code-block::
+        .. code-block:: json
 
             {
                 "orderRef":"131daac9-16c6-4618-beb0-365768f37288",
@@ -196,7 +194,7 @@ class BankIDJSONClient(object):
 
         Example collect result when authentication or signing has failed:
 
-        .. code-block::
+        .. code-block:: json
 
             {
                 "orderRef":"131daac9-16c6-4618-beb0-365768f37288",
@@ -207,7 +205,7 @@ class BankIDJSONClient(object):
         Example collect result when authentication or signing is successful
         and completed:
 
-        .. code-block::
+        .. code-block:: json
 
             {
                 "orderRef":"131daac9-16c6-4618-beb0-365768f37288",
@@ -275,6 +273,6 @@ class BankIDJSONClient(object):
 
     def _encode_user_data(self, user_data):
         if isinstance(user_data, six.text_type):
-            return base64.b64encode(user_data.encode('utf-8')).decode('utf-8')
+            return base64.b64encode(user_data.encode('utf-8')).decode('ascii')
         else:
-            return base64.b64encode(user_data).decode('utf-8')
+            return base64.b64encode(user_data).decode('ascii')
