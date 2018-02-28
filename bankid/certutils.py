@@ -82,16 +82,15 @@ def split_certificate(certificate_path, destination_folder, password=None):
             raise BankIDError("OpenSSL executable could not be found. "
                               "Splitting cannot be performed.")
         openssl_executable = 'openssl'
-    except BankIDError:
+    except Exception:
         # Attempt to call on standard Git for Windows path.
         p = subprocess.Popen(
             ['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sout, serr = p.communicate()
         if not sout.decode().lower().startswith('openssl'):
             raise BankIDError("OpenSSL executable could not be found. "
                               "Splitting cannot be performed.")
-        print(sout.strip())
         openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
 
     if not os.path.exists(os.path.abspath(

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import tempfile
-
 import pytest
 import requests
 
@@ -15,7 +13,8 @@ def ip_address():
 
 
 @pytest.fixture(scope="session")
-def cert_and_key():
+def cert_and_key(tmpdir_factory):
+    testcert_dir = tmpdir_factory.mktemp('testcert')
     cert, key = bankid.create_bankid_test_server_cert_and_key(
-        tempfile.gettempdir())
+        str(testcert_dir))
     return cert, key
