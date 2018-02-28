@@ -80,6 +80,10 @@ class BankIDJSONClient(object):
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
+        Note that personal number is not needed when authentication is to
+        be done on the same device, provided that the returned
+        ``autoStartToken`` is used to open the BankID Client.
+
         Example data returned:
 
         .. code-block:: json
@@ -123,6 +127,10 @@ class BankIDJSONClient(object):
              requirement=None, user_non_visible_data = None, **kwargs):
         """Request an signing order. The :py:meth:`collect` method
         is used to query the status of the order.
+
+        Note that personal number is not needed when signing is to be done
+        on the same device, provided that the returned ``autoStartToken``
+        is used to open the BankID Client.
 
         Example data returned:
 

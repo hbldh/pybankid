@@ -53,11 +53,28 @@ class BankIDClient(object):
     def __init__(self, certificates, test_server=False, legacy_mode=False):
         self.certs = certificates
 
+        if legacy_mode:
+            warnings.warn("BankIDClient using the SOAP API in legacy mode will "
+                          "be deprecated in March 2019. Use "
+                          "bankid.BankIDJSONClient instead.",
+                          PendingDeprecationWarning)
+        else:
+            warnings.warn("BankIDClient using the SOAP API will "
+                          "be deprecated in February 2020. Use "
+                          "bankid.BankIDJSONClient instead.",
+                          PendingDeprecationWarning)
+
         if test_server:
-            self.api_url = 'https://appapi.test.bankid.com/rp/v4'
-            self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
-            self.verify_cert = resource_filename(
-                'bankid.certs', 'appapi.test.bankid.com.pem')
+            if legacy_mode:
+                self.api_url = 'https://appapi.test.bankid.com/rp/v4'
+                self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
+                self.verify_cert = resource_filename(
+                    'bankid.certs', 'appapi.test.bankid.com.pem')
+            else:
+                self.api_url = 'https://appapi2.test.bankid.com/rp/v4'
+                self.wsdl_url = 'https://appapi2.test.bankid.com/rp/v4?wsdl'
+                self.verify_cert = resource_filename(
+                    'bankid.certs', 'appapi2.test.bankid.com.pem')
         else:
             if legacy_mode:
                 # Use the old appapi.bankid.com endpoint.
@@ -65,12 +82,15 @@ class BankIDClient(object):
                 self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
                 self.verify_cert = resource_filename(
                     'bankid.certs', 'appapi.bankid.com.pem')
+
             else:
                 self.api_url = 'https://appapi2.bankid.com/rp/v4'
                 self.wsdl_url = 'https://appapi2.bankid.com/rp/v4?wsdl'
                 self.verify_cert = resource_filename(
                     'bankid.certs', 'appapi2.bankid.com.pem')
-
+                warnings.warn("BankIDClient in legacy mode will be deprecated "
+                              "in March 2019. Use bankid.BankIDJSONClient instead.",
+                              PendingDeprecationWarning)
         headers = {
             "Content-Type": "text/xml;charset=UTF-8",
         }
@@ -81,6 +101,8 @@ class BankIDClient(object):
         session.headers = headers
         transport = Transport(session=session)
         self.client = Client(self.wsdl_url, transport=transport)
+
+
 
     def authenticate(self, personal_number, **kwargs):
         """Request an authentication order. The :py:meth:`collect` method
