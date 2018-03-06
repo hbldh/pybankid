@@ -88,9 +88,7 @@ class BankIDClient(object):
                 self.wsdl_url = 'https://appapi2.bankid.com/rp/v4?wsdl'
                 self.verify_cert = resource_filename(
                     'bankid.certs', 'appapi2.bankid.com.pem')
-                warnings.warn("BankIDClient in legacy mode will be deprecated "
-                              "in March 2019. Use bankid.BankIDJSONClient instead.",
-                              PendingDeprecationWarning)
+
         headers = {
             "Content-Type": "text/xml;charset=UTF-8",
         }
@@ -101,8 +99,6 @@ class BankIDClient(object):
         session.headers = headers
         transport = Transport(session=session)
         self.client = Client(self.wsdl_url, transport=transport)
-
-
 
     def authenticate(self, personal_number, **kwargs):
         """Request an authentication order. The :py:meth:`collect` method
@@ -118,7 +114,8 @@ class BankIDClient(object):
 
         """
         if 'requirementAlternatives' in kwargs:
-            warnings.warn("Requirement Alternatives option is not tested.", BankIDWarning)
+            warnings.warn("Requirement Alternatives "
+                          "option is not tested.", BankIDWarning)
 
         try:
             out = self.client.service.Authenticate(
