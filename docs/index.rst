@@ -18,18 +18,27 @@ PyBankID Documentation
 .. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
     :target: https://coveralls.io/github/hbldh/pybankid?branch=master
 
-PyBankID is a client for performing BankID authentication and signing.
+PyBankID is a client for providing BankID services as a Relying Party, i.e.
+providing authentication and signing functionality to end users. This package
+provides a simplifying interface for initiating authentication
+and signing orders and then collecting the results from the BankID servers.
 
-The Swedish BankID solution for digital signing uses a SOAP
-connection solution, and this module aims at providing a simplifying
-client for making authentication, signing and collect requests to
-the BankID servers.
+If you intend to use PyBankID in your project, you are advised to read
+the `BankID Relying Party Guidelines
+<https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_ before
+doing anything else. There, one can find information
+about how the BankID methods are defined and how to use them.
+
+**If you use PyBankID in production and want updates on new releases and
+notifications about important changes to the BankID service, send a mail to
+the developer of this package to be added to the PyBankID mailing list.**
+
 
 .. toctree::
    :maxdepth: 2
 
+   get_started
    usage
-   client
    exceptions
    certutils
 

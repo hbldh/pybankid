@@ -26,15 +26,20 @@ def get_error_class(exc, exception_text):
         return error_class(exception_text)
 
 
+def get_json_error_class(response):
+    data = response.json()
+    error_class = _JSON_ERROR_CODE_TO_CLASS.get(
+        data.get('errorCode'), BankIDError)
+    return error_class("{0}: {1}".format(
+        data.get('errorCode'), data.get("details")))
+
+
 class BankIDError(Exception):
     """Parent exception class for all PyBankID errors."""
 
     def __init__(self, *args, **kwargs):
         super(BankIDError, self).__init__(*args, **kwargs)
         self.rfa = None
-
-    def __str__(self):
-        return self.__doc__
 
 
 class BankIDWarning(Warning):
@@ -49,9 +54,9 @@ class InvalidParametersError(BankIDError):
 
     **Reason:** Invalid parameter. Invalid use of method.
 
-    **Action by RP:** RP must not try the same request again. This is
-    an internal error within RP's system and must
-    not be communicated to the user as a BankID-error.
+    **Action by RP:** RP must not try the same request again.
+    This is an internal error within RP's system and must not be '
+    communicated to the user as a BankID error.
 
     """
 
@@ -90,6 +95,20 @@ class InternalError(BankIDError):
 
     def __init__(self, *args, **kwargs):
         super(InternalError, self).__init__(*args, **kwargs)
+        self.rfa = 5
+
+
+class MaintenanceError(BankIDError):
+    """The service is temporarily out of service.
+
+    **Action by RP:** RP may try again without informing the user.
+    If this error is returned repeatedly, RP must inform the user.
+    Message RFA5.
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(MaintenanceError, self).__init__(*args, **kwargs)
         self.rfa = 5
 
 
@@ -168,7 +187,8 @@ class CertificateError(BankIDError):
 
     **Code:** ``CERTIFICATE_ERR``
 
-    **Reason:** This error is returned if:
+    **Reason:**
+    This error is returned if:
         1) The user has entered wrong security code
            too many times in her mobile device. The
            Mobile BankID cannot be used.
@@ -246,6 +266,41 @@ class StartFailedError(BankIDError):
         self.rfa = 17
 
 
+class UnauthorizedError(BankIDError):
+    """RP does not have access to the service.
+
+    **Action by RP:** RP must not try the same request again.
+    This is an internal error within RP's system and must not be '
+    communicated to the user as a BankID error.
+
+    """
+    pass
+
+
+class NotFoundError(BankIDError):
+    """An erroneously URL path was used.
+
+    **Action by RP:** RP must not try the same request again.
+    This is an internal error within RP's system and must not be '
+    communicated to the user as a BankID error.
+
+    """
+    pass
+
+
+class RequestTimeoutError(BankIDError):
+    """It took too long time to transmit the request.
+
+    **Action by RP:** RP must not automatically try again.
+    This error may occur if the processing at RP or the communication is too
+    slow. RP must inform the user. Message RFA5
+
+    """
+    def __init__(self, *args, **kwargs):
+        super(RequestTimeoutError, self).__init__(*args, **kwargs)
+        self.rfa = 5
+
+
 _ERROR_CODE_TO_CLASS = {
     'INVALID_PARAMETERS': InvalidParametersError,
     'ALREADY_IN_PROGRESS': AlreadyInProgressError,
@@ -258,4 +313,16 @@ _ERROR_CODE_TO_CLASS = {
     'USER_CANCEL': UserCancelError,
     'CANCELLED': CancelledError,
     'START_FAILED': StartFailedError,
+}
+
+
+_JSON_ERROR_CODE_TO_CLASS = {
+    'invalidParameters': InvalidParametersError,
+    'alreadyInProgress': AlreadyInProgressError,
+    'unauthorized': UnauthorizedError,
+    'notFound': NotFoundError,
+    'requestTimeout': RequestTimeoutError,
+    # 'unsupportedMediaType': ,  # This will not be handled here...
+    'internalError': InternalError,
+    'Maintenance': MaintenanceError
 }

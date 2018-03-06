@@ -4,9 +4,7 @@
 :mod:`bankid.certutils` -- Certificate Utilities
 ================================================
 
-Created by hbldh <henrik.blidh@nedomkull.com>
-
-Created on 2016-04-10
+Created 2016-04-10 by hbldh
 
 """
 
@@ -23,7 +21,8 @@ import requests
 from bankid.exceptions import BankIDError
 
 _TEST_CERT_PASSWORD = 'qwerty123'
-_TEST_CERT_URL = "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
+_TEST_CERT_URL = \
+    "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
 
 
 def create_bankid_test_server_cert_and_key(destination_path):
@@ -73,25 +72,25 @@ def split_certificate(certificate_path, destination_folder, password=None):
     """
     try:
         # Attempt Linux and Darwin call first.
-        p = subprocess.Popen(['openssl', 'version'], stdout=subprocess.PIPE)
+        p = subprocess.Popen(['openssl', 'version'],
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
         sout, serr = p.communicate()
         openssl_executable_version = sout.decode().lower()
         if not (openssl_executable_version.startswith('openssl') or
                     openssl_executable_version.startswith('libressl')):
             raise BankIDError("OpenSSL executable could not be found. "
                               "Splitting cannot be performed.")
-        print(sout.strip())
         openssl_executable = 'openssl'
-    except BankIDError:
+    except Exception:
         # Attempt to call on standard Git for Windows path.
         p = subprocess.Popen(
             ['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sout, serr = p.communicate()
         if not sout.decode().lower().startswith('openssl'):
             raise BankIDError("OpenSSL executable could not be found. "
                               "Splitting cannot be performed.")
-        print(sout.strip())
         openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
 
     if not os.path.exists(os.path.abspath(
@@ -134,11 +133,13 @@ def split_certificate(certificate_path, destination_folder, password=None):
     return out_cert_path, out_key_path
 
 
-def main():
+def main(verbose=True):
     paths = create_bankid_test_server_cert_and_key(os.path.expanduser('~'))
-    print('Saved certificate as {0}'.format(paths[0]))
-    print('Saved key as {0}'.format(paths[1]))
+    if verbose:
+        print('Saved certificate as {0}'.format(paths[0]))
+        print('Saved key as {0}'.format(paths[1]))
     return paths
+
 
 if __name__ == "__main__":    # pragma: no cover
     main()

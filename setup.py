@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 PyBankID
@@ -18,40 +19,90 @@ Created on 2013-09-14, 19:31
 
 """
 
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
+import io
+import os
+import sys
+from shutil import rmtree
 
-import re
-from codecs import open
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup, Command
 
+# Package meta-data.
+NAME = 'pybankid'
+DESCRIPTION = 'BankID Relying Party client for Python'
+URL = 'https://github.com/hbldh/pybankid'
+EMAIL = 'henrik.blidh@nedomkull.com'
+AUTHOR = 'Henrik Blidh'
 
-with open('bankid/version.py', 'r') as fd:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-                        fd.read(), re.MULTILINE).group(1)
-
-
-def read(f):
-    return open(f, encoding='utf-8').read()
-
-
-REQUIRES = [
-    "requests",
-    "zeep",
-    "six"
+# What packages are required for this module to be executed?
+REQUIRED = [
+    'requests',
+    'zeep',
+    'six'
 ]
 
+here = os.path.abspath(os.path.dirname(__file__))
+
+# Import the README and use it as the long-description.
+# Note: this will only work if 'README.rst' is present in your MANIFEST.in file!
+with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description = '\n' + f.read()
+
+# Load the package's __version__.py module as a dictionary.
+about = {}
+with open(os.path.join(here, 'bankid', '__version__.py')) as f:
+    exec(f.read(), about)
+
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPi via Twine…')
+        os.system('twine upload dist/*')
+
+        sys.exit()
+
+
+# Where the magic happens:
 setup(
-    name='pybankid',
-    version=version,
-    author='Henrik Blidh',
-    author_email='henrik.blidh@nedomkull.com',
-    description="BankID client for Python",
-    long_description=read('README.rst'),
+    name=NAME,
+    version=about['__version__'],
+    description=DESCRIPTION,
+    long_description=long_description,
+    author=AUTHOR,
+    author_email=EMAIL,
+    url=URL,
+    packages=find_packages(exclude=('tests',)),
+    install_requires=REQUIRED,
+    include_package_data=True,
+    package_data={'': ['*.pem']},
     license='MIT',
-    url='https://github.com/hbldh/pybankid/',
     classifiers=[
+        # Trove classifiers
+        # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
@@ -67,12 +118,10 @@ setup(
         'Topic :: Security',
         'Topic :: Utilities',
     ],
-    platforms=['any'],
-    packages=find_packages(exclude=('tests', )),
-    package_data={'': ['*.pem']},
-    install_requires=REQUIRES,
-    dependency_links=[],
-    ext_modules=[],
+    # $ setup.py publish support.
+    cmdclass={
+        'upload': UploadCommand,
+    },
     extras_require={
         'security': ['pyOpenSSL>=0.13', 'ndg-httpsclient', 'pyasn1'],
     },
