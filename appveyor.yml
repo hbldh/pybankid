@@ -1,0 +1,45 @@
+# AppVeyor.yml from https://github.com/ogrisel/python-appveyor-demo
+# License: CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/
+
+build: off
+
+environment:
+  matrix:
+    - PYTHON: "C:\\Python27-x64"
+      PYTHON_VERSION: "2.7.x"
+      PYTHON_ARCH: "64"
+      TOXENV: "py27"
+
+    - PYTHON: "C:\\Python35-x64"
+      PYTHON_VERSION: "3.5.x"
+      PYTHON_ARCH: "64"
+      TOXENV: "py35"
+
+    - PYTHON: "C:\\Python36-x64"
+      PYTHON_VERSION: "3.6.x"
+      PYTHON_ARCH: "64"
+      TOXENV: "py36"
+
+install:
+  # Check that we have the expected version and architecture for Python
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+  # Upgrade to the latest version of pip to avoid it displaying warnings
+  # about it being out of date.
+  - "pip install --disable-pip-version-check --user --upgrade pip"
+
+  # Install PyBankID test deps.
+  - "pip install pytest"
+  - "pip install mock"
+  - "pip install pytest-cov"
+  - "pip install python-coveralls"
+
+  # Install PyBankID as editable code.
+  - "pip install -e ."
+
+test_script:
+  - "%PYTHON%\\Scripts\\py.test tests/ --cov bankid --cov-report term-missing"
+
+# on_success:
+#   - ""
