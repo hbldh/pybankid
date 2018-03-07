@@ -33,13 +33,12 @@ install:
   - "pip install pytest"
   - "pip install mock"
   - "pip install pytest-cov"
-  - "pip install python-coveralls"
 
   # Install PyBankID as editable code.
   - "pip install -e ."
 
 test_script:
-  - "%PYTHON%/Scripts/py.test tests/ --cov bankid --cov-report term-missing"
+  - "py.test tests/ --cov bankid --cov-report term-missing"
 
 # on_success:
 #   - ""
