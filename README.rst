@@ -33,15 +33,6 @@ exists and can be found in deployed state on `Heroku <https://bankid-example-app
 notifications about important changes to the BankID service, send a mail to
 the developer of this package to be added to the PyBankID mailing list.**
 
-* `Installation`_
-* `Usage`_
-    - `JSON client`_
-    - `SOAP client`_
-* `Certificates`_
-* `Python 2, urllib3 and certificate verification`_
-* `Testing`_
-
-
 Installation
 ------------
 
@@ -79,7 +70,7 @@ There are two different clients available in the ``bankid`` package: the
 in February 2020,  and the ``BankIDJSONClient``, which uses the new
 JSON API released in February 2018.
 
-**Any new deployment using PyBankID should use the ``BankIDJSONClient``**.
+**Any new deployment using PyBankID should use the** ``BankIDJSONClient``**.**
 
 JSON client
 ~~~~~~~~~~~
@@ -160,7 +151,7 @@ with the ``collect`` method using the received ``orderRef``:
     }
 
 Please note that the ``collect`` method should be used sparingly: in the
-`BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_.
+`BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
 it states that *"collect should be called every two seconds and must not be
 called more frequent than once per second"*.
 
