@@ -39,7 +39,7 @@ install:
   - "pip install -e ."
 
 test_script:
-  - "%PYTHON%\\Scripts\\py.test tests/ --cov bankid --cov-report term-missing"
+  - "%PYTHON%/Scripts/py.test tests/ --cov bankid --cov-report term-missing"
 
 # on_success:
 #   - ""
