@@ -169,7 +169,7 @@ class BankIDJSONClient(object):
         data['userVisibleData'] = self._encode_user_data(user_visible_data)
         if user_non_visible_data:
             data['userNonVisibleData'] = self._encode_user_data(
-                user_visible_data)
+                user_non_visible_data)
         if requirement and isinstance(requirement, dict):
             data['requirement'] = requirement
         # Handling potentially changed optional in-parameters.
