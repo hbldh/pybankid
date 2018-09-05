@@ -18,7 +18,7 @@ branches:
 install:
   - "pip install pytest"
   - "pip install mock"
-  - "pip install pytest-cov<2.6.0"
+  - "pip install 'pytest_cov<2.6.0'"
   - "pip install python-coveralls"
   - "pip install -e ."
 script: py.test tests/ --cov bankid --cov-report term-missing
