@@ -1,15 +1,10 @@
 language: python
-sudo: false
+dist: xenial
 python:
   - 2.7
   - 3.5
   - 3.6
-  - "pypy"
-  - "pypy3"
-matrix:
-  allow_failures:
-    - python: "pypy"
-    - python: "pypy3"
+  - 3.7
 branches:
   only:
     - master
@@ -17,7 +12,7 @@ branches:
 install:
   - "pip install pytest"
   - "pip install mock"
-  - "pip install pytest-cov"
+  - "pip install 'pytest_cov<2.6.0'"
   - "pip install python-coveralls"
   - "pip install -e ."
 script: py.test tests/ --cov bankid --cov-report term-missing
