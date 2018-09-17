@@ -70,7 +70,7 @@ There are two different clients available in the ``bankid`` package: the
 in February 2020,  and the ``BankIDJSONClient``, which uses the new
 JSON API released in February 2018.
 
-**Any new deployment using PyBankID should use the** ``BankIDJSONClient``**.**
+**Any new deployment using PyBankID should use the** ``BankIDJSONClient``.
 
 JSON client
 ~~~~~~~~~~~
