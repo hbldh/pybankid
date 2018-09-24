@@ -1,6 +1,7 @@
 import base64
 import datetime
 import hashlib
+from io import BytesIO
 from logging import getLogger
 
 import OpenSSL.crypto
@@ -14,7 +15,7 @@ from bankid.experimental.helper import CompletionDataContainer, make_cert, Nonce
 
 _LOG = getLogger(__name__)
 
-def verify_bankid_response(bank_id_response, ensure_certificates_still_valid=True):
+def verify_bankid_response(bank_id_response, ensure_certificates_still_valid=True, BANK_ID_ROOT_CERT=None):
 
     if not isinstance(bank_id_response, dict):
         raise TypeError("Response not a dictionary")
