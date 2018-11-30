@@ -45,6 +45,10 @@ and a sign order is initiated in a similar fashion:
         'orderRef': 'a9b791c3-459f-492b-bf61-23027876140b'
     }
 
+Since the `BankIDJSONClient` is using the BankID ``v5`` JSON API, the `personal_number` can now be omitted when calling
+`authenticate` and `sign`. See `BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
+for more information about this.
+
 The status of an order can then be studied by polling
 with the ``collect`` method using the received ``orderRef``:
 
