@@ -9,7 +9,7 @@ import bankid
 
 @pytest.fixture(scope="module")
 def ip_address():
-    return requests.get("https://httpbin.org/ip").json()['origin']
+    return requests.get("https://httpbin.org/ip").json()["origin"].split(',')[0]
 
 
 @pytest.fixture(scope="session")

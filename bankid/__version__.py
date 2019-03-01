@@ -8,5 +8,5 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-__version__ = '0.7.2'
+__version__ = '0.8.0'
 version = __version__  # backwards compatibility name
