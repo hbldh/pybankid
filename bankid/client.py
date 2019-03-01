@@ -44,50 +44,28 @@ class BankIDClient(object):
     :type certificates: tuple
     :param test_server: Use the test server for authenticating and signing.
     :type test_server: bool
-    :param legacy_mode: Use the old production server endpoint (will be removed
-        in June 2019)
-    :type legacy_mode: bool
 
     """
 
-    def __init__(self, certificates, test_server=False, legacy_mode=False):
+    def __init__(self, certificates, test_server=False, **kwargs):
         self.certs = certificates
 
-        if legacy_mode:
-            warnings.warn("BankIDClient using the SOAP API in legacy mode will "
-                          "be deprecated in March 2019. Use "
-                          "bankid.BankIDJSONClient instead.",
-                          PendingDeprecationWarning)
-        else:
-            warnings.warn("BankIDClient using the SOAP API will "
-                          "be deprecated in February 2020. Use "
-                          "bankid.BankIDJSONClient instead.",
-                          PendingDeprecationWarning)
+        warnings.warn("BankIDClient using the SOAP API will "
+                      "be deprecated in February 2020. Use "
+                      "bankid.BankIDJSONClient instead.",
+                      PendingDeprecationWarning)
 
         if test_server:
-            if legacy_mode:
-                self.api_url = 'https://appapi.test.bankid.com/rp/v4'
-                self.wsdl_url = 'https://appapi.test.bankid.com/rp/v4?wsdl'
-                self.verify_cert = resource_filename(
-                    'bankid.certs', 'appapi.test.bankid.com.pem')
-            else:
-                self.api_url = 'https://appapi2.test.bankid.com/rp/v4'
-                self.wsdl_url = 'https://appapi2.test.bankid.com/rp/v4?wsdl'
-                self.verify_cert = resource_filename(
-                    'bankid.certs', 'appapi2.test.bankid.com.pem')
+            self.api_url = 'https://appapi2.test.bankid.com/rp/v4'
+            self.wsdl_url = 'https://appapi2.test.bankid.com/rp/v4?wsdl'
+            self.verify_cert = resource_filename(
+                'bankid.certs', 'appapi2.test.bankid.com.pem')
         else:
-            if legacy_mode:
-                # Use the old appapi.bankid.com endpoint.
-                self.api_url = 'https://appapi.bankid.com/rp/v4'
-                self.wsdl_url = 'https://appapi.bankid.com/rp/v4?wsdl'
-                self.verify_cert = resource_filename(
-                    'bankid.certs', 'appapi.bankid.com.pem')
 
-            else:
-                self.api_url = 'https://appapi2.bankid.com/rp/v4'
-                self.wsdl_url = 'https://appapi2.bankid.com/rp/v4?wsdl'
-                self.verify_cert = resource_filename(
-                    'bankid.certs', 'appapi2.bankid.com.pem')
+            self.api_url = 'https://appapi2.bankid.com/rp/v4'
+            self.wsdl_url = 'https://appapi2.bankid.com/rp/v4?wsdl'
+            self.verify_cert = resource_filename(
+                'bankid.certs', 'appapi2.bankid.com.pem')
 
         headers = {
             "Content-Type": "text/xml;charset=UTF-8",
