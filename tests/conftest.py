@@ -9,12 +9,11 @@ import bankid
 
 @pytest.fixture(scope="module")
 def ip_address():
-    return requests.get("https://httpbin.org/ip").json()["origin"].split(',')[0]
+    return requests.get("https://httpbin.org/ip").json()["origin"].split(",")[0]
 
 
 @pytest.fixture(scope="session")
 def cert_and_key(tmpdir_factory):
-    testcert_dir = tmpdir_factory.mktemp('testcert')
-    cert, key = bankid.create_bankid_test_server_cert_and_key(
-        str(testcert_dir))
+    testcert_dir = tmpdir_factory.mktemp("testcert")
+    cert, key = bankid.create_bankid_test_server_cert_and_key(str(testcert_dir))
     return cert, key

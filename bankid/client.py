@@ -30,9 +30,10 @@ from bankid.exceptions import get_error_class, BankIDWarning
 # See README.rst for details.
 try:
     import requests.packages.urllib3.contrib.pyopenssl
+
     requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
 except ImportError:
-    if bool(os.environ.get('PYBANKID_DISABLE_WARNINGS', False)):
+    if bool(os.environ.get("PYBANKID_DISABLE_WARNINGS", False)):
         requests.packages.urllib3.disable_warnings()
 
 
@@ -50,26 +51,28 @@ class BankIDClient(object):
     def __init__(self, certificates, test_server=False, **kwargs):
         self.certs = certificates
 
-        warnings.warn("BankIDClient using the SOAP API will "
-                      "be deprecated in February 2020. Use "
-                      "bankid.BankIDJSONClient instead.",
-                      PendingDeprecationWarning)
+        warnings.warn(
+            "BankIDClient using the SOAP API will "
+            "be deprecated in February 2020. Use "
+            "bankid.BankIDJSONClient instead.",
+            PendingDeprecationWarning,
+        )
 
         if test_server:
-            self.api_url = 'https://appapi2.test.bankid.com/rp/v4'
-            self.wsdl_url = 'https://appapi2.test.bankid.com/rp/v4?wsdl'
+            self.api_url = "https://appapi2.test.bankid.com/rp/v4"
+            self.wsdl_url = "https://appapi2.test.bankid.com/rp/v4?wsdl"
             self.verify_cert = resource_filename(
-                'bankid.certs', 'appapi2.test.bankid.com.pem')
+                "bankid.certs", "appapi2.test.bankid.com.pem"
+            )
         else:
 
-            self.api_url = 'https://appapi2.bankid.com/rp/v4'
-            self.wsdl_url = 'https://appapi2.bankid.com/rp/v4?wsdl'
+            self.api_url = "https://appapi2.bankid.com/rp/v4"
+            self.wsdl_url = "https://appapi2.bankid.com/rp/v4?wsdl"
             self.verify_cert = resource_filename(
-                'bankid.certs', 'appapi2.bankid.com.pem')
+                "bankid.certs", "appapi2.bankid.com.pem"
+            )
 
-        headers = {
-            "Content-Type": "text/xml;charset=UTF-8",
-        }
+        headers = {"Content-Type": "text/xml;charset=UTF-8"}
 
         session = requests.Session()
         session.verify = self.verify_cert
@@ -91,13 +94,15 @@ class BankIDClient(object):
                              when error has been returned from server.
 
         """
-        if 'requirementAlternatives' in kwargs:
-            warnings.warn("Requirement Alternatives "
-                          "option is not tested.", BankIDWarning)
+        if "requirementAlternatives" in kwargs:
+            warnings.warn(
+                "Requirement Alternatives " "option is not tested.", BankIDWarning
+            )
 
         try:
             out = self.client.service.Authenticate(
-                personalNumber=personal_number, **kwargs)
+                personalNumber=personal_number, **kwargs
+            )
         except Error as e:
             raise get_error_class(e, "Could not complete Authenticate order.")
 
@@ -119,20 +124,20 @@ class BankIDClient(object):
                      when error has been returned from server.
 
         """
-        if 'requirementAlternatives' in kwargs:
-            warnings.warn("Requirement Alternatives option is not tested.",
-                          BankIDWarning)
+        if "requirementAlternatives" in kwargs:
+            warnings.warn(
+                "Requirement Alternatives option is not tested.", BankIDWarning
+            )
 
         if isinstance(user_visible_data, six.text_type):
-            data = base64.b64encode(
-                user_visible_data.encode('utf-8')).decode('ascii')
+            data = base64.b64encode(user_visible_data.encode("utf-8")).decode("ascii")
         else:
-            data = base64.b64encode(user_visible_data).decode('ascii')
+            data = base64.b64encode(user_visible_data).decode("ascii")
 
         try:
             out = self.client.service.Sign(
-                userVisibleData=data,
-                personalNumber=personal_number, **kwargs)
+                userVisibleData=data, personalNumber=personal_number, **kwargs
+            )
         except Error as e:
             raise get_error_class(e, "Could not complete Sign order.")
 
@@ -170,7 +175,8 @@ class BankIDClient(object):
 
         """
         raise NotImplementedError(
-            "FileSign is deprecated and therefore not implemented.")
+            "FileSign is deprecated and therefore not implemented."
+        )
 
     def _dictify(self, doc):
         """Transforms the replies to a regular Python dict with
@@ -183,5 +189,7 @@ class BankIDClient(object):
         :rtype: dict
 
         """
-        return {k: (self._dictify(doc[k]) if hasattr(doc[k], '_xsd_type')
-                    else doc[k]) for k in doc}
+        return {
+            k: (self._dictify(doc[k]) if hasattr(doc[k], "_xsd_type") else doc[k])
+            for k in doc
+        }

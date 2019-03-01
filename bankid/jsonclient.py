@@ -34,9 +34,10 @@ except ImportError:
 # See README.rst for details.
 try:
     import requests.packages.urllib3.contrib.pyopenssl
+
     requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
 except ImportError:
-    if bool(os.environ.get('PYBANKID_DISABLE_WARNINGS', False)):
+    if bool(os.environ.get("PYBANKID_DISABLE_WARNINGS", False)):
         requests.packages.urllib3.disable_warnings()
 
 
@@ -55,28 +56,29 @@ class BankIDJSONClient(object):
         self.certs = certificates
 
         if test_server:
-            self.api_url = 'https://appapi2.test.bankid.com/rp/v5/'
+            self.api_url = "https://appapi2.test.bankid.com/rp/v5/"
             self.verify_cert = resource_filename(
-                'bankid.certs', 'appapi2.test.bankid.com.pem')
+                "bankid.certs", "appapi2.test.bankid.com.pem"
+            )
         else:
-            self.api_url = 'https://appapi2.bankid.com/rp/v5/'
+            self.api_url = "https://appapi2.bankid.com/rp/v5/"
             self.verify_cert = resource_filename(
-                'bankid.certs', 'appapi2.bankid.com.pem')
+                "bankid.certs", "appapi2.bankid.com.pem"
+            )
 
         self.client = requests.Session()
         self.client.verify = self.verify_cert
         self.client.cert = self.certs
-        self.client.headers = {
-            "Content-Type": "application/json"
-        }
+        self.client.headers = {"Content-Type": "application/json"}
 
-        self._auth_endpoint = urlparse.urljoin(self.api_url, 'auth')
-        self._sign_endpoint = urlparse.urljoin(self.api_url, 'sign')
-        self._collect_endpoint = urlparse.urljoin(self.api_url, 'collect')
-        self._cancel_endpoint = urlparse.urljoin(self.api_url, 'cancel')
+        self._auth_endpoint = urlparse.urljoin(self.api_url, "auth")
+        self._sign_endpoint = urlparse.urljoin(self.api_url, "sign")
+        self._collect_endpoint = urlparse.urljoin(self.api_url, "collect")
+        self._cancel_endpoint = urlparse.urljoin(self.api_url, "cancel")
 
-    def authenticate(self, end_user_ip, personal_number=None,
-                     requirement=None, **kwargs):
+    def authenticate(
+        self, end_user_ip, personal_number=None, requirement=None, **kwargs
+    ):
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -111,9 +113,9 @@ class BankIDJSONClient(object):
         """
         data = {"endUserIp": end_user_ip}
         if personal_number:
-            data['personalNumber'] = personal_number
+            data["personalNumber"] = personal_number
         if requirement and isinstance(requirement, dict):
-            data['requirement'] = requirement
+            data["requirement"] = requirement
         # Handling potentially changed optional in-parameters.
         data.update(kwargs)
         response = self.client.post(self._auth_endpoint, json=data)
@@ -123,8 +125,15 @@ class BankIDJSONClient(object):
         else:
             raise get_json_error_class(response)
 
-    def sign(self, end_user_ip, user_visible_data, personal_number=None,
-             requirement=None, user_non_visible_data = None, **kwargs):
+    def sign(
+        self,
+        end_user_ip,
+        user_visible_data,
+        personal_number=None,
+        requirement=None,
+        user_non_visible_data=None,
+        **kwargs
+    ):
         """Request an signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -165,13 +174,12 @@ class BankIDJSONClient(object):
         """
         data = {"endUserIp": end_user_ip}
         if personal_number:
-            data['personalNumber'] = personal_number
-        data['userVisibleData'] = self._encode_user_data(user_visible_data)
+            data["personalNumber"] = personal_number
+        data["userVisibleData"] = self._encode_user_data(user_visible_data)
         if user_non_visible_data:
-            data['userNonVisibleData'] = self._encode_user_data(
-                user_non_visible_data)
+            data["userNonVisibleData"] = self._encode_user_data(user_non_visible_data)
         if requirement and isinstance(requirement, dict):
-            data['requirement'] = requirement
+            data["requirement"] = requirement
         # Handling potentially changed optional in-parameters.
         data.update(kwargs)
         response = self.client.post(self._sign_endpoint, json=data)
@@ -250,7 +258,8 @@ class BankIDJSONClient(object):
 
         """
         response = self.client.post(
-            self._collect_endpoint, json={'orderRef': order_ref})
+            self._collect_endpoint, json={"orderRef": order_ref}
+        )
 
         if response.status_code == 200:
             return response.json()
@@ -271,8 +280,7 @@ class BankIDJSONClient(object):
                              when error has been returned from server.
 
         """
-        response = self.client.post(
-            self._cancel_endpoint, json={'orderRef': order_ref})
+        response = self.client.post(self._cancel_endpoint, json={"orderRef": order_ref})
 
         if response.status_code == 200:
             return response.json() == {}
@@ -281,6 +289,6 @@ class BankIDJSONClient(object):
 
     def _encode_user_data(self, user_data):
         if isinstance(user_data, six.text_type):
-            return base64.b64encode(user_data.encode('utf-8')).decode('ascii')
+            return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
         else:
-            return base64.b64encode(user_data).decode('ascii')
+            return base64.b64encode(user_data).decode("ascii")

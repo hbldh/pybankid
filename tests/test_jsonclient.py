@@ -75,37 +75,38 @@ def test_authentication_and_collect(cert_and_key, ip_address):
     """Authenticate call and then collect with the returned orderRef UUID."""
 
     c = bankid.BankIDJSONClient(certificates=cert_and_key, test_server=True)
-    assert 'appapi2.test.bankid.com.pem' in c.verify_cert
+    assert "appapi2.test.bankid.com.pem" in c.verify_cert
     out = c.authenticate(ip_address, _get_random_personal_number())
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out.get('orderRef'), version=4)
-    collect_status = c.collect(out.get('orderRef'))
-    assert collect_status.get('status') == 'pending'
-    assert collect_status.get('hintCode') in \
-           ('outstandingTransaction', 'noClient')
+    order_ref = uuid.UUID(out.get("orderRef"), version=4)
+    collect_status = c.collect(out.get("orderRef"))
+    assert collect_status.get("status") == "pending"
+    assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
 
 
 def test_sign_and_collect(cert_and_key, ip_address):
     """Sign call and then collect with the returned orderRef UUID."""
 
     c = bankid.BankIDJSONClient(certificates=cert_and_key, test_server=True)
-    out = c.sign(ip_address, "The data to be signed",
-                 personal_number=_get_random_personal_number(),
-                 user_non_visible_data="Non visible data")
+    out = c.sign(
+        ip_address,
+        "The data to be signed",
+        personal_number=_get_random_personal_number(),
+        user_non_visible_data="Non visible data",
+    )
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out.get('orderRef'), version=4)
-    collect_status = c.collect(out.get('orderRef'))
-    assert collect_status.get('status') == 'pending'
-    assert collect_status.get('hintCode') in \
-           ('outstandingTransaction', 'noClient')
+    order_ref = uuid.UUID(out.get("orderRef"), version=4)
+    collect_status = c.collect(out.get("orderRef"))
+    assert collect_status.get("status") == "pending"
+    assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
 
 
 def test_invalid_orderref_raises_error(cert_and_key):
     c = bankid.BankIDJSONClient(certificates=cert_and_key, test_server=True)
     with pytest.raises(bankid.exceptions.InvalidParametersError):
-        collect_status = c.collect('invalid-uuid')
+        collect_status = c.collect("invalid-uuid")
 
 
 def test_already_in_progress_raises_error(cert_and_key, ip_address):
@@ -119,9 +120,9 @@ def test_already_in_progress_raises_error(cert_and_key, ip_address):
 def test_already_in_progress_raises_error_2(cert_and_key, ip_address):
     c = bankid.BankIDJSONClient(certificates=cert_and_key, test_server=True)
     pn = _get_random_personal_number()
-    out = c.sign(ip_address, 'Text to sign', pn)
+    out = c.sign(ip_address, "Text to sign", pn)
     with pytest.raises(bankid.exceptions.AlreadyInProgressError):
-        out2 = c.sign(ip_address, 'Text to sign', pn)
+        out2 = c.sign(ip_address, "Text to sign", pn)
 
 
 def test_authentication_and_cancel(cert_and_key, ip_address):
@@ -131,15 +132,14 @@ def test_authentication_and_cancel(cert_and_key, ip_address):
     out = c.authenticate(ip_address, _get_random_personal_number())
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out.get('orderRef'), version=4)
-    collect_status = c.collect(out.get('orderRef'))
-    assert collect_status.get('status') == 'pending'
-    assert collect_status.get('hintCode') in \
-           ('outstandingTransaction', 'noClient')
+    order_ref = uuid.UUID(out.get("orderRef"), version=4)
+    collect_status = c.collect(out.get("orderRef"))
+    assert collect_status.get("status") == "pending"
+    assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
     success = c.cancel(str(order_ref))
     assert success
     with pytest.raises(bankid.exceptions.InvalidParametersError):
-        collect_status = c.collect(out.get('orderRef'))
+        collect_status = c.collect(out.get("orderRef"))
 
 
 def test_cancel_with_invalid_uuid(cert_and_key):
@@ -149,13 +149,11 @@ def test_cancel_with_invalid_uuid(cert_and_key):
         cancel_status = c.cancel(str(invalid_order_ref))
 
 
-@pytest.mark.parametrize("test_server, endpoint", [
-    (False, 'appapi2.bankid.com'),
-    (True, 'appapi2.test.bankid.com'),
-])
+@pytest.mark.parametrize(
+    "test_server, endpoint",
+    [(False, "appapi2.bankid.com"), (True, "appapi2.test.bankid.com")],
+)
 def test_correct_prod_server_urls(cert_and_key, test_server, endpoint):
-    c = bankid.BankIDJSONClient(
-        certificates=cert_and_key,
-        test_server=test_server)
-    assert c.api_url == 'https://{0}/rp/v5/'.format(endpoint)
-    assert '{0}.pem'.format(endpoint) in c.verify_cert
+    c = bankid.BankIDJSONClient(certificates=cert_and_key, test_server=test_server)
+    assert c.api_url == "https://{0}/rp/v5/".format(endpoint)
+    assert "{0}.pem".format(endpoint) in c.verify_cert

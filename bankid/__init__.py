@@ -30,9 +30,12 @@ from .__version__ import __version__, version
 import bankid.exceptions
 
 __all__ = [
-    'BankIDClient', 'BankIDJSONClient', 'exceptions',
-    'create_bankid_test_server_cert_and_key',
-    '__version__', 'version'
+    "BankIDClient",
+    "BankIDJSONClient",
+    "exceptions",
+    "create_bankid_test_server_cert_and_key",
+    "__version__",
+    "version",
 ]
 
-_warnings.simplefilter('ignore', _sanw)
+_warnings.simplefilter("ignore", _sanw)

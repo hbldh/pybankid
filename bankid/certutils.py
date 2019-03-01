@@ -20,9 +20,10 @@ import requests
 
 from bankid.exceptions import BankIDError
 
-_TEST_CERT_PASSWORD = 'qwerty123'
-_TEST_CERT_URL = \
+_TEST_CERT_PASSWORD = "qwerty123"
+_TEST_CERT_URL = (
     "https://www.bankid.com/assets/bankid/rp/FPTestcert2_20150818_102329.pfx"
+)
 
 
 def create_bankid_test_server_cert_and_key(destination_path):
@@ -38,15 +39,16 @@ def create_bankid_test_server_cert_and_key(destination_path):
     """
 
     # Fetch P12 certificate and store in temporary folder.
-    cert_tmp_path = os.path.join(tempfile.gettempdir(),
-                                 os.path.basename(_TEST_CERT_URL))
+    cert_tmp_path = os.path.join(
+        tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL)
+    )
     r = requests.get(_TEST_CERT_URL)
-    with open(cert_tmp_path, 'wb') as f:
+    with open(cert_tmp_path, "wb") as f:
         f.write(r.content)
 
-    certificate, key = split_certificate(cert_tmp_path,
-                                         destination_path,
-                                         password=_TEST_CERT_PASSWORD)
+    certificate, key = split_certificate(
+        cert_tmp_path, destination_path, password=_TEST_CERT_PASSWORD
+    )
     # Try to remove temporary file.
     try:  # pragma: no cover
         os.remove(cert_tmp_path)
@@ -72,61 +74,78 @@ def split_certificate(certificate_path, destination_folder, password=None):
     """
     try:
         # Attempt Linux and Darwin call first.
-        p = subprocess.Popen(['openssl', 'version'],
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            ["openssl", "version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         sout, serr = p.communicate()
         openssl_executable_version = sout.decode().lower()
-        if not (openssl_executable_version.startswith('openssl') or
-                    openssl_executable_version.startswith('libressl')):
-            raise BankIDError("OpenSSL executable could not be found. "
-                              "Splitting cannot be performed.")
-        openssl_executable = 'openssl'
+        if not (
+            openssl_executable_version.startswith("openssl")
+            or openssl_executable_version.startswith("libressl")
+        ):
+            raise BankIDError(
+                "OpenSSL executable could not be found. "
+                "Splitting cannot be performed."
+            )
+        openssl_executable = "openssl"
     except Exception:
         # Attempt to call on standard Git for Windows path.
         p = subprocess.Popen(
-            ['C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe', 'version'],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            ["C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe", "version"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         sout, serr = p.communicate()
-        if not sout.decode().lower().startswith('openssl'):
-            raise BankIDError("OpenSSL executable could not be found. "
-                              "Splitting cannot be performed.")
-        openssl_executable = 'C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe'
+        if not sout.decode().lower().startswith("openssl"):
+            raise BankIDError(
+                "OpenSSL executable could not be found. "
+                "Splitting cannot be performed."
+            )
+        openssl_executable = "C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe"
 
-    if not os.path.exists(os.path.abspath(
-            os.path.expanduser(destination_folder))):
+    if not os.path.exists(os.path.abspath(os.path.expanduser(destination_folder))):
         os.makedirs(os.path.abspath(os.path.expanduser(destination_folder)))
 
     # Paths to output files.
-    out_cert_path = os.path.join(os.path.abspath(
-        os.path.expanduser(destination_folder)), 'certificate.pem')
-    out_key_path = os.path.join(os.path.abspath(
-        os.path.expanduser(destination_folder)), 'key.pem')
+    out_cert_path = os.path.join(
+        os.path.abspath(os.path.expanduser(destination_folder)), "certificate.pem"
+    )
+    out_key_path = os.path.join(
+        os.path.abspath(os.path.expanduser(destination_folder)), "key.pem"
+    )
 
     # Use openssl for converting to pem format.
     pipeline_1 = [
-        openssl_executable, 'pkcs12',
-        '-in', "{0}".format(certificate_path),
-        '-passin' if password is not None else '',
-        'pass:{0}'.format(password) if password is not None else '',
-        '-out', "{0}".format(out_cert_path),
-        '-clcerts', '-nokeys'
+        openssl_executable,
+        "pkcs12",
+        "-in",
+        "{0}".format(certificate_path),
+        "-passin" if password is not None else "",
+        "pass:{0}".format(password) if password is not None else "",
+        "-out",
+        "{0}".format(out_cert_path),
+        "-clcerts",
+        "-nokeys",
     ]
-    p = subprocess.Popen(list(filter(None, pipeline_1)),
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+    p = subprocess.Popen(
+        list(filter(None, pipeline_1)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     p.communicate()
     pipeline_2 = [
-        openssl_executable, 'pkcs12',
-        '-in', "{0}".format(certificate_path),
-        '-passin' if password is not None else '',
-        'pass:{0}'.format(password) if password is not None else '',
-        '-out', "{0}".format(out_key_path),
-        '-nocerts', '-nodes'
+        openssl_executable,
+        "pkcs12",
+        "-in",
+        "{0}".format(certificate_path),
+        "-passin" if password is not None else "",
+        "pass:{0}".format(password) if password is not None else "",
+        "-out",
+        "{0}".format(out_key_path),
+        "-nocerts",
+        "-nodes",
     ]
-    p = subprocess.Popen(list(filter(None, pipeline_2)),
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+    p = subprocess.Popen(
+        list(filter(None, pipeline_2)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     p.communicate()
 
     # Return path tuples.
@@ -134,12 +153,12 @@ def split_certificate(certificate_path, destination_folder, password=None):
 
 
 def main(verbose=True):
-    paths = create_bankid_test_server_cert_and_key(os.path.expanduser('~'))
+    paths = create_bankid_test_server_cert_and_key(os.path.expanduser("~"))
     if verbose:
-        print('Saved certificate as {0}'.format(paths[0]))
-        print('Saved key as {0}'.format(paths[1]))
+        print("Saved certificate as {0}".format(paths[0]))
+        print("Saved key as {0}".format(paths[1]))
     return paths
 
 
-if __name__ == "__main__":    # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     main()

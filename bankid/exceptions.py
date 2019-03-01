@@ -28,10 +28,8 @@ def get_error_class(exc, exception_text):
 
 def get_json_error_class(response):
     data = response.json()
-    error_class = _JSON_ERROR_CODE_TO_CLASS.get(
-        data.get('errorCode'), BankIDError)
-    return error_class("{0}: {1}".format(
-        data.get('errorCode'), data.get("details")))
+    error_class = _JSON_ERROR_CODE_TO_CLASS.get(data.get("errorCode"), BankIDError)
+    return error_class("{0}: {1}".format(data.get("errorCode"), data.get("details")))
 
 
 class BankIDError(Exception):
@@ -44,6 +42,7 @@ class BankIDError(Exception):
 
 class BankIDWarning(Warning):
     """Warning class for PyBankID."""
+
     pass
 
 
@@ -274,6 +273,7 @@ class UnauthorizedError(BankIDError):
     communicated to the user as a BankID error.
 
     """
+
     pass
 
 
@@ -285,6 +285,7 @@ class NotFoundError(BankIDError):
     communicated to the user as a BankID error.
 
     """
+
     pass
 
 
@@ -296,33 +297,34 @@ class RequestTimeoutError(BankIDError):
     slow. RP must inform the user. Message RFA5
 
     """
+
     def __init__(self, *args, **kwargs):
         super(RequestTimeoutError, self).__init__(*args, **kwargs)
         self.rfa = 5
 
 
 _ERROR_CODE_TO_CLASS = {
-    'INVALID_PARAMETERS': InvalidParametersError,
-    'ALREADY_IN_PROGRESS': AlreadyInProgressError,
-    'INTERNAL_ERROR': InternalError,
-    'RETRY': RetryError,
-    'ACCESS_DENIED_RP': AccessDeniedRPError,
-    'CLIENT_ERR': ClientError,
-    'EXPIRED_TRANSACTION': ExpiredTransactionError,
-    'CERTIFICATE_ERR': CertificateError,
-    'USER_CANCEL': UserCancelError,
-    'CANCELLED': CancelledError,
-    'START_FAILED': StartFailedError,
+    "INVALID_PARAMETERS": InvalidParametersError,
+    "ALREADY_IN_PROGRESS": AlreadyInProgressError,
+    "INTERNAL_ERROR": InternalError,
+    "RETRY": RetryError,
+    "ACCESS_DENIED_RP": AccessDeniedRPError,
+    "CLIENT_ERR": ClientError,
+    "EXPIRED_TRANSACTION": ExpiredTransactionError,
+    "CERTIFICATE_ERR": CertificateError,
+    "USER_CANCEL": UserCancelError,
+    "CANCELLED": CancelledError,
+    "START_FAILED": StartFailedError,
 }
 
 
 _JSON_ERROR_CODE_TO_CLASS = {
-    'invalidParameters': InvalidParametersError,
-    'alreadyInProgress': AlreadyInProgressError,
-    'unauthorized': UnauthorizedError,
-    'notFound': NotFoundError,
-    'requestTimeout': RequestTimeoutError,
+    "invalidParameters": InvalidParametersError,
+    "alreadyInProgress": AlreadyInProgressError,
+    "unauthorized": UnauthorizedError,
+    "notFound": NotFoundError,
+    "requestTimeout": RequestTimeoutError,
     # 'unsupportedMediaType': ,  # This will not be handled here...
-    'internalError': InternalError,
-    'Maintenance': MaintenanceError
+    "internalError": InternalError,
+    "Maintenance": MaintenanceError,
 }

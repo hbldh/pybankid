@@ -23,6 +23,7 @@ import random
 import uuid
 
 import pytest
+
 try:
     from unittest import mock
 except:
@@ -48,6 +49,7 @@ def _get_random_personal_number():
 
         def digits_of(n):
             return [int(i) for i in str(n)]
+
         id_ = int(id_) * 10
         digits = digits_of(id_)
         checksum = sum(digits[-1::-2])
@@ -69,13 +71,16 @@ def test_authentication_and_collect(cert_and_key):
     """Authenticate call and then collect with the returned orderRef UUID."""
 
     c = bankid.BankIDClient(certificates=cert_and_key, test_server=True)
-    assert 'appapi2.test.bankid.com.pem' in c.verify_cert
+    assert "appapi2.test.bankid.com.pem" in c.verify_cert
     out = c.authenticate(_get_random_personal_number())
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out.get('orderRef'), version=4)
-    collect_status = c.collect(out.get('orderRef'))
-    assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
+    order_ref = uuid.UUID(out.get("orderRef"), version=4)
+    collect_status = c.collect(out.get("orderRef"))
+    assert collect_status.get("progressStatus") in (
+        "OUTSTANDING_TRANSACTION",
+        "NO_CLIENT",
+    )
 
 
 def test_sign_and_collect(cert_and_key):
@@ -85,15 +90,18 @@ def test_sign_and_collect(cert_and_key):
     out = c.sign("The data to be signed", _get_random_personal_number())
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out.get('orderRef'), version=4)
-    collect_status = c.collect(out.get('orderRef'))
-    assert collect_status.get('progressStatus') in ('OUTSTANDING_TRANSACTION', 'NO_CLIENT')
+    order_ref = uuid.UUID(out.get("orderRef"), version=4)
+    collect_status = c.collect(out.get("orderRef"))
+    assert collect_status.get("progressStatus") in (
+        "OUTSTANDING_TRANSACTION",
+        "NO_CLIENT",
+    )
 
 
 def test_invalid_orderref_raises_error(cert_and_key):
     c = bankid.BankIDClient(certificates=cert_and_key, test_server=True)
     with pytest.raises(bankid.exceptions.InvalidParametersError):
-        collect_status = c.collect('invalid-uuid')
+        collect_status = c.collect("invalid-uuid")
 
 
 def test_already_in_progress_raises_error(cert_and_key):
@@ -107,9 +115,9 @@ def test_already_in_progress_raises_error(cert_and_key):
 def test_already_in_progress_raises_error_2(cert_and_key):
     c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=True)
     pn = _get_random_personal_number()
-    out = c.sign('Text to sign', pn)
+    out = c.sign("Text to sign", pn)
     with pytest.raises(bankid.exceptions.AlreadyInProgressError):
-        out2 = c.sign('Text to sign', pn)
+        out2 = c.sign("Text to sign", pn)
 
 
 def test_file_sign_not_implemented(cert_and_key):
@@ -118,26 +126,28 @@ def test_file_sign_not_implemented(cert_and_key):
         out = c.file_sign()
 
 
-@pytest.mark.parametrize("endpoint", [
-    ('appapi2.bankid.com'),
-])
+@pytest.mark.parametrize("endpoint", [("appapi2.test.bankid.com")])
 def test_correct_test_server_urls(cert_and_key, endpoint):
     bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
-    c = bankid.client.BankIDClient(
-        certificates=cert_and_key,
-        test_server=False)
-    assert c.api_url == 'https://{0}/rp/v4'.format(endpoint)
-    assert c.wsdl_url == 'https://{0}/rp/v4?wsdl'.format(endpoint)
-    assert '{0}.pem'.format(endpoint) in c.verify_cert
+    c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=True)
+    assert c.api_url == "https://{0}/rp/v4".format(endpoint)
+    assert c.wsdl_url == "https://{0}/rp/v4?wsdl".format(endpoint)
+    assert "{0}.pem".format(endpoint) in c.verify_cert
 
 
-@pytest.mark.parametrize("endpoint", [
-    ('appapi2.bankid.com'),
-])
+@pytest.mark.parametrize("endpoint", [("appapi2.bankid.com")])
+def test_correct_prod_server_urls(cert_and_key, endpoint):
+    bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
+    c = bankid.client.BankIDClient(certificates=cert_and_key, test_server=False)
+    assert c.api_url == "https://{0}/rp/v4".format(endpoint)
+    assert c.wsdl_url == "https://{0}/rp/v4?wsdl".format(endpoint)
+    assert "{0}.pem".format(endpoint) in c.verify_cert
+
+
+@pytest.mark.parametrize("endpoint", [("appapi2.bankid.com")])
 def test_correct_prod_server_urls_2(cert_and_key, endpoint):
     bankid.client.Client.__init__ = mock.MagicMock(return_value=None)
-    c = bankid.client.BankIDClient(
-        certificates=cert_and_key)
-    assert c.api_url == 'https://{0}/rp/v4'.format(endpoint)
-    assert c.wsdl_url == 'https://{0}/rp/v4?wsdl'.format(endpoint)
-    assert '{0}.pem'.format(endpoint) in c.verify_cert
+    c = bankid.client.BankIDClient(certificates=cert_and_key)
+    assert c.api_url == "https://{0}/rp/v4".format(endpoint)
+    assert c.wsdl_url == "https://{0}/rp/v4?wsdl".format(endpoint)
+    assert "{0}.pem".format(endpoint) in c.verify_cert
