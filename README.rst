@@ -3,8 +3,6 @@ PyBankID
 
 .. image:: https://dev.azure.com/hbldh/github/_apis/build/status/hbldh.pybankid?branchName=master
     :target: https://dev.azure.com/hbldh/github/_build/latest?definitionId=2&branchName=master
-.. image:: https://travis-ci.org/hbldh/pybankid.svg?branch=master
-    :target: https://travis-ci.org/hbldh/pybankid
 .. image:: https://readthedocs.org/projects/pybankid/badge/?version=latest
     :target: http://pybankid.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
