@@ -48,7 +48,7 @@ class BankIDClient(object):
 
     """
 
-    def __init__(self, certificates, test_server=False, **kwargs):
+    def __init__(self, certificates, test_server=False, request_timeout=None, **kwargs):
         self.certs = certificates
 
         warnings.warn(
@@ -78,7 +78,8 @@ class BankIDClient(object):
         session.verify = self.verify_cert
         session.cert = self.certs
         session.headers = headers
-        transport = Transport(session=session)
+        timeout_kwarg = {} if request_timeout is None else {"timeout": request_timeout}
+        transport = Transport(session=session, **timeout_kwarg)
         self.client = Client(self.wsdl_url, transport=transport)
 
     def authenticate(self, personal_number, **kwargs):
