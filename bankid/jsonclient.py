@@ -49,11 +49,14 @@ class BankIDJSONClient(object):
     :type certificates: tuple
     :param test_server: Use the test server for authenticating and signing.
     :type test_server: bool
+    :param request_timeout: Timeout for BankID requests.
+    :type request_timeout: int
 
     """
 
-    def __init__(self, certificates, test_server=False):
+    def __init__(self, certificates, test_server=False, request_timeout=None):
         self.certs = certificates
+        self._request_timeout = request_timeout
 
         if test_server:
             self.api_url = "https://appapi2.test.bankid.com/rp/v5/"
@@ -75,6 +78,10 @@ class BankIDJSONClient(object):
         self._sign_endpoint = urlparse.urljoin(self.api_url, "sign")
         self._collect_endpoint = urlparse.urljoin(self.api_url, "collect")
         self._cancel_endpoint = urlparse.urljoin(self.api_url, "cancel")
+
+    def _post(self, endpoint, *args, **kwargs):
+        """Internal helper method for adding timeout to requests."""
+        return self.client.post(endpoint, *args, timeout=self._request_timeout, **kwargs)
 
     def authenticate(
         self, end_user_ip, personal_number=None, requirement=None, **kwargs
@@ -118,7 +125,7 @@ class BankIDJSONClient(object):
             data["requirement"] = requirement
         # Handling potentially changed optional in-parameters.
         data.update(kwargs)
-        response = self.client.post(self._auth_endpoint, json=data)
+        response = self._post(self._auth_endpoint, json=data)
 
         if response.status_code == 200:
             return response.json()
@@ -182,7 +189,7 @@ class BankIDJSONClient(object):
             data["requirement"] = requirement
         # Handling potentially changed optional in-parameters.
         data.update(kwargs)
-        response = self.client.post(self._sign_endpoint, json=data)
+        response = self._post(self._sign_endpoint, json=data)
 
         if response.status_code == 200:
             return response.json()
@@ -257,7 +264,7 @@ class BankIDJSONClient(object):
                              when error has been returned from server.
 
         """
-        response = self.client.post(
+        response = self._post(
             self._collect_endpoint, json={"orderRef": order_ref}
         )
 
@@ -280,7 +287,7 @@ class BankIDJSONClient(object):
                              when error has been returned from server.
 
         """
-        response = self.client.post(self._cancel_endpoint, json={"orderRef": order_ref})
+        response = self._post(self._cancel_endpoint, json={"orderRef": order_ref})
 
         if response.status_code == 200:
             return response.json() == {}
