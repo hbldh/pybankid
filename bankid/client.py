@@ -45,6 +45,8 @@ class BankIDClient(object):
     :type certificates: tuple
     :param test_server: Use the test server for authenticating and signing.
     :type test_server: bool
+    :param request_timeout: Timeout for BankID requests.
+    :type request_timeout: int
 
     """
 

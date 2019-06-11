@@ -49,6 +49,8 @@ class BankIDJSONClient(object):
     :type certificates: tuple
     :param test_server: Use the test server for authenticating and signing.
     :type test_server: bool
+    :param request_timeout: Timeout for BankID requests.
+    :type request_timeout: int
 
     """
 
@@ -78,6 +80,7 @@ class BankIDJSONClient(object):
         self._cancel_endpoint = urlparse.urljoin(self.api_url, "cancel")
 
     def _post(self, endpoint, *args, **kwargs):
+        """Internal helper method for adding timeout to requests."""
         return self.client.post(endpoint, *args, timeout=self._request_timeout, **kwargs)
 
     def authenticate(
