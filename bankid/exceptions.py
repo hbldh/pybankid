@@ -70,7 +70,7 @@ class AlreadyInProgressError(BankIDError):
 
     **Action by RP:** RP must inform the user that a login or signing
     operation is already initiated for this user.
-    Message RFA3 should be used.
+    Message RFA4 should be used.
 
     """
 
