@@ -194,7 +194,7 @@ class CertificateError(BankIDError):
         2) The users BankID is revoked.
         3) The users BankID is invalid.
 
-    **Action by RP:** RP must inform the user. Message RFA3.
+    **Action by RP:** RP must inform the user. Message RFA13.
 
     """
 
