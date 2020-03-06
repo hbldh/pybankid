@@ -63,12 +63,8 @@ See the `cryptography package's documentation for details <https://cryptography.
 Usage
 -----
 
-There are two different clients available in the ``bankid`` package: the
-``BankIDClient``, which uses the SOAP-based API that is being deprecated
-in February 2020,  and the ``BankIDJSONClient``, which uses the new
-JSON API released in February 2018.
-
-**Any new deployment using PyBankID should use the** ``BankIDJSONClient``.
+`bankid.jsonclient.BankIDJSONClient` is the client to be used to
+communicate with the BankID service. It uses the JSON API released in February 2018.
 
 JSON client
 ~~~~~~~~~~~
@@ -156,12 +152,6 @@ Please note that the ``collect`` method should be used sparingly: in the
 `BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
 it states that *"collect should be called every two seconds and must not be
 called more frequent than once per second"*.
-
-SOAP client
-~~~~~~~~~~~
-
-For documentation about how to use the SOAP client, see the
-`documentation <https://pybankid.readthedocs.io/>`_.
 
 Certificates
 ------------

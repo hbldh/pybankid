@@ -34,7 +34,7 @@ EMAIL = "henrik.blidh@nedomkull.com"
 AUTHOR = "Henrik Blidh"
 
 # What packages are required for this module to be executed?
-REQUIRED = ["requests", "zeep", "six"]
+REQUIRED = ["requests", "six"]
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -88,6 +88,7 @@ setup(
     version=about["__version__"],
     description=DESCRIPTION,
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
