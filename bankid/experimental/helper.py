@@ -22,7 +22,7 @@ class B64Value:
 
 class BankIdSignatureContainer:
 
-    def __init__(self, signature: B64Value):
+    def __init__(self, signature):
         self.root = ET.fromstring(signature.decode)
         self.raw = signature
 
@@ -109,7 +109,7 @@ class CompletionDataContainer:
         return B64Value(self.completion_data['signature'])
 
     @property
-    def signature_container(self) -> BankIdSignatureContainer:
+    def signature_container(self):
         return BankIdSignatureContainer(self.signature)
 
 
