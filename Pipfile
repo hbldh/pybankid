@@ -1,20 +1,13 @@
 [[source]]
-
-verify_ssl = true
-url = "https://pypi.python.org/simple"
 name = "pypi"
-
-[packages]
-
-requests = ">=2.20.0"
-zeep = ">=1.3.0"
+url = "https://pypi.org/simple"
+verify_ssl = true
 
 [dev-packages]
 
-sphinx = "*"
-sphinx-rtd-theme = "*"
-pytest = "*"
-pytest-cov = "*"
-twine = "*"
+[packages]
+requests = ">=2.20.0"
+six = ">=1.10.0"
 
-
+[requires]
+python_version = "3.7"

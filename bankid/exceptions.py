@@ -76,7 +76,7 @@ class AlreadyInProgressError(BankIDError):
 
     def __init__(self, *args, **kwargs):
         super(AlreadyInProgressError, self).__init__(*args, **kwargs)
-        self.rfa = 3
+        self.rfa = 4
 
 
 class InternalError(BankIDError):
