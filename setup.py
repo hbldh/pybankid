@@ -88,6 +88,7 @@ setup(
     version=about["__version__"],
     description=DESCRIPTION,
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
