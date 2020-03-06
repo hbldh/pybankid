@@ -16,12 +16,12 @@ import bankid
         (bankid.exceptions.RequestTimeoutError, 5),
         (bankid.exceptions.InternalError, 5),
         (bankid.exceptions.MaintenanceError, 5),
-        (bankid.exceptions.BankIDError, 22),
+        (bankid.exceptions.BankIDError, None),
     ],
 )
 def test_exceptions(exception_class, rfa):
     e = exception_class()
-    assert e.RFA == rfa
+    assert e.rfa == rfa
     assert isinstance(e, bankid.exceptions.BankIDError)
 
 
