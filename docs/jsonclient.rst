@@ -46,7 +46,7 @@ and a sign order is initiated in a similar fashion:
     }
 
 Since the `BankIDJSONClient` is using the BankID ``v5`` JSON API, the `personal_number` can now be omitted when calling
-`authenticate` and `sign`. See `BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
+`authenticate` and `sign`. See `BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
 for more information about this.
 
 The status of an order can then be studied by polling
@@ -90,7 +90,7 @@ with the ``collect`` method using the received ``orderRef``:
     }
 
 Please note that the ``collect`` method should be used sparingly: in the
-`BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
+`BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
 it is specified that *"collect should be called every two seconds and must not be
 called more frequent than once per second"*.
 

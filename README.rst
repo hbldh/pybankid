@@ -20,7 +20,7 @@ and signing orders and then collecting the results from the BankID servers.
 
 If you intend to use PyBankID in your project, you are advised to read
 the `BankID Relying Party Guidelines
-<https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_ before
+<https://www.bankid.com/utvecklare/rp-info>`_ before
 doing anything else. There, one can find information
 about how the BankID methods are defined and how to use them.
 
@@ -105,7 +105,7 @@ and a sign order is initiated in a similar fashion:
     }
 
 Since the `BankIDJSONClient` is using the BankID ``v5`` JSON API, the `personal_number` can now be omitted when calling
-`authenticate` and `sign`. See `BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
+`authenticate` and `sign`. See `BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
 for more information about this.
 
 The status of an order can then be studied by polling
@@ -149,7 +149,7 @@ with the ``collect`` method using the received ``orderRef``:
     }
 
 Please note that the ``collect`` method should be used sparingly: in the
-`BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_
+`BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
 it states that *"collect should be called every two seconds and must not be
 called more frequent than once per second"*.
 

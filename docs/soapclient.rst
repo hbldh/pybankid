@@ -62,7 +62,7 @@ with the ``collect`` method using the received ``orderRef``:
                   'surname': 'Namnsson'}}
 
 Please note that the ``collect`` method should be used sparingly: in the
-`BankID Relying Party Guidelines <https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_.
+`BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_.
 it states that *"collect should be called every two seconds and must not be
 called more frequent than once per second"*.
 
