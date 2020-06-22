@@ -38,7 +38,7 @@ be obtained through PyBankID:
         certificates=cert_and_key, test_server=True)
 
 The test certificate is available on `BankID Technical Information webpage
-<https://www.bankid.com/bankid-i-dina-tjanster/rp-info>`_. The
+<https://www.bankid.com/utvecklare/rp-info>`_. The
 :py:func:`bankid.certutils.create_bankid_test_server_cert_and_key` in the
 :py:mod:`bankid.certutils` module fetches that test certificate, splits it
 into one certificate and one key part and converts it from

@@ -118,5 +118,8 @@ setup(
     ],
     # $ setup.py publish support.
     cmdclass={"upload": UploadCommand},
-    extras_require={"security": ["pyOpenSSL>=0.13", "ndg-httpsclient", "pyasn1"]},
+    extras_require={
+        "security": ["pyOpenSSL>=0.13", "ndg-httpsclient", "pyasn1"],
+        "signature-verification": {"pyOpenSSL", "asn1crypto", "freezegun", "pytz"},
+    },
 )
