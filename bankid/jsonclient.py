@@ -252,7 +252,7 @@ class BankIDJSONClient(object):
                 }
             }
 
-        See `BankID Relying Party Guidelines Version: 3.0 <https://www.bankid.com/assets/bankid/rp/bankid-relying-party-guidelines-v3.0.pdf>`_
+        See `BankID Relying Party Guidelines Version: 3.5 <https://www.bankid.com/assets/bankid/rp/bankid-relying-party-guidelines-v3.5.pdf>`_
         for more details about how to inform end user of the current status,
         whether it is pending, failed or completed.
 
