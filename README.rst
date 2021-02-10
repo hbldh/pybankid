@@ -24,13 +24,6 @@ the `BankID Relying Party Guidelines
 doing anything else. There, one can find information
 about how the BankID methods are defined and how to use them.
 
-An `example web application using PyBankID <https://github.com/hbldh/pybankid-example-app>`_
-exists and can be found in deployed state on `Heroku <https://bankid-example-app.herokuapp.com/>`_.
-
-**If you use PyBankID in production and want updates on new releases and
-notifications about important changes to the BankID service, send a mail to
-the developer of this package to be added to the PyBankID mailing list.**
-
 Installation
 ------------
 
