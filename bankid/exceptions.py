@@ -323,6 +323,7 @@ _JSON_ERROR_CODE_TO_CLASS = {
     "alreadyInProgress": AlreadyInProgressError,
     "unauthorized": UnauthorizedError,
     "notFound": NotFoundError,
+    # 'methodNotAllowed': ,  # This will not be handled here...
     "requestTimeout": RequestTimeoutError,
     # 'unsupportedMediaType': ,  # This will not be handled here...
     "internalError": InternalError,
