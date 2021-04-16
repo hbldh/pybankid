@@ -327,5 +327,5 @@ _JSON_ERROR_CODE_TO_CLASS = {
     "requestTimeout": RequestTimeoutError,
     # 'unsupportedMediaType': ,  # This will not be handled here...
     "internalError": InternalError,
-    "Maintenance": MaintenanceError,
+    "maintenance": MaintenanceError,
 }
