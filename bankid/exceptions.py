@@ -39,7 +39,7 @@ class BankIDWarning(Warning):
 class InvalidParametersError(BankIDError):
     """User induced error.
 
-    **Code:** ``INVALID_PARAMETERS``
+    **Code:** ``invalidParameters``
 
     **Reason:** Invalid parameter. Invalid use of method.
 
@@ -53,7 +53,7 @@ class InvalidParametersError(BankIDError):
 class AlreadyInProgressError(BankIDError):
     """Failure to create new order due to one already in progress.
 
-    **Code:** ``ALREADY_IN_PROGRESS``
+    **Code:** ``alreadyInProgress``
 
     **Reason:** An order for this user is already in progress. The order
     is aborted. No order is created.
@@ -72,7 +72,7 @@ class AlreadyInProgressError(BankIDError):
 class InternalError(BankIDError):
     """Remote server error.
 
-    **Code:** ``INTERNAL_ERROR``
+    **Code:** ``internalError``
 
     **Reason:** Internal technical error in the BankID system.
 
@@ -90,6 +90,8 @@ class InternalError(BankIDError):
 class MaintenanceError(BankIDError):
     """The service is temporarily out of service.
 
+    **Code:** ``maintenance``
+
     **Action by RP:** RP may try again without informing the user.
     If this error is returned repeatedly, RP must inform the user.
     Message RFA5.
@@ -104,6 +106,8 @@ class MaintenanceError(BankIDError):
 class UnauthorizedError(BankIDError):
     """RP does not have access to the service.
 
+    **Code:** ``unauthorized``
+
     **Action by RP:** RP must not try the same request again.
     This is an internal error within RP's system and must not be '
     communicated to the user as a BankID error.
@@ -116,6 +120,8 @@ class UnauthorizedError(BankIDError):
 class NotFoundError(BankIDError):
     """An erroneously URL path was used.
 
+    **Code:** ``notFound``
+
     **Action by RP:** RP must not try the same request again.
     This is an internal error within RP's system and must not be '
     communicated to the user as a BankID error.
@@ -127,6 +133,8 @@ class NotFoundError(BankIDError):
 
 class RequestTimeoutError(BankIDError):
     """It took too long time to transmit the request.
+
+    **Code:** ``requestTimeout``
 
     **Action by RP:** RP must not automatically try again.
     This error may occur if the processing at RP or the communication is too
