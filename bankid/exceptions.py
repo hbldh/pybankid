@@ -15,16 +15,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-import six
-
-
-def get_error_class(exc, exception_text):
-    error_class = _ERROR_CODE_TO_CLASS.get(six.text_type(exc.message))
-    if error_class is None:
-        return BankIDError("{0}: {1}".format(exc, exception_text))
-    else:
-        return error_class(exception_text)
-
 
 def get_json_error_class(response):
     data = response.json()
@@ -301,21 +291,6 @@ class RequestTimeoutError(BankIDError):
     def __init__(self, *args, **kwargs):
         super(RequestTimeoutError, self).__init__(*args, **kwargs)
         self.rfa = 5
-
-
-_ERROR_CODE_TO_CLASS = {
-    "INVALID_PARAMETERS": InvalidParametersError,
-    "ALREADY_IN_PROGRESS": AlreadyInProgressError,
-    "INTERNAL_ERROR": InternalError,
-    "RETRY": RetryError,
-    "ACCESS_DENIED_RP": AccessDeniedRPError,
-    "CLIENT_ERR": ClientError,
-    "EXPIRED_TRANSACTION": ExpiredTransactionError,
-    "CERTIFICATE_ERR": CertificateError,
-    "USER_CANCEL": UserCancelError,
-    "CANCELLED": CancelledError,
-    "START_FAILED": StartFailedError,
-}
 
 
 _JSON_ERROR_CODE_TO_CLASS = {
