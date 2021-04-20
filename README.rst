@@ -24,13 +24,6 @@ the `BankID Relying Party Guidelines
 doing anything else. There, one can find information
 about how the BankID methods are defined and how to use them.
 
-An `example web application using PyBankID <https://github.com/hbldh/pybankid-example-app>`_
-exists and can be found in deployed state on `Heroku <https://bankid-example-app.herokuapp.com/>`_.
-
-**If you use PyBankID in production and want updates on new releases and
-notifications about important changes to the BankID service, send a mail to
-the developer of this package to be added to the PyBankID mailing list.**
-
 Installation
 ------------
 
@@ -63,7 +56,7 @@ See the `cryptography package's documentation for details <https://cryptography.
 Usage
 -----
 
-`bankid.jsonclient.BankIDJSONClient` is the client to be used to
+``BankIDJSONClient`` is the client to be used to
 communicate with the BankID service. It uses the JSON API released in February 2018.
 
 JSON client
@@ -79,7 +72,7 @@ Connection to production server is the default in the client. If test
 server is desired, send in the ``test_server=True`` keyword in the init
 of the client.
 
-WHen using the JSON client, all authentication and signing calls requires
+When using the JSON client, authentication and signing calls requires
 the end user's ip address to be included in all calls. An authentication order
 is initiated as such:
 
@@ -104,8 +97,8 @@ and a sign order is initiated in a similar fashion:
         'orderRef': 'a9b791c3-459f-492b-bf61-23027876140b'
     }
 
-Since the `BankIDJSONClient` is using the BankID ``v5`` JSON API, the `personal_number` can now be omitted when calling
-`authenticate` and `sign`. See `BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
+Since the ``BankIDJSONClient`` is using the BankID ``v5`` JSON API, the ``personal_number`` can now be omitted when calling
+``authenticate`` and ``sign``. See `BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
 for more information about this.
 
 The status of an order can then be studied by polling
@@ -206,4 +199,4 @@ The PyBankID solution can be tested with `pytest <https://pytest.org/>`_:
 
 .. code-block:: bash
 
-    py.test tests/
+    py.test
