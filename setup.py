@@ -6,8 +6,8 @@ PyBankID
 
 PyBankID is a client for performing BankID signing.
 
-The Swedish BankID solution for digital signing uses a SOAP
-connection solution, and this module aims at providing a simplifying
+The Swedish BankID solution for digital signing utilizes a
+JSON API, and this module aims at providing a simplifying
 client for making authentication, signing and collect requests to
 the BankID servers.
 

@@ -34,7 +34,7 @@ def test_exceptions(exception_class, rfa):
         (bankid.exceptions.NotFoundError, "notFound"),
         (bankid.exceptions.RequestTimeoutError, "requestTimeout"),
         (bankid.exceptions.InternalError, "internalError"),
-        (bankid.exceptions.MaintenanceError, "Maintenance"),
+        (bankid.exceptions.MaintenanceError, "maintenance"),
         (bankid.exceptions.BankIDError, "Unknown error code"),
     ],
 )
