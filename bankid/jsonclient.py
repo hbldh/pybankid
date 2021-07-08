@@ -59,12 +59,12 @@ class BankIDJSONClient(object):
         self._request_timeout = request_timeout
 
         if test_server:
-            self.api_url = "https://appapi2.test.bankid.com/rp/v5/"
+            self.api_url = "https://appapi2.test.bankid.com/rp/v5.1/"
             self.verify_cert = resource_filename(
                 "bankid.certs", "appapi2.test.bankid.com.pem"
             )
         else:
-            self.api_url = "https://appapi2.bankid.com/rp/v5/"
+            self.api_url = "https://appapi2.bankid.com/rp/v5.1/"
             self.verify_cert = resource_filename(
                 "bankid.certs", "appapi2.bankid.com.pem"
             )
