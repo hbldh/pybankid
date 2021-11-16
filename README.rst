@@ -118,7 +118,7 @@ with the ``collect`` method using the received ``orderRef``:
         'orderRef': 'a9b791c3-459f-492b-bf61-23027876140b',
         'status': 'pending'
     }
-    >>> c.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
+    >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
     {
         'completionData': {
             'cert': {
