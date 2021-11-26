@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PyBankID QR Demo</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.18.0/jsoneditor.min.css"
+        integrity="sha256-P0OKc2Z4CEFG6jcAfqn7wM4H+58u2wPyWWG5zPWioUY=" crossorigin="anonymous"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.18.0/jsoneditor-minimalist.min.js"
+          integrity="sha256-A7/Is3GSPwZYzK5Iev0fpUw/H2MXYeSFNNlNDayzUeU=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="row d-flex flex-column align-items-center">
+  <div class="col-6 text-center pt-5">
+    <a href="/"><h1>PyBankID QR Code Demo</h1></a>
+    <h2>Auth Complete</h2>
+  </div>
+  <div class="col-6 text-center pt-5">
+    <div id="jsoneditor" style="width: 100%; height: 800px;"></div>
+  </div>
+</div>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/json-tree-view@0.4.12/JSONView.min.js"></script>
+
+<script type="application/javascript">
+
+  let container = document.getElementById("jsoneditor");
+  let options = {};
+  let editor = new JSONEditor(container, options);
+  editor.set({{ auth | tojson | safe }});
+
+</script>
+
+</html>
