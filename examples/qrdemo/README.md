@@ -20,7 +20,8 @@ Making a simple authentication via QR code solution using Flask, Flask-Caching a
       > flask run -h 0.0.0.0
       ```
 
-The app can now be accessed from the running computer on `http://127.0.0.1:5000`, `http://localhost:5000` or 
+The app can now be accessed from the running computer on `http://127.0.0.1:5000`, `http://localhost:5000` or from an 
+external device on the same network on `http://<ip for the running computer>:5000`.
 
 
 ## Basic workflow
