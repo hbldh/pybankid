@@ -19,10 +19,6 @@ about how the BankID methods are defined and how to use them.
 
 """
 
-import warnings as _warnings
-
-from requests.packages.urllib3.exceptions import SubjectAltNameWarning as _sanw
-
 from .jsonclient import BankIDJSONClient
 from .certutils import create_bankid_test_server_cert_and_key
 from .__version__ import __version__, version
@@ -35,5 +31,3 @@ __all__ = [
     "__version__",
     "version",
 ]
-
-_warnings.simplefilter("ignore", _sanw)
