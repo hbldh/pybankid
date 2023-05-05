@@ -17,7 +17,9 @@ import os
 import tempfile
 import subprocess
 import requests
+import pathlib
 
+from bankid.certs import get_test_cert_p12
 from bankid.exceptions import BankIDError
 
 _TEST_CERT_PASSWORD = "qwerty123"
@@ -27,9 +29,8 @@ _TEST_CERT_URL = (
 
 
 def create_bankid_test_server_cert_and_key(destination_path):
-    """Fetch the P12 certificate from BankID servers, split it into
-    a certificate part and a key part and save them as separate files,
-    stored in PEM format.
+    """Split the bundled test certificate into certificate and key parts and save them
+    as separate files, stored in PEM format.
 
     :param destination_path: The directory to save certificate and key files to.
     :type destination_path: str
@@ -37,24 +38,10 @@ def create_bankid_test_server_cert_and_key(destination_path):
     :rtype: tuple
 
     """
-
-    # Fetch P12 certificate and store in temporary folder.
-    cert_tmp_path = os.path.join(
-        tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL)
-    )
-    r = requests.get(_TEST_CERT_URL)
-    with open(cert_tmp_path, "wb") as f:
-        f.write(r.content)
-
+    # Fetch testP12 certificate path
     certificate, key = split_certificate(
-        cert_tmp_path, destination_path, password=_TEST_CERT_PASSWORD
+        str(get_test_cert_p12()), destination_path, password=_TEST_CERT_PASSWORD
     )
-    # Try to remove temporary file.
-    try:  # pragma: no cover
-        os.remove(cert_tmp_path)
-    except:  # pragma: no cover
-        pass
-
     # Return path tuples.
     return certificate, key
 
@@ -130,7 +117,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
     p = subprocess.Popen(
         list(filter(None, pipeline_1)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    p.communicate()
+    sout, serr = p.communicate()
     pipeline_2 = [
         openssl_executable,
         "pkcs12",
