@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PyBankID QR Demo</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<div class="row d-flex flex-column align-items-center">
+  <div class="col-6 text-center pt-5">
+    <a href="/"><h1>PyBankID QR Code Demo</h1></a>
+    <h2>Perform QR signing</h2>
+  </div>
+  <div class="col-6 text-center pt-5">
+    <canvas id="qr-canvas"></canvas>
+  </div>
+  <div class="col-6 text-center pt-5">
+    <a href="bankid:///?autostarttoken={{auto_start_token}}&redirect=null">Click here to start it by autoStartToken (BankID on same device)</a>
+  </div>
+  <div class="col-6 text-center pt-5">
+    <p id="collect-status"></p>
+  </div>
+
+</div>
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script type="application/javascript">
+  let orderRef = "{{order_ref}}"
+  // Generate the first QR code provided by backend on initial page render.
+  let qr = new QRious({
+    element: document.getElementById('qr-canvas'),
+    value: "{{qr_content}}",
+    size: 400
+  });
+
+  generateQR = () => {
+    fetch(`/get-qr-code/${orderRef}`)
+      .then(response => {
+        response.text()
+          .then(qr_code_content => {
+            console.log(qr_code_content)
+            qr = new QRious({
+              element: document.getElementById('qr-canvas'),
+              value: qr_code_content,
+              size: 400
+            });
+          })
+      })
+  }
+
+  collect = () => {
+    fetch(`/collect/${orderRef}`, {method: 'GET', credentials: 'same-origin'})
+      .then(response => {
+        response.json()
+          .then(collectResponse => {
+            console.log(collectResponse)
+            if (collectResponse["status"] == "complete") {
+              clearInterval(t);
+              clearInterval(t2);
+              // Wait 2 seconds before redirecting to let user see the failed response.
+              setTimeout(() => {
+                window.location = "/auth-complete"
+              }, 2000);
+            } else if (collectResponse["status"] == "failed") {
+              clearInterval(t);
+              clearInterval(t2);
+              // Wait 2 seconds before redirecting to let user see the failed response.
+              setTimeout(() => {
+                window.location = "/auth-complete"
+              }, 2000);
+            }
+            let statusP = document.getElementById('collect-status');
+            statusP.innerHTML = `${collectResponse["hintCode"]}: ${collectResponse["status"]}`;
+          })
+      })
+  }
+  // Fetch new QR code content every second.
+  let t = setInterval(generateQR, 1000);
+  // Make BankID collect call every other second.
+  let t2 = setInterval(collect, 2000);
+
+</script>
+</html>

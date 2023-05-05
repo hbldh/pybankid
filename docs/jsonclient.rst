@@ -3,7 +3,8 @@
 BankID JSON Client
 ==================
 
-The Relying Party client using the ``v5`` JSON API.
+:py:class:`bankid.jsonclient.BankIDJSONClient` is the client to be used to
+communicate with the BankID service. It uses the JSON API version 5.1 released in April 2020.
 
 Usage
 -----
@@ -29,8 +30,10 @@ is initiated as such:
     >>> client.authenticate(end_user_ip='194.168.2.25',
     ...                     personal_number="YYYYMMDDXXXX")
     {
-        'autoStartToken': '798c1ea1-e67a-4df6-a2f6-164ac223fd52',
-        'orderRef': 'a9b791c3-459f-492b-bf61-23027876140b'
+        'orderRef': 'ee3421ea-2096-4000-8130-82648efe0927',
+        'autoStartToken': 'e8df5c3c-c67b-4a01-bfe5-fefeab760beb',
+        'qrStartToken': '01f94e28-857f-4d8a-bf8e-6c5a24466658',
+        'qrStartSecret': 'b4214886-3b5b-46ab-bc08-6862fddc0e06'
     }
 
 and a sign order is initiated in a similar fashion:
@@ -41,8 +44,10 @@ and a sign order is initiated in a similar fashion:
     ...            user_visible_data="The information to sign.",
     ...            personal_number="YYYYMMDDXXXX")
     {
-        'autoStartToken': '798c1ea1-e67a-4df6-a2f6-164ac223fd52',
-        'orderRef': 'a9b791c3-459f-492b-bf61-23027876140b'
+        'orderRef': 'ee3421ea-2096-4000-8130-82648efe0927',
+        'autoStartToken': 'e8df5c3c-c67b-4a01-bfe5-fefeab760beb',
+        'qrStartToken': '01f94e28-857f-4d8a-bf8e-6c5a24466658',
+        'qrStartSecret': 'b4214886-3b5b-46ab-bc08-6862fddc0e06'
     }
 
 Since the `BankIDJSONClient` is using the BankID ``v5`` JSON API, the `personal_number` can now be omitted when calling
@@ -93,6 +98,11 @@ Please note that the ``collect`` method should be used sparingly: in the
 `BankID Relying Party Guidelines <https://www.bankid.com/utvecklare/rp-info>`_
 it is specified that *"collect should be called every two seconds and must not be
 called more frequent than once per second"*.
+
+QR Codes
+--------
+
+See the examples section for more details: :ref:`examples`.
 
 API
 ---

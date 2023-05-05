@@ -22,7 +22,7 @@ from bankid.exceptions import BankIDError
 
 _TEST_CERT_PASSWORD = "qwerty123"
 _TEST_CERT_URL = (
-    "https://www.bankid.com/assets/bankid/rp/FPTestcert3_20200618.p12"
+    "https://www.bankid.com/assets/bankid/rp/FPTestcert4_20220818.p12"
 )
 
 

@@ -15,10 +15,6 @@ your company/application with the BankID servers.
 This certificate has to be processed somewhat to be able to use with PyBankID,
 and how to do this depends on what the selling bank provides you with.
 
-.. todo::
-
-   Add more information about how to use the data received from selling banks.
-
 Test certificate
 ~~~~~~~~~~~~~~~~
 
@@ -73,9 +69,6 @@ It can also be done via regular OpenSSL terminal calls:
 .. note::
    This also removes the password from the private key in the certificate,
    which is a requirement for using the PyBankID package in an automated way.
-
-Test server certificate
------------------------
 
 
 API

@@ -29,18 +29,15 @@ the `BankID Relying Party Guidelines
 doing anything else. There, one can find information
 about how the BankID methods are defined and how to use them.
 
-**If you use PyBankID in production and want updates on new releases and
-notifications about important changes to the BankID service, send a mail to
-the developer of this package to be added to the PyBankID mailing list.**
-
 
 .. toctree::
    :maxdepth: 2
 
    get_started
-   usage
+   jsonclient
    exceptions
    certutils
+   examples
 
 
 Indices and tables
