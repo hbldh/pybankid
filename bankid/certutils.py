@@ -130,7 +130,13 @@ def split_certificate(certificate_path, destination_folder, password=None):
     p = subprocess.Popen(
         list(filter(None, pipeline_1)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    p.communicate()
+    out, err = p.communicate()
+
+    if p.returncode:
+        raise BankIDError(
+            f"Error converting certificate: {err.decode('utf-8')}"
+        )
+
     pipeline_2 = [
         openssl_executable,
         "pkcs12",
@@ -146,7 +152,12 @@ def split_certificate(certificate_path, destination_folder, password=None):
     p = subprocess.Popen(
         list(filter(None, pipeline_2)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    p.communicate()
+    out, err = p.communicate()
+
+    if p.returncode:
+        raise BankIDError(
+            f"Error converting certificate: {err.decode('utf-8')}"
+        )
 
     # Return path tuples.
     return out_cert_path, out_key_path
