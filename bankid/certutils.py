@@ -31,6 +31,9 @@ def create_bankid_test_server_cert_and_key(destination_path):
     a certificate part and a key part and save them as separate files,
     stored in PEM format.
 
+    If the environment variable TEST_CERT_FILE is set, use this file
+    instead of fetching the P12 certificate.
+
     :param destination_path: The directory to save certificate and key files to.
     :type destination_path: str
     :returns: The path tuple ``(cert_path, key_path)``.
@@ -38,22 +41,29 @@ def create_bankid_test_server_cert_and_key(destination_path):
 
     """
 
-    # Fetch P12 certificate and store in temporary folder.
-    cert_tmp_path = os.path.join(
-        tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL)
-    )
-    r = requests.get(_TEST_CERT_URL)
-    with open(cert_tmp_path, "wb") as f:
-        f.write(r.content)
+    if os.getenv("TEST_CERT_FILE"):
+        certificate, key = split_certificate(
+            os.getenv("TEST_CERT_FILE"), destination_path, password=_TEST_CERT_PASSWORD
+        )
 
-    certificate, key = split_certificate(
-        cert_tmp_path, destination_path, password=_TEST_CERT_PASSWORD
-    )
-    # Try to remove temporary file.
-    try:  # pragma: no cover
-        os.remove(cert_tmp_path)
-    except:  # pragma: no cover
-        pass
+    else:
+        # Fetch P12 certificate and store in temporary folder.
+        cert_tmp_path = os.path.join(
+            tempfile.gettempdir(), os.path.basename(_TEST_CERT_URL)
+        )
+
+        r = requests.get(_TEST_CERT_URL)
+        with open(cert_tmp_path, "wb") as f:
+            f.write(r.content)
+
+            certificate, key = split_certificate(
+                cert_tmp_path, destination_path, password=_TEST_CERT_PASSWORD
+            )
+            # Try to remove temporary file.
+            try:  # pragma: no cover
+                os.remove(cert_tmp_path)
+            except:  # pragma: no cover
+                pass
 
     # Return path tuples.
     return certificate, key
