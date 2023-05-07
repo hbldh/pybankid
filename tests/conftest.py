@@ -5,6 +5,7 @@ import pytest
 import requests
 
 import bankid
+from bankid.certs import get_test_cert_and_key
 
 
 @pytest.fixture(scope="module")
@@ -14,6 +15,5 @@ def ip_address():
 
 @pytest.fixture(scope="session")
 def cert_and_key(tmpdir_factory):
-    testcert_dir = tmpdir_factory.mktemp("testcert")
-    cert, key = bankid.create_bankid_test_server_cert_and_key(str(testcert_dir))
+    cert, key = get_test_cert_and_key()
     return cert, key

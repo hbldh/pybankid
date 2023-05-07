@@ -29,7 +29,6 @@ try:
     from unittest import mock
 except:
     import mock
-import requests
 
 import bankid
 
