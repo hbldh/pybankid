@@ -131,7 +131,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
 
     if p.returncode:
         raise BankIDError(
-            f"Error converting certificate: {err.decode('utf-8')}"
+            "Error converting certificate: {0}".format(err.decode("utf-8"))
         )
 
     pipeline_2 = [
@@ -153,7 +153,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
 
     if p.returncode:
         raise BankIDError(
-            f"Error converting certificate: {err.decode('utf-8')}"
+            "Error converting certificate: {0}".format(err.decode("utf-8"))
         )
 
     # Return path tuples.
