@@ -18,9 +18,7 @@ cache = Cache(app, config={"CACHE_TYPE": "SimpleCache"})
 # The client should be initialized in a better way, e.g. with Flask_BankID so that it is stored in the
 # Flask app. For this demo it is sufficient to let it reside globally in this file.
 if USE_TEST_SERVER:
-    cert_paths = create_bankid_test_server_cert_and_key(
-        str(pathlib.Path(__file__).parent)
-    )
+    cert_paths = create_bankid_test_server_cert_and_key(str(pathlib.Path(__file__).parent))
     client = BankIDJSONClient(cert_paths, test_server=True)
 else:
     # Set your own cert paths for you production certificate and key here.
@@ -52,9 +50,7 @@ def auth_complete():
         collect_response = {}
         age = None
 
-    response = make_response(
-        render_template("auth_complete.html", auth=collect_response)
-    )
+    response = make_response(render_template("auth_complete.html", auth=collect_response))
     # Unsetting the cookie to make the app capable of being run again.
     response.set_cookie("QRDemo-Auth", "", expires=0)
     return response
@@ -79,9 +75,7 @@ def initiate():
     resp = client.authenticate(
         end_user_ip=request.remote_addr,  # Get the IP of the device making the request.
         personal_number=pn,
-        requirement={
-            "tokenStartRequired": True if pn else False
-        },  # Set to True if PN is provided. Recommended.
+        requirement={"tokenStartRequired": True if pn else False},  # Set to True if PN is provided. Recommended.
     )
     # Record when this response was received. This is needed for generating sequential, animated QR codes.
     resp["start_t"] = time.time()
@@ -89,9 +83,7 @@ def initiate():
     # multi-instance apps. Using orderRef as key since it is unique and can be sent in a GET URL without problem.
     cache.set(resp.get("orderRef"), resp, timeout=5 * 60)
     # Generate the first QR code to display to user.
-    qr_content_0 = generate_qr_code_content(
-        resp["qrStartToken"], resp["start_t"], resp["qrStartSecret"]
-    )
+    qr_content_0 = generate_qr_code_content(resp["qrStartToken"], resp["start_t"], resp["qrStartSecret"])
     return render_template(
         "qr.html",
         order_ref=resp["orderRef"],
@@ -107,9 +99,7 @@ def get_qr_code(order_ref: str):
     if x is None:
         qr_content = ""
     else:
-        qr_content = generate_qr_code_content(
-            x["qrStartToken"], x["start_t"], x["qrStartSecret"]
-        )
+        qr_content = generate_qr_code_content(x["qrStartToken"], x["start_t"], x["qrStartSecret"])
     response = make_response(qr_content, 200)
     response.mimetype = "text/plain"
     return response

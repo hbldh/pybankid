@@ -7,38 +7,15 @@
 Created on 2018-02-19 by hbldh
 
 """
-
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-from __future__ import absolute_import
-
 import os
 import six
 import base64
+from urllib import parse as urlparse
 
 import requests
 from pkg_resources import resource_filename
 
 from bankid.exceptions import get_json_error_class
-
-try:
-    # Python 3
-    from urllib import parse as urlparse
-except ImportError:
-    # Python 2
-    import urlparse
-
-
-# Handling Python 2.7 verification of certificates with urllib3.
-# See README.rst for details.
-try:
-    import requests.packages.urllib3.contrib.pyopenssl
-
-    requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
-except ImportError:
-    if bool(os.environ.get("PYBANKID_DISABLE_WARNINGS", False)):
-        requests.packages.urllib3.disable_warnings()
 
 
 class BankIDJSONClient(object):
@@ -60,14 +37,10 @@ class BankIDJSONClient(object):
 
         if test_server:
             self.api_url = "https://appapi2.test.bankid.com/rp/v5.1/"
-            self.verify_cert = resource_filename(
-                "bankid.certs", "appapi2.test.bankid.com.pem"
-            )
+            self.verify_cert = resource_filename("bankid.certs", "appapi2.test.bankid.com.pem")
         else:
             self.api_url = "https://appapi2.bankid.com/rp/v5.1/"
-            self.verify_cert = resource_filename(
-                "bankid.certs", "appapi2.bankid.com.pem"
-            )
+            self.verify_cert = resource_filename("bankid.certs", "appapi2.bankid.com.pem")
 
         self.client = requests.Session()
         self.client.verify = self.verify_cert
@@ -83,9 +56,7 @@ class BankIDJSONClient(object):
         """Internal helper method for adding timeout to requests."""
         return self.client.post(endpoint, *args, timeout=self._request_timeout, **kwargs)
 
-    def authenticate(
-        self, end_user_ip, personal_number=None, requirement=None, **kwargs
-    ):
+    def authenticate(self, end_user_ip, personal_number=None, requirement=None, **kwargs):
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -268,9 +239,7 @@ class BankIDJSONClient(object):
                              when error has been returned from server.
 
         """
-        response = self._post(
-            self._collect_endpoint, json={"orderRef": order_ref}
-        )
+        response = self._post(self._collect_endpoint, json={"orderRef": order_ref})
 
         if response.status_code == 200:
             return response.json()
