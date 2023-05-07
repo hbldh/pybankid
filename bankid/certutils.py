@@ -32,16 +32,26 @@ def create_bankid_test_server_cert_and_key(destination_path):
     """Split the bundled test certificate into certificate and key parts and save them
     as separate files, stored in PEM format.
 
+    If the environment variable TEST_CERT_FILE is set, use this file
+    instead of fetching the P12 certificate.
+
     :param destination_path: The directory to save certificate and key files to.
     :type destination_path: str
     :returns: The path tuple ``(cert_path, key_path)``.
     :rtype: tuple
 
     """
-    # Fetch testP12 certificate path
-    certificate, key = split_certificate(
-        str(get_test_cert_p12()), destination_path, password=_TEST_CERT_PASSWORD
-    )
+    if os.getenv("TEST_CERT_FILE"):
+        certificate, key = split_certificate(
+            os.getenv("TEST_CERT_FILE"), destination_path, password=_TEST_CERT_PASSWORD
+        )
+
+    else:
+        # Fetch testP12 certificate path
+        certificate, key = split_certificate(
+            str(get_test_cert_p12()), destination_path, password=_TEST_CERT_PASSWORD
+        )
+
     # Return path tuples.
     return certificate, key
 
@@ -117,7 +127,13 @@ def split_certificate(certificate_path, destination_folder, password=None):
     p = subprocess.Popen(
         list(filter(None, pipeline_1)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    sout, serr = p.communicate()
+    out, err = p.communicate()
+
+    if p.returncode:
+        raise BankIDError(
+            f"Error converting certificate: {err.decode('utf-8')}"
+        )
+
     pipeline_2 = [
         openssl_executable,
         "pkcs12",
@@ -133,7 +149,12 @@ def split_certificate(certificate_path, destination_folder, password=None):
     p = subprocess.Popen(
         list(filter(None, pipeline_2)), stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    p.communicate()
+    out, err = p.communicate()
+
+    if p.returncode:
+        raise BankIDError(
+            f"Error converting certificate: {err.decode('utf-8')}"
+        )
 
     # Return path tuples.
     return out_cert_path, out_key_path
