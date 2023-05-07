@@ -7,8 +7,6 @@
 Created on 2018-02-19 by hbldh
 
 """
-import os
-import six
 import base64
 from urllib import parse as urlparse
 
@@ -16,6 +14,13 @@ import requests
 from pkg_resources import resource_filename
 
 from bankid.exceptions import get_json_error_class
+
+
+def _encode_user_data(user_data):
+    if isinstance(user_data, str):
+        return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
+    else:
+        return base64.b64encode(user_data).decode("ascii")
 
 
 class BankIDJSONClient(object):
@@ -114,7 +119,7 @@ class BankIDJSONClient(object):
         user_non_visible_data=None,
         **kwargs
     ):
-        """Request an signing order. The :py:meth:`collect` method
+        """Request a signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
         Note that personal number is not needed when signing is to be done
@@ -157,9 +162,9 @@ class BankIDJSONClient(object):
         data = {"endUserIp": end_user_ip}
         if personal_number:
             data["personalNumber"] = personal_number
-        data["userVisibleData"] = self._encode_user_data(user_visible_data)
+        data["userVisibleData"] = _encode_user_data(user_visible_data)
         if user_non_visible_data:
-            data["userNonVisibleData"] = self._encode_user_data(user_non_visible_data)
+            data["userNonVisibleData"] = _encode_user_data(user_non_visible_data)
         if requirement and isinstance(requirement, dict):
             data["requirement"] = requirement
         # Handling potentially changed optional in-parameters.
@@ -266,9 +271,3 @@ class BankIDJSONClient(object):
             return response.json() == {}
         else:
             raise get_json_error_class(response)
-
-    def _encode_user_data(self, user_data):
-        if isinstance(user_data, six.text_type):
-            return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
-        else:
-            return base64.b64encode(user_data).decode("ascii")
