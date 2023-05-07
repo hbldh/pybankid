@@ -88,20 +88,19 @@ setup(
     version=about["__version__"],
     description=DESCRIPTION,
     long_description=long_description,
-    long_description_content_type='text/x-rst',
+    long_description_content_type="text/x-rst",
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
     packages=find_packages(exclude=("tests",)),
     install_requires=REQUIRED,
     include_package_data=True,
-    package_data={"": ["*.pem"]},
+    package_data={"": ["*.pem", "*.p12"]},
     license="MIT",
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX :: Linux",

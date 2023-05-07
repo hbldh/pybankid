@@ -33,31 +33,11 @@ PyBankID can be installed though pip:
 
     pip install pybankid
 
-To remedy the ``InsecurePlatformWarning`` problem detailed below
-(`Python 2, urllib3 and certificate verification`_), you can install
-``pybankid`` with the ``security`` extras:
-
-.. code-block:: bash
-
-    pip install pybankid[security]
-
-This installs the ``pyopenssl``, ``ndg-httpsclient`` and ``pyasn1`` packages
-as well.
-
-In Linux, this does however require the installation of some additional
-system packages:
-
-.. code-block:: bash
-
-    sudo apt-get install build-essential libssl-dev libffi-dev python-dev
-
-See the `cryptography package's documentation for details <https://cryptography.io/en/latest/installation/#building-cryptography-on-linux>`_.
-
 Usage
 -----
 
 ``BankIDJSONClient`` is the client to be used to
-communicate with the BankID service. It uses the JSON API released in February 2018.
+communicate with the BankID service. It uses the JSON 5.1 API released in April 2020.
 
 JSON client
 ~~~~~~~~~~~
@@ -122,7 +102,7 @@ with the ``collect`` method using the received ``orderRef``:
         'orderRef': 'a9b791c3-459f-492b-bf61-23027876140b',
         'status': 'pending'
     }
-    >>> c.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
+    >>> client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
     {
         'completionData': {
             'cert': {
@@ -211,19 +191,6 @@ be obtained through PyBankID:
     ['/home/hbldh/certificate.pem', '/home/hbldh/key.pem']
     >>> client = bankid.BankIDJSONClient(
         certificates=cert_and_key, test_server=True)
-
-
-Python 2, urllib3 and certificate verification
-----------------------------------------------
-
-An ``InsecurePlatformWarning`` is issued when using the client in Python 2 (See
-`urllib3 documentation <https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning>`_).
-This can be remedied by installing ``pybankid`` with the ``security`` extras as
-described above, or to manually install ``pyopenssl`` according to
-`this issue <https://github.com/kennethreitz/requests/issues/749>`_ and
-`docstrings in requests <https://github.com/kennethreitz/requests/blob/master/requests/packages/urllib3/contrib/pyopenssl.py>`_.
-
-Optionally, the environment variable ``PYBANKID_DISABLE_WARNINGS`` can be set to disable these warnings.
 
 Testing
 -------
