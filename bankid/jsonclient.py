@@ -74,10 +74,10 @@ class BankIDJSONClient(object):
         .. code-block:: json
 
             {
-                'orderRef': 'ee3421ea-2096-4000-8130-82648efe0927',
-                'autoStartToken': 'e8df5c3c-c67b-4a01-bfe5-fefeab760beb',
-                'qrStartToken': '01f94e28-857f-4d8a-bf8e-6c5a24466658',
-                'qrStartSecret': 'b4214886-3b5b-46ab-bc08-6862fddc0e06'
+                "orderRef": "ee3421ea-2096-4000-8130-82648efe0927",
+                "autoStartToken": "e8df5c3c-c67b-4a01-bfe5-fefeab760beb",
+                "qrStartToken": "01f94e28-857f-4d8a-bf8e-6c5a24466658",
+                "qrStartSecret": "b4214886-3b5b-46ab-bc08-6862fddc0e06"
             }
 
         :param end_user_ip: IP address of the user requesting
@@ -131,10 +131,10 @@ class BankIDJSONClient(object):
         .. code-block:: json
 
             {
-                'orderRef': 'ee3421ea-2096-4000-8130-82648efe0927',
-                'autoStartToken': 'e8df5c3c-c67b-4a01-bfe5-fefeab760beb',
-                'qrStartToken': '01f94e28-857f-4d8a-bf8e-6c5a24466658',
-                'qrStartSecret': 'b4214886-3b5b-46ab-bc08-6862fddc0e06'
+                "orderRef": "ee3421ea-2096-4000-8130-82648efe0927",
+                "autoStartToken": "e8df5c3c-c67b-4a01-bfe5-fefeab760beb",
+                "qrStartToken": "01f94e28-857f-4d8a-bf8e-6c5a24466658",
+                "qrStartSecret": "b4214886-3b5b-46ab-bc08-6862fddc0e06"
             }
 
         :param end_user_ip: IP address of the user requesting
