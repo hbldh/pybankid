@@ -11,7 +11,7 @@ import base64
 from urllib import parse as urlparse
 
 import requests
-import importlib.resources
+import importlib_resources
 
 from bankid.exceptions import get_json_error_class
 
@@ -23,8 +23,8 @@ def _encode_user_data(user_data):
         return base64.b64encode(user_data).decode("ascii")
 
 def _resolve_cert_path(file):
-    ref = importlib.resources.files("bankid.certs") / file
-    with importlib.resources.as_file(ref) as path:
+    ref = importlib_resources.files("bankid.certs") / file
+    with importlib_resources.as_file(ref) as path:
         return str(path)
 
 class BankIDJSONClient(object):
