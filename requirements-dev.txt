@@ -1,3 +1,4 @@
 pytest
+pytest-asyncio
 sphinx
 sphinx-rtd-theme

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 :mod:`bankid`
@@ -19,13 +18,14 @@ about how the BankID methods are defined and how to use them.
 
 """
 
-from .jsonclient import BankIDJSONClient
-from .certutils import create_bankid_test_server_cert_and_key
+from . import exceptions
 from .__version__ import __version__, version
-import bankid.exceptions
+from .certutils import create_bankid_test_server_cert_and_key
+from .jsonclient import AsyncBankIDJSONClient, BankIDJSONClient
 
 __all__ = [
     "BankIDJSONClient",
+    "AsyncBankIDJSONClient",
     "exceptions",
     "create_bankid_test_server_cert_and_key",
     "__version__",

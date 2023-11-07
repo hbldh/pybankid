@@ -34,8 +34,7 @@ about how the BankID methods are defined and how to use them.
    :maxdepth: 2
 
    get_started
-   jsonclient
-   exceptions
+   api_reference
    certutils
    examples
 

@@ -1,0 +1,33 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.indexing": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    ".pytest_cache": true,
+    "**/__pycache__": true,
+    ".venv": true,
+    "build": true,
+    "dist": true,
+    "*.egg-info": true,
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "charliermarsh.ruff",
+  "editor.formatOnSave": true,
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "flake8.importStrategy": "fromEnvironment",
+  "flake8.args": [
+    "--max-complexity=10",
+    "--max-line-length=127",
+    "--select=E9,F63,F7,F82",
+  ],
+}

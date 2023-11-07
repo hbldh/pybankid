@@ -14,8 +14,7 @@ the BankID servers.
 The latest development version is available at the project's `GitHub
 site <https://github.com/hbldh/pybankid/>`_.
 
-Created by hbldh <henrik.blidh@nedomkull.com>
-Created on 2013-09-14, 19:31
+.. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
 
 """
 
@@ -114,7 +113,6 @@ setup(
     # $ setup.py publish support.
     cmdclass={"upload": UploadCommand},
     extras_require={
-        "security": ["pyOpenSSL>=0.13", "ndg-httpsclient", "pyasn1"],
-        "signature-verification": {"pyOpenSSL", "asn1crypto", "freezegun", "pytz"},
+        "signature-verification": {"pyOpenSSL", "asn1crypto", "pytz"},
     },
 )
