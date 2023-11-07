@@ -31,7 +31,7 @@ jobs:
                 run: pip install -r requirements.txt
 
             -   name: Install development dependencies
-                run: pip install pytest pytest-cov mock flake8
+                run: pip install -r requirements-dev.txt
 
             -   name: Lint with flake8
                 run: |
