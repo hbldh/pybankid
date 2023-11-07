@@ -27,9 +27,6 @@ jobs:
                 with:
                     python-version: ${{ matrix.python-version }}
                     
-            -   name: Upgrade pip. setuptools and wheel
-                run: python -m pip install --upgrade pip setuptools wheel
-
             -   name: Install dependencies
                 run: pip install -r requirements.txt
 
@@ -46,6 +43,9 @@ jobs:
             -   name: Test with pytest
                 run: |
                     pytest tests --junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml --cov=bankid --cov-report=xml --cov-report=html
+
+            -   name: Upgrade pip. setuptools and wheel
+                run: python -m pip install --upgrade pip setuptools wheel
 
             -   name: Upload pytest test results
                 uses: actions/upload-artifact@v3
