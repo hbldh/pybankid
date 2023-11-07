@@ -2,7 +2,7 @@
 
 import asyncio
 import base64
-from typing import Any, Callable, Coroutine, Dict, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, Optional, Tuple, TypeVar, Union
 from urllib import parse as urlparse
 
 import httpx
@@ -19,15 +19,6 @@ def _encode_user_data(user_data: Union[str, bytes]) -> str:
 
 
 T = TypeVar("T")
-
-
-class AsyncToSync:
-    def __init__(self, func: Callable[..., Coroutine[Any, Any, T]]):
-        self.func = func
-
-    def __call__(self, *args, **kwargs) -> T:
-        loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.func(*args, **kwargs))
 
 
 class AsyncBankIDJSONClient(object):
@@ -347,19 +338,29 @@ class BankIDJSONClient(AsyncBankIDJSONClient):
         test_server: bool = False,
         request_timeout: Optional[int] = None,
     ):
-        super().__init__(certificates, test_server, request_timeout)
+        self.loop = asyncio.new_event_loop()
+        self.async_runner = self.loop.run_until_complete
+        self.async_client = super()
+        self.async_client.__init__(certificates, test_server, request_timeout)
+
+    def __del__(self):
+        self.loop.close()
 
     def cancel(
         self,
         order_ref: str,
     ) -> Dict[str, Any]:
-        return AsyncToSync(AsyncBankIDJSONClient.cancel)(self, order_ref)
+        return self.async_runner(
+            self.async_client.cancel(order_ref),
+        )
 
     def collect(
         self,
         order_ref: str,
     ) -> Dict[str, Any]:
-        return AsyncToSync(AsyncBankIDJSONClient.collect)(self, order_ref)
+        return self.async_runner(
+            self.async_client.collect(order_ref),
+        )
 
     def sign(
         self,
@@ -368,8 +369,8 @@ class BankIDJSONClient(AsyncBankIDJSONClient):
         personal_number: Optional[str] = None,
         user_non_visible_data: Optional[str] = None,
     ) -> Dict[str, Any]:
-        return AsyncToSync(AsyncBankIDJSONClient.sign)(
-            self, ip_address, user_visible_data, personal_number, user_non_visible_data
+        return self.async_runner(
+            self.async_client.sign(ip_address, user_visible_data, personal_number, user_non_visible_data),
         )
 
     def authenticate(
@@ -377,4 +378,6 @@ class BankIDJSONClient(AsyncBankIDJSONClient):
         ip_address: str,
         personal_number: Optional[str] = None,
     ) -> Dict[str, Any]:
-        return AsyncToSync(AsyncBankIDJSONClient.authenticate)(self, ip_address, personal_number)
+        return self.async_runner(
+            self.async_client.authenticate(ip_address, personal_number),
+        )
