@@ -11,7 +11,7 @@ import base64
 from urllib import parse as urlparse
 
 import requests
-from pkg_resources import resource_filename
+import importlib.resources
 
 from bankid.exceptions import get_json_error_class
 
@@ -22,6 +22,10 @@ def _encode_user_data(user_data):
     else:
         return base64.b64encode(user_data).decode("ascii")
 
+def _resolve_cert_path(file):
+    ref = importlib.resources.files("bankid.certs") / file
+    with importlib.resources.as_file(ref) as path:
+        return str(path)
 
 class BankIDJSONClient(object):
     """The client to use for communicating with BankID servers via the v.5 API.
@@ -42,10 +46,10 @@ class BankIDJSONClient(object):
 
         if test_server:
             self.api_url = "https://appapi2.test.bankid.com/rp/v5.1/"
-            self.verify_cert = resource_filename("bankid.certs", "appapi2.test.bankid.com.pem")
+            self.verify_cert = _resolve_cert_path("appapi2.test.bankid.com.pem")
         else:
             self.api_url = "https://appapi2.bankid.com/rp/v5.1/"
-            self.verify_cert = resource_filename("bankid.certs", "appapi2.bankid.com.pem")
+            self.verify_cert = _resolve_cert_path("appapi2.bankid.com.pem")
 
         self.client = requests.Session()
         self.client.verify = self.verify_cert
