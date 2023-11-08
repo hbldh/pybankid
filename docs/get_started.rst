@@ -37,7 +37,7 @@ Dependencies
 
 PyBankID makes use of the following external packages:
 * `requests>=2.20.0 <https://docs.python-requests.org/>`_
-* `six>=1.10.0 <https://pythonhosted.org/six/>`_
+* `importlib-resources==5.12.0 <https://importlib-resources.readthedocs.io/>`_
 
 
 Python 2, urllib3 and certificate verification

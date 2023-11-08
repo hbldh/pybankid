@@ -1,1 +1,2 @@
+importlib-resources==5.12.0
 requests>=2.20.0

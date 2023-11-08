@@ -24,7 +24,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_packages, setup, Command
+from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = "pybankid"
@@ -34,7 +34,7 @@ EMAIL = "henrik.blidh@nedomkull.com"
 AUTHOR = "Henrik Blidh"
 
 # What packages are required for this module to be executed?
-REQUIRED = ["requests", "six"]
+REQUIRED = open("requirements.txt").read().splitlines()
 
 here = os.path.abspath(os.path.dirname(__file__))
 
