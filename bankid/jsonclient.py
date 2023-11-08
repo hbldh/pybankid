@@ -18,7 +18,7 @@ def _encode_user_data(user_data: Union[str, bytes]) -> str:
         return base64.b64encode(user_data).decode("ascii")
 
 
-class AsyncBankIDJSONClient(object):
+class AsyncBankIDJSONClient:
     """
     Asynchronous BankID client.
 
