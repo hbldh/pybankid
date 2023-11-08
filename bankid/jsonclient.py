@@ -86,7 +86,7 @@ class AsyncBankIDJSONClient(object):
         requirement: Optional[Dict[str, Any]] = None,
         user_non_visible_data: Optional[str] = None,
         **kwargs,
-    ):
+    ) -> Dict[str, Any]:
         data = {"endUserIp": end_user_ip}
         if personal_number:
             data["personalNumber"] = personal_number
