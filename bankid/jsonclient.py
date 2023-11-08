@@ -2,7 +2,7 @@
 
 import asyncio
 import base64
-from typing import Any, Dict, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, Optional, Tuple, Union
 from urllib import parse as urlparse
 
 import httpx
@@ -16,9 +16,6 @@ def _encode_user_data(user_data: Union[str, bytes]) -> str:
         return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
     else:
         return base64.b64encode(user_data).decode("ascii")
-
-
-T = TypeVar("T")
 
 
 class AsyncBankIDJSONClient(object):
