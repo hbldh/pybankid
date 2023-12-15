@@ -1,7 +1,7 @@
 .. _examples:
 
-PyBankID and QR code
---------------------
+Generating QR codes
+-------------------
 
 PyBankID cannot generate QR codes for you, but there is an example application in the
 `examples folder of the repo <https://github.com/hbldh/pybankid/tree/master/examples>`_ where a

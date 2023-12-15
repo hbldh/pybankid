@@ -1,15 +1,4 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:mod:`bankid.exceptions` -- PyBankID Exceptions
-===============================================
-
-.. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
-
-Created on 2014-09-10, 08:29
-
-"""
-
 
 def get_json_error_class(response):
     data = response.json()

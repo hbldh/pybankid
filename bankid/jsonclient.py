@@ -1,30 +1,26 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:mod:`bankid.jsonclient` -- BankID JSON Client
-==============================================
 
-Created on 2018-02-19 by hbldh
-
-"""
+import asyncio
 import base64
+from typing import Any, Dict, Optional, Tuple, Union
 from urllib import parse as urlparse
 
-import requests
-from pkg_resources import resource_filename
+import httpx
 
+from bankid.certutils import resolve_cert_path
 from bankid.exceptions import get_json_error_class
 
 
-def _encode_user_data(user_data):
+def _encode_user_data(user_data: Union[str, bytes]) -> str:
     if isinstance(user_data, str):
         return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
     else:
         return base64.b64encode(user_data).decode("ascii")
 
 
-class BankIDJSONClient(object):
-    """The client to use for communicating with BankID servers via the v.5 API.
+class AsyncBankIDJSONClient:
+    """
+    Asynchronous BankID client.
 
     :param certificates: Tuple of string paths to the certificate to use and
         the key to sign with.
@@ -33,35 +29,80 @@ class BankIDJSONClient(object):
     :type test_server: bool
     :param request_timeout: Timeout for BankID requests.
     :type request_timeout: int
-
     """
 
-    def __init__(self, certificates, test_server=False, request_timeout=None):
+    def __init__(
+        self,
+        certificates: Tuple[str],
+        test_server: bool = False,
+        request_timeout: Optional[int] = None,
+    ):
         self.certs = certificates
         self._request_timeout = request_timeout
 
         if test_server:
             self.api_url = "https://appapi2.test.bankid.com/rp/v5.1/"
-            self.verify_cert = resource_filename("bankid.certs", "appapi2.test.bankid.com.pem")
+            self.verify_cert = resolve_cert_path("appapi2.test.bankid.com.pem")
         else:
             self.api_url = "https://appapi2.bankid.com/rp/v5.1/"
-            self.verify_cert = resource_filename("bankid.certs", "appapi2.bankid.com.pem")
-
-        self.client = requests.Session()
-        self.client.verify = self.verify_cert
-        self.client.cert = self.certs
-        self.client.headers = {"Content-Type": "application/json"}
+            self.verify_cert = resolve_cert_path("appapi2.bankid.com.pem")
 
         self._auth_endpoint = urlparse.urljoin(self.api_url, "auth")
         self._sign_endpoint = urlparse.urljoin(self.api_url, "sign")
         self._collect_endpoint = urlparse.urljoin(self.api_url, "collect")
         self._cancel_endpoint = urlparse.urljoin(self.api_url, "cancel")
 
-    def _post(self, endpoint, *args, **kwargs):
-        """Internal helper method for adding timeout to requests."""
-        return self.client.post(endpoint, *args, timeout=self._request_timeout, **kwargs)
+        self.client = httpx.AsyncClient(
+            cert=self.certs,
+            headers={"Content-Type": "application/json"},
+            verify=self.verify_cert,
+            timeout=self._request_timeout,
+        )
 
-    def authenticate(self, end_user_ip, personal_number=None, requirement=None, **kwargs):
+    def authenticate_payload(
+        self,
+        end_user_ip: str,
+        personal_number: Optional[str] = None,
+        requirement: Optional[str] = None,
+        **kwargs,
+    ) -> Dict[str, Any]:
+        data = {"endUserIp": end_user_ip}
+        if personal_number:
+            data["personalNumber"] = personal_number
+        if requirement and isinstance(requirement, dict):
+            data["requirement"] = requirement
+        # Handling potentially changed optional in-parameters.
+        data.update(kwargs)
+        return data
+
+    def sign_payload(
+        self,
+        end_user_ip: str,
+        user_visible_data: str,
+        personal_number: Optional[str] = None,
+        requirement: Optional[Dict[str, Any]] = None,
+        user_non_visible_data: Optional[str] = None,
+        **kwargs,
+    ) -> Dict[str, Any]:
+        data = {"endUserIp": end_user_ip}
+        if personal_number:
+            data["personalNumber"] = personal_number
+        data["userVisibleData"] = _encode_user_data(user_visible_data)
+        if user_non_visible_data:
+            data["userNonVisibleData"] = _encode_user_data(user_non_visible_data)
+        if requirement and isinstance(requirement, dict):
+            data["requirement"] = requirement
+        # Handling potentially changed optional in-parameters.
+        data.update(kwargs)
+        return data
+
+    async def authenticate(
+        self,
+        end_user_ip: str,
+        personal_number: Optional[str] = None,
+        requirement: Optional[str] = None,
+        **kwargs,
+    ) -> Dict[str, Any]:
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -94,31 +135,30 @@ class BankIDJSONClient(object):
         :rtype: dict
         :raises BankIDError: raises a subclass of this error
                              when error has been returned from server.
-
         """
-        data = {"endUserIp": end_user_ip}
-        if personal_number:
-            data["personalNumber"] = personal_number
-        if requirement and isinstance(requirement, dict):
-            data["requirement"] = requirement
-        # Handling potentially changed optional in-parameters.
-        data.update(kwargs)
-        response = self._post(self._auth_endpoint, json=data)
-
+        response = await self.client.post(
+            self._auth_endpoint,
+            json=self.authenticate_payload(
+                end_user_ip,
+                personal_number,
+                requirement,
+                **kwargs,
+            ),
+        )
         if response.status_code == 200:
             return response.json()
-        else:
-            raise get_json_error_class(response)
 
-    def sign(
+        raise get_json_error_class(response)
+
+    async def sign(
         self,
-        end_user_ip,
-        user_visible_data,
-        personal_number=None,
-        requirement=None,
-        user_non_visible_data=None,
-        **kwargs
-    ):
+        end_user_ip: str,
+        user_visible_data: str,
+        personal_number: Optional[str] = None,
+        requirement: Optional[Dict[str, Any]] = None,
+        user_non_visible_data: Optional[str] = None,
+        **kwargs,
+    ) -> Dict[str, Any]:
         """Request a signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -157,26 +197,24 @@ class BankIDJSONClient(object):
         :rtype: dict
         :raises BankIDError: raises a subclass of this error
                      when error has been returned from server.
-
         """
-        data = {"endUserIp": end_user_ip}
-        if personal_number:
-            data["personalNumber"] = personal_number
-        data["userVisibleData"] = _encode_user_data(user_visible_data)
-        if user_non_visible_data:
-            data["userNonVisibleData"] = _encode_user_data(user_non_visible_data)
-        if requirement and isinstance(requirement, dict):
-            data["requirement"] = requirement
-        # Handling potentially changed optional in-parameters.
-        data.update(kwargs)
-        response = self._post(self._sign_endpoint, json=data)
-
+        response = await self.client.post(
+            self._sign_endpoint,
+            json=self.sign_payload(
+                end_user_ip,
+                user_visible_data,
+                personal_number,
+                requirement,
+                user_non_visible_data,
+                **kwargs,
+            ),
+        )
         if response.status_code == 200:
             return response.json()
-        else:
-            raise get_json_error_class(response)
 
-    def collect(self, order_ref):
+        raise get_json_error_class(response)
+
+    async def collect(self, order_ref: str) -> Dict[str, Any]:
         """Collects the result of a sign or auth order using the
         ``orderRef`` as reference.
 
@@ -242,16 +280,19 @@ class BankIDJSONClient(object):
         :rtype: dict
         :raises BankIDError: raises a subclass of this error
                              when error has been returned from server.
-
         """
-        response = self._post(self._collect_endpoint, json={"orderRef": order_ref})
-
+        response = await self.client.post(
+            self._collect_endpoint,
+            json=dict(
+                orderRef=order_ref,
+            ),
+        )
         if response.status_code == 200:
             return response.json()
-        else:
-            raise get_json_error_class(response)
 
-    def cancel(self, order_ref):
+        raise get_json_error_class(response)
+
+    async def cancel(self, order_ref: str) -> bool:
         """Cancels an ongoing sign or auth order.
 
         This is typically used if the user cancels the order
@@ -263,11 +304,77 @@ class BankIDJSONClient(object):
         :rtype: bool
         :raises BankIDError: raises a subclass of this error
                              when error has been returned from server.
-
         """
-        response = self._post(self._cancel_endpoint, json={"orderRef": order_ref})
-
+        response = await self.client.post(
+            self._cancel_endpoint,
+            json=dict(
+                orderRef=order_ref,
+            ),
+        )
         if response.status_code == 200:
             return response.json() == {}
-        else:
-            raise get_json_error_class(response)
+
+        raise get_json_error_class(response)
+
+
+class BankIDJSONClient(AsyncBankIDJSONClient):
+    """Synchronous BankID client.
+
+    :param certificates: Tuple of string paths to the certificate to use and
+        the key to sign with.
+    :type certificates: tuple
+    :param test_server: Use the test server for authenticating and signing.
+    :type test_server: bool
+    :param request_timeout: Timeout for BankID requests.
+    :type request_timeout: int
+    """
+
+    def __init__(
+        self,
+        certificates: Tuple[str],
+        test_server: bool = False,
+        request_timeout: Optional[int] = None,
+    ):
+        self.loop = asyncio.new_event_loop()
+        self.async_runner = self.loop.run_until_complete
+        self.async_client = super()
+        self.async_client.__init__(certificates, test_server, request_timeout)
+
+    def __del__(self):
+        self.loop.close()
+
+    def cancel(
+        self,
+        order_ref: str,
+    ) -> Dict[str, Any]:
+        return self.async_runner(
+            self.async_client.cancel(order_ref),
+        )
+
+    def collect(
+        self,
+        order_ref: str,
+    ) -> Dict[str, Any]:
+        return self.async_runner(
+            self.async_client.collect(order_ref),
+        )
+
+    def sign(
+        self,
+        ip_address: str,
+        user_visible_data: str,
+        personal_number: Optional[str] = None,
+        user_non_visible_data: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        return self.async_runner(
+            self.async_client.sign(ip_address, user_visible_data, personal_number, user_non_visible_data),
+        )
+
+    def authenticate(
+        self,
+        ip_address: str,
+        personal_number: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        return self.async_runner(
+            self.async_client.authenticate(ip_address, personal_number),
+        )
