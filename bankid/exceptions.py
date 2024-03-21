@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 def get_json_error_class(response):
     data = response.json()
     error_class = _JSON_ERROR_CODE_TO_CLASS.get(data.get("errorCode"), BankIDError)

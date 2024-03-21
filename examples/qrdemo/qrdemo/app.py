@@ -7,7 +7,7 @@ import uuid
 
 from flask import Flask, make_response, render_template, request, jsonify
 from flask_caching import Cache
-from bankid import BankIDJSONClient
+from bankid import BankIdClient
 from bankid.certutils import create_bankid_test_server_cert_and_key
 
 USE_TEST_SERVER = True
@@ -19,13 +19,13 @@ cache = Cache(app, config={"CACHE_TYPE": "SimpleCache"})
 # Flask app. For this demo it is sufficient to let it reside globally in this file.
 if USE_TEST_SERVER:
     cert_paths = create_bankid_test_server_cert_and_key(str(pathlib.Path(__file__).parent))
-    client = BankIDJSONClient(cert_paths, test_server=True)
+    client = BankIdClient(cert_paths, test_server=True)
 else:
     # Set your own cert paths for you production certificate and key here.
     # Note that my recommendation is to get it to work with
     # test server certs first!
     cert_paths = ("certificate.pem", "key.pem")
-    client = BankIDJSONClient(cert_paths, test_server=False)
+    client = BankIdClient(cert_paths, test_server=False)
 
 
 # Frontend pages
@@ -74,8 +74,7 @@ def initiate():
     # Make Auth call to BankID.
     resp = client.authenticate(
         end_user_ip=request.remote_addr,  # Get the IP of the device making the request.
-        personal_number=pn,
-        requirement={"tokenStartRequired": True if pn else False},  # Set to True if PN is provided. Recommended.
+        requirement={"personalNumber": pn},  # Set to True if PN is provided. Recommended.
     )
     # Record when this response was received. This is needed for generating sequential, animated QR codes.
     resp["start_t"] = time.time()
@@ -83,7 +82,7 @@ def initiate():
     # multi-instance apps. Using orderRef as key since it is unique and can be sent in a GET URL without problem.
     cache.set(resp.get("orderRef"), resp, timeout=5 * 60)
     # Generate the first QR code to display to user.
-    qr_content_0 = generate_qr_code_content(resp["qrStartToken"], resp["start_t"], resp["qrStartSecret"])
+    qr_content_0 = client.generate_qr_code_content(resp["qrStartToken"], resp["start_t"], resp["qrStartSecret"])
     return render_template(
         "qr.html",
         order_ref=resp["orderRef"],
@@ -99,7 +98,7 @@ def get_qr_code(order_ref: str):
     if x is None:
         qr_content = ""
     else:
-        qr_content = generate_qr_code_content(x["qrStartToken"], x["start_t"], x["qrStartSecret"])
+        qr_content = client.generate_qr_code_content(x["qrStartToken"], x["start_t"], x["qrStartSecret"])
     response = make_response(qr_content, 200)
     response.mimetype = "text/plain"
     return response
@@ -123,19 +122,3 @@ def collect(order_ref: str):
         return response
     else:
         return jsonify(collect_response)
-
-
-# Helper methods
-
-
-def generate_qr_code_content(qr_start_token: str, start_t: float, qr_start_secret: str):
-    """Given QR start token, time.time() when initiated authentication call was made and the
-    QR start secret, calculate the current QR code content to display.
-    """
-    elapsed_seconds_since_call = int(floor(time.time() - start_t))
-    qr_auth_code = hmac.new(
-        qr_start_secret.encode(),
-        msg=str(elapsed_seconds_since_call).encode(),
-        digestmod=hashlib.sha256,
-    ).hexdigest()
-    return f"bankid.{qr_start_token}.{elapsed_seconds_since_call}.{qr_auth_code}"

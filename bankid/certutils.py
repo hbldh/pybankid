@@ -37,7 +37,9 @@ def create_bankid_test_server_cert_and_key(destination_path: str) -> Tuple[str]:
 
     """
     if os.getenv("TEST_CERT_FILE"):
-        certificate, key = split_certificate(os.getenv("TEST_CERT_FILE"), destination_path, password=_TEST_CERT_PASSWORD)
+        certificate, key = split_certificate(
+            os.getenv("TEST_CERT_FILE"), destination_path, password=_TEST_CERT_PASSWORD
+        )
 
     else:
         # Fetch testP12 certificate path

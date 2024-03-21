@@ -18,16 +18,15 @@ about how the BankID methods are defined and how to use them.
 
 """
 
-from . import exceptions
-from .__version__ import __version__, version
-from .certutils import create_bankid_test_server_cert_and_key
-from .jsonclient import AsyncBankIDJSONClient, BankIDJSONClient
-from .jsonclient6 import BankIDJSONClient6
+from bankid import exceptions
+from bankid.__version__ import __version__, version
+from bankid.certutils import create_bankid_test_server_cert_and_key
+from bankid.syncclient import BankIdClient
+from bankid.asyncclient import BankIdAsyncClient
 
 __all__ = [
-    "BankIDJSONClient",
-    "AsyncBankIDJSONClient",
-    "BankIDJSONClient6",
+    "BankIdClient",
+    "BankIdAsyncClient",
     "exceptions",
     "create_bankid_test_server_cert_and_key",
     "__version__",
