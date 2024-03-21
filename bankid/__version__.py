@@ -3,5 +3,5 @@
 Version info
 """
 
-__version__ = "0.14.1"
+__version__ = "0.15.0"
 version = __version__  # backwards compatibility name
