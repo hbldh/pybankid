@@ -28,7 +28,7 @@ external device on the same network on `http://<ip for the running computer>:500
 
 These are the steps that the application takes:
 
-1. Ask the user for Swedish Personal Identity Number (PN).
+1. Ask the user for Swedish Personal Identity Number (PN) or initiate an authentication without.
 2. Upon POSTing that PN to the backend, initiate a BankID `authenticate` session. This generates tokens that
    one can create QR codes from using the `generate_qr_code_content` method.
 3. Continuously update the QR code according to the description in the BankID Relying Party Guidelines
@@ -48,5 +48,4 @@ There are a few shortcuts taken here:
 
 ## References
 
-[BankID Relying Party Guidelines
-Version: 3.6](https://www.bankid.com/assets/bankid/rp/bankid-relying-party-guidelines-v3.6.pdf)
+[BankID Integration Guide](https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide/)

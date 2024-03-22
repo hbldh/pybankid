@@ -1,8 +1,8 @@
-from typing import Optional, Tuple, Dict, Any, Awaitable
+from typing import Optional, Tuple, Dict, Any
 
 import httpx
 
-from bankid.base import BankIDClientBaseclass
+from bankid.baseclient import BankIDClientBaseclass
 from bankid.exceptions import get_json_error_class
 
 

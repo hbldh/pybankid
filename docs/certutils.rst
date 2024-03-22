@@ -44,7 +44,7 @@ into one certificate and one key part and converts it from
 `.p12 or .pfx <https://en.wikipedia.org/wiki/PKCS_12>`_ format to
 `pem <https://en.wikipedia.org/wiki/X.509#Certificate_filename_extensions>`_.
 These can then be used for testing purposes, by sending in ``test_server=True``
-keyword in the :py:class:`~BankIDClient` or :py:class:`~BankIDJSONClient`.
+keyword in the :py:class:`~BankIDClient` or :py:class:`~BankIdAsyncClient`.
 
 
 Splitting certificates
