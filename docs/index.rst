@@ -23,9 +23,14 @@ providing authentication and signing functionality to end users. This package
 provides a simplifying interface for initiating authentication
 and signing orders and then collecting the results from the BankID servers.
 
+The only supported BankID API version supported by PyBankID from version 1.0.0
+is v6.0, which means that the Secure Start solution is the only supported way
+of providing BankID services. PyBankID versions prior to 1.0.0 will not
+work after 1st of May 2024.
+
 If you intend to use PyBankID in your project, you are advised to read
-the `BankID Relying Party Guidelines
-<https://www.bankid.com/utvecklare/rp-info>`_ before
+the `BankID Integration Guide
+<https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide>`_ before
 doing anything else. There, one can find information
 about how the BankID methods are defined and how to use them.
 
@@ -34,10 +39,9 @@ about how the BankID methods are defined and how to use them.
    :maxdepth: 2
 
    get_started
-   jsonclient
-   exceptions
    certutils
    examples
+   api_reference
 
 
 Indices and tables

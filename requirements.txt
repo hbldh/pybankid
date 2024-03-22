@@ -1,1 +1,2 @@
-requests>=2.20.0
+httpx
+importlib-resources>=5.12.0

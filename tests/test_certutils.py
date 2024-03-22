@@ -1,18 +1,16 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import os
+
+from pytest import TempdirFactory
 
 import bankid
 
 
-# def test_certutils_main():
-#     bankid.certutils.main(verbose=False)
-#
-#     assert os.path.exists(os.path.expanduser("~/certificate.pem"))
-#     assert os.path.exists(os.path.expanduser("~/key.pem"))
-#
-#     try:
-#         os.remove(os.path.expanduser("~/certificate.pem"))
-#         os.remove(os.path.expanduser("~/key.pem"))
-#     except:
-#         pass
+def test_create_bankid_test_server_cert_and_key(tmpdir_factory: TempdirFactory):
+    paths = bankid.certutils.create_bankid_test_server_cert_and_key(tmpdir_factory.mktemp("certs"))
+    assert os.path.exists(paths[0])
+    assert os.path.exists(paths[1])
+    try:
+        os.remove(paths[0])
+        os.remove(paths[1])
+    except Exception:
+        pass

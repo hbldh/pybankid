@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from collections import namedtuple
 
 import pytest
 
@@ -39,8 +38,6 @@ def test_exceptions(exception_class, rfa):
     ],
 )
 def test_error_class_factory(exception_class, error_code):
-    from collections import namedtuple
-
     MockResponse = namedtuple("MockResponse", ["json"])
     response = MockResponse(json=lambda: {"errorCode": error_code})
     e_class = bankid.exceptions.get_json_error_class(response)

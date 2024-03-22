@@ -1,3 +1,7 @@
+flake8
+mock
 pytest
+pytest-asyncio
+pytest-cov
 sphinx
 sphinx-rtd-theme

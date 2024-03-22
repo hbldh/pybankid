@@ -1,15 +1,15 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 :mod:`bankid.certutils` -- Certificate Utilities
 ================================================
-
-Created 2016-04-10 by hbldh
-
+.. moduleauthor:: hbldh <henrik.blidh@nedomkull.com>
 """
 
 import os
 import subprocess
+from typing import Tuple
+
+import importlib_resources
 
 from bankid.certs import get_test_cert_p12
 from bankid.exceptions import BankIDError
@@ -17,7 +17,13 @@ from bankid.exceptions import BankIDError
 _TEST_CERT_PASSWORD = "qwerty123"
 
 
-def create_bankid_test_server_cert_and_key(destination_path):
+def resolve_cert_path(file: str) -> str:
+    ref = importlib_resources.files("bankid.certs") / file
+    with importlib_resources.as_file(ref) as path:
+        return str(path)
+
+
+def create_bankid_test_server_cert_and_key(destination_path: str) -> Tuple[str]:
     """Split the bundled test certificate into certificate and key parts and save them
     as separate files, stored in PEM format.
 
