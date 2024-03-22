@@ -3,7 +3,7 @@
 Getting Started
 ===============
 
-PyBankID use BankID JSON API version 6.0 released in May 2023.
+PyBankID uses BankID JSON API version 6.0 released in May 2023.
 
 Installation
 ------------
@@ -25,9 +25,10 @@ PyBankID makes use of the following external packages:
 Using the client
 ----------------
 
-PyBankID provide both a synchronous and an asynchronous client for
+PyBankID provides both a synchronous and an asynchronous client for
 communication with BankID services. Example below will use the asynchronous
-client, but the synchronous client is used in the same way.
+client, but the synchronous client is used in the same way by merely omitting
+the ``await`` keyword.
 
 Get started by importing and initializing the client:
 
