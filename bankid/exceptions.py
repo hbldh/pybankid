@@ -4,15 +4,16 @@
 def get_json_error_class(response):
     data = response.json()
     error_class = _JSON_ERROR_CODE_TO_CLASS.get(data.get("errorCode"), BankIDError)
-    return error_class("{0}: {1}".format(data.get("errorCode"), data.get("details")))
+    return error_class("{0}: {1}".format(data.get("errorCode"), data.get("details")), raw_data=data)
 
 
 class BankIDError(Exception):
     """Parent exception class for all PyBankID errors."""
 
     def __init__(self, *args, **kwargs):
-        super(BankIDError, self).__init__(*args, **kwargs)
+        super(BankIDError, self).__init__(*args)
         self.rfa = None
+        self.json = kwargs.get("raw_data", {})
 
 
 class BankIDWarning(Warning):
@@ -33,6 +34,8 @@ class InvalidParametersError(BankIDError):
     communicated to the user as a BankID error.
 
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class AlreadyInProgressError(BankIDError):
@@ -50,7 +53,7 @@ class AlreadyInProgressError(BankIDError):
     """
 
     def __init__(self, *args, **kwargs):
-        super(AlreadyInProgressError, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.rfa = 4
 
 
@@ -68,7 +71,7 @@ class InternalError(BankIDError):
     """
 
     def __init__(self, *args, **kwargs):
-        super(InternalError, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.rfa = 5
 
 
@@ -84,7 +87,7 @@ class MaintenanceError(BankIDError):
     """
 
     def __init__(self, *args, **kwargs):
-        super(MaintenanceError, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.rfa = 5
 
 
@@ -98,12 +101,12 @@ class UnauthorizedError(BankIDError):
     communicated to the user as a BankID error.
 
     """
-
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class NotFoundError(BankIDError):
-    """An erroneously URL path was used.
+    """An erroneous URL path was used.
 
     **Code:** ``notFound``
 
@@ -112,8 +115,8 @@ class NotFoundError(BankIDError):
     communicated to the user as a BankID error.
 
     """
-
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class RequestTimeoutError(BankIDError):
@@ -128,7 +131,7 @@ class RequestTimeoutError(BankIDError):
     """
 
     def __init__(self, *args, **kwargs):
-        super(RequestTimeoutError, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.rfa = 5
 
 

@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PyBankID QR Demo</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>PyBankID QR Demo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 <div class="row d-flex flex-column align-items-center">
-  <div class="col-6 text-center pt-5">
-    <a href="/"><h1>PyBankID QR Code Demo</h1></a>
-    <h2>Perform QR signing</h2>
-  </div>
-  <div class="col-6 text-center pt-5">
-    <canvas id="qr-canvas"></canvas>
-  </div>
-  <div class="col-6 text-center pt-5">
-    <a href="bankid:///?autostarttoken={{auto_start_token}}&redirect=null">Click here to start it by autoStartToken (BankID on same device)</a>
-  </div>
-  <div class="col-6 text-center pt-5">
-    <p id="collect-status"></p>
-  </div>
+    <div class="col-6 text-center pt-5">
+        <a href="/"><h1>PyBankID QR Code Demo</h1></a>
+        <h2>Perform QR signing</h2>
+    </div>
+    <div class="col-6 text-center pt-2">
+        <canvas id="qr-canvas"></canvas>
+    </div>
+    <div class="col-6 text-center pt-2">
+        <a href="bankid:///?autostarttoken={{ auto_start_token }}&redirect=null">Click here to start it by
+            autoStartToken (BankID on same device)</a>
+    </div>
+    <div class="col-6 text-center pt-2">
+        <p id="collect-status"></p>
+    </div>
+    <div class="col-6 text-center pt-2">
+        <button type="button" class="btn btn-danger" id="cancel-button" onclick="cancel('{{ auto_start_token }}')">
+            Cancel
+        </button>
+    </div>
 
 </div>
 
@@ -38,59 +44,100 @@
         crossorigin="anonymous"></script>
 
 <script type="application/javascript">
-  let orderRef = "{{order_ref}}"
-  // Generate the first QR code provided by backend on initial page render.
-  let qr = new QRious({
-    element: document.getElementById('qr-canvas'),
-    value: "{{qr_content}}",
-    size: 400
-  });
+    let orderRef = "{{order_ref}}"
+    // Generate the first QR code provided by backend on initial page render.
+    let qr = new QRious({
+        element: document.getElementById('qr-canvas'),
+        value: "{{qr_content}}",
+        size: 400
+    });
 
-  generateQR = () => {
-    fetch(`/get-qr-code/${orderRef}`)
-      .then(response => {
-        response.text()
-          .then(qr_code_content => {
-            console.log(qr_code_content)
-            qr = new QRious({
-              element: document.getElementById('qr-canvas'),
-              value: qr_code_content,
-              size: 400
-            });
-          })
-      })
-  }
+    generateQR = () => {
+        fetch(`/get-qr-code/${orderRef}`)
+            .then(response => {
+                response.text()
+                    .then(qr_code_content => {
+                        console.log(qr_code_content)
+                        qr = new QRious({
+                            element: document.getElementById('qr-canvas'),
+                            value: qr_code_content,
+                            size: 400
+                        });
+                    })
+            })
+    }
 
-  collect = () => {
-    fetch(`/collect/${orderRef}`, {method: 'GET', credentials: 'same-origin'})
-      .then(response => {
-        response.json()
-          .then(collectResponse => {
-            console.log(collectResponse)
-            if (collectResponse["status"] == "complete") {
-              clearInterval(t);
-              clearInterval(t2);
-              // Wait 2 seconds before redirecting to let user see the failed response.
-              setTimeout(() => {
-                window.location = "/auth-complete"
-              }, 2000);
-            } else if (collectResponse["status"] == "failed") {
-              clearInterval(t);
-              clearInterval(t2);
-              // Wait 2 seconds before redirecting to let user see the failed response.
-              setTimeout(() => {
-                window.location = "/auth-complete"
-              }, 2000);
-            }
-            let statusP = document.getElementById('collect-status');
-            statusP.innerHTML = `${collectResponse["hintCode"]}: ${collectResponse["status"]}`;
-          })
-      })
-  }
-  // Fetch new QR code content every second.
-  let t = setInterval(generateQR, 1000);
-  // Make BankID collect call every other second.
-  let t2 = setInterval(collect, 2000);
+    collect = () => {
+        fetch(`/collect/${orderRef}`, {method: 'GET', credentials: 'same-origin'})
+            .then(response => {
+                response.json()
+                    .then(collectResponse => {
+                        console.log(collectResponse)
+                        if (response.status !== 200) {
+                            let statusP = document.getElementById('collect-status');
+                            statusP.innerHTML = `${collectResponse["errorCode"]}: ${collectResponse["details"]}`;
+                            return;
+                        }
+                        if (collectResponse["status"] == "complete") {
+                            clearInterval(t);
+                            clearInterval(t2);
+                            // Wait 4 seconds before redirecting to let user see the failed response.
+                            setTimeout(() => {
+                                window.location = "/auth-complete"
+                            }, 4000);
+                        } else if (collectResponse["status"] == "failed") {
+                            clearInterval(t);
+                            clearInterval(t2);
+                            // Wait 4 seconds before redirecting to let user see the failed response.
+                            setTimeout(() => {
+                                window.location = "/auth-complete"
+                            }, 4000);
+                        }
+                        let statusP = document.getElementById('collect-status');
+                        statusP.innerHTML = `${collectResponse["hintCode"]}: ${collectResponse["status"]}`;
+                    })
+            })
+    }
+
+    // Fetch new QR code content every second.
+    let t = setInterval(generateQR, 1000);
+    // Make BankID collect call every other second.
+    let t2 = setInterval(collect, 2000);
+
+    cancel = () => {
+        fetch(`/cancel/${orderRef}`, {method: 'GET', credentials: 'same-origin'})
+            .then(response => {
+                response.text()
+                    .then(cancelResponse => {
+                        console.log("Cancel = " + cancelResponse)
+                        if (cancelResponse === "True") {
+                            clearInterval(t);
+                            clearInterval(t2);
+                            collect()
+                            // Wait 4 seconds before redirecting to let user see the failed response.
+                            setTimeout(() => {
+                              window.location = "/"
+                            }, 4000);
+                        } else {
+                            clearInterval(t);
+                            clearInterval(t2);
+                            // Wait 4 seconds before redirecting to let user see the failed response.
+                            setTimeout(() => {
+                              window.location = "/"
+                            }, 4000);
+                        }
+                    })
+            })
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var cancelButton = document.getElementById('cancel-button');
+
+        cancelButton.addEventListener('click', function() {
+            this.disabled = true; // Disable the button
+            this.textContent = 'Cancelled'; // Change the button text
+        });
+    });
 
 </script>
 </html>

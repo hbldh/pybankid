@@ -1,13 +1,11 @@
 import pathlib
 import time
-from math import floor
-import hmac
-import hashlib
 import uuid
 
 from flask import Flask, make_response, render_template, request, jsonify
 from flask_caching import Cache
 from bankid import BankIdClient
+from bankid.exceptions import BankIDError
 from bankid.certutils import create_bankid_test_server_cert_and_key
 
 USE_TEST_SERVER = True
@@ -63,18 +61,16 @@ def auth_complete():
 def initiate():
     """Initiate a BankID Authentication session and cache details needed for QR code generation"""
     # Note that empty personal number is allowed here! That means that the
-    pn = request.form.get("personnumer")
+    pn = request.form.get("personnummer")
 
-    # From (https://www.bankid.com/assets/bankid/rp/bankid-relying-party-guidelines-v3.6.pdf):
-    # Note: If personal number is included in the call to the service, RP must
-    # consider setting the requirement tokenStartRequired to true. By this, the
-    # system enforces that no other device than the one started using the QR code
-    # or autoStartToken is used.
+    # By knowing the personal number of the one you want to autenticate, send in the
+    # personal number as a requirement to ensure that only autentication with that personal
+    # number is allowed.
 
     # Make Auth call to BankID.
     resp = client.authenticate(
         end_user_ip=request.remote_addr,  # Get the IP of the device making the request.
-        requirement={"personalNumber": pn},  # Set to True if PN is provided. Recommended.
+        requirement={"personalNumber": pn} if pn else None,  # Set to True if PN is provided. Recommended.
     )
     # Record when this response was received. This is needed for generating sequential, animated QR codes.
     resp["start_t"] = time.time()
@@ -107,7 +103,11 @@ def get_qr_code(order_ref: str):
 @app.route("/collect/<order_ref>")
 def collect(order_ref: str):
     """Make collect calls to the BankID servers"""
-    collect_response = client.collect(order_ref)
+    try:
+        collect_response = client.collect(order_ref)
+    except BankIDError as e:
+        return jsonify(e.json), 400
+
     if collect_response.get("status") == "complete":
         # Create or Login the newly authenticated user, give it a session token or something similar.
         # Here I will use an ugly hack and just stick a generated UUID in a cookie so the frontend can tell
@@ -122,3 +122,25 @@ def collect(order_ref: str):
         return response
     else:
         return jsonify(collect_response)
+
+
+@app.route("/cancel/<order_ref>")
+def cancel(order_ref: str):
+    """Make a cancel call to the BankID servers"""
+    cancel_response = client.cancel(order_ref)
+    if cancel_response:
+        cache.delete(order_ref)
+        response = make_response(str(cancel_response), 200)
+        response.mimetype = "text/plain"
+        response.delete_cookie("QRDemo-Auth")
+        return response
+    else:
+        cache.delete(order_ref)
+        response = make_response(str(cancel_response), 500)
+        response.mimetype = "text/plain"
+        return response
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return str(error)
