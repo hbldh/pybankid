@@ -21,12 +21,12 @@ about how the BankID methods are defined and how to use them.
 from bankid import exceptions
 from bankid.__version__ import __version__, version
 from bankid.certutils import create_bankid_test_server_cert_and_key
-from bankid.syncclient import BankIdClient
-from bankid.asyncclient import BankIdAsyncClient
+from bankid.syncclient import BankIDClient
+from bankid.asyncclient import BankIDAsyncClient
 
 __all__ = [
-    "BankIdClient",
-    "BankIdAsyncClient",
+    "BankIDClient",
+    "BankIDAsyncClient",
     "exceptions",
     "create_bankid_test_server_cert_and_key",
     "__version__",

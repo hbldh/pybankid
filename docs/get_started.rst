@@ -34,8 +34,8 @@ Get started by importing and initializing the client:
 
 .. code-block:: python
 
-    >>> from bankid import BankIdAsyncClient
-    >>> client = BankIdAsyncClient(certificates=(
+    >>> from bankid import BankIDAsyncClient
+    >>> client = BankIDAsyncClient(certificates=(
     ...     'path/to/certificate.pem',
     ...     'path/to/key.pem',
     ... ))
@@ -148,8 +148,8 @@ as well, by simply removing the ``await`` keyword.
 
 .. code-block:: python
 
-    >>> from bankid import BankIdClient
-    >>> client = BankIdClient(certificates=(
+    >>> from bankid import BankIDClient
+    >>> client = BankIDClient(certificates=(
     ...     'path/to/certificate.pem',
     ...     'path/to/key.pem',
     ... ))

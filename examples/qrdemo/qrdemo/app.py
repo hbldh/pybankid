@@ -4,7 +4,7 @@ import uuid
 
 from flask import Flask, make_response, render_template, request, jsonify
 from flask_caching import Cache
-from bankid import BankIdClient
+from bankid import BankIDClient
 from bankid.exceptions import BankIDError
 from bankid.certutils import create_bankid_test_server_cert_and_key
 
@@ -17,13 +17,13 @@ cache = Cache(app, config={"CACHE_TYPE": "SimpleCache"})
 # Flask app. For this demo it is sufficient to let it reside globally in this file.
 if USE_TEST_SERVER:
     cert_paths = create_bankid_test_server_cert_and_key(str(pathlib.Path(__file__).parent))
-    client = BankIdClient(cert_paths, test_server=True)
+    client = BankIDClient(cert_paths, test_server=True)
 else:
     # Set your own cert paths for you production certificate and key here.
     # Note that my recommendation is to get it to work with
     # test server certs first!
     cert_paths = ("certificate.pem", "key.pem")
-    client = BankIdClient(cert_paths, test_server=False)
+    client = BankIDClient(cert_paths, test_server=False)
 
 
 # Frontend pages

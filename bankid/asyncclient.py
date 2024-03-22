@@ -6,7 +6,7 @@ from bankid.baseclient import BankIDClientBaseclass
 from bankid.exceptions import get_json_error_class
 
 
-class BankIdAsyncClient(BankIDClientBaseclass):
+class BankIDAsyncClient(BankIDClientBaseclass):
     """The asynchronous client to use for communicating with BankID servers via the v6 API.
 
     :param certificates: Tuple of string paths to the certificate to use and
@@ -89,11 +89,76 @@ class BankIdAsyncClient(BankIDClientBaseclass):
         else:
             raise get_json_error_class(response)
 
+    async def phone_authenticate(
+        self,
+        personal_number: str,
+        call_initiator: str,
+        requirement: Dict[str, Any] = None,
+        user_visible_data: str = None,
+        user_non_visible_data: str = None,
+        user_visible_data_format: str = None,
+    ) -> Dict[str, str]:
+        """Initiates an authentication order when the user is talking
+        to the RP over the phone. The :py:meth:`collect` method
+        is used to query the status of the order.
+
+        Example data returned:
+
+        .. code-block:: json
+
+            {
+                "orderRef": "ee3421ea-2096-4000-8130-82648efe0927"
+            }
+
+        :param personal_number: The personal number of the user. 12 digits.
+        :type personal_number: str
+        :param call_initiator: Indicate if the user or the RP initiated the phone call.
+            "user": user called the RP
+            "RP": RP called the user
+        :type call_initiator: str
+        :param requirement: Requirements on how the auth order must be performed.
+            See the section `Requirements <https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide/graenssnittsbeskrivning/phone-auth>`_ for more details.
+        :type requirement: dict
+        :param user_visible_data: Text displayed to the user during authentication with BankID,
+            with the purpose of providing context for the authentication and to enable users
+            to detect identification errors and averting fraud attempts.
+        :type user_visible_data: str
+        :param user_non_visible_data: Data is not displayed to the user.
+        :type user_non_visible_data: str
+        :param user_visible_data_format: If present, and set to “simpleMarkdownV1”,
+            this parameter indicates that userVisibleData holds formatting characters which
+            potentially make for a more pleasant user experience.
+        :type user_visible_data_format: str
+        :return: The order response.
+        :rtype: dict
+        :raises BankIDError: raises a subclass of this error
+                             when error has been returned from server.
+
+        """
+        if call_initiator not in ["user", "RP"]:
+            raise ValueError("call_initiator must be either 'user' or 'RP'")
+
+        data = self._create_payload(
+            requirement=requirement,
+            user_visible_data=user_visible_data,
+            user_non_visible_data=user_non_visible_data,
+            user_visible_data_format=user_visible_data_format,
+        )
+        data["personalNumber"] = personal_number
+        data["callInitiator"] = call_initiator
+
+        response = await self.client.post(self._phone_auth_endpoint, json=data)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise get_json_error_class(response)
+
     async def sign(
         self,
         end_user_ip,
+        user_visible_data: str,
         requirement: Dict[str, Any] = None,
-        user_visible_data: str = None,
         user_non_visible_data: str = None,
         user_visible_data_format: str = None,
     ) -> Dict[str, str]:
@@ -139,6 +204,69 @@ class BankIdAsyncClient(BankIDClientBaseclass):
         )
 
         response = await self.client.post(self._sign_endpoint, json=data)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise get_json_error_class(response)
+
+    async def phone_sign(
+        self,
+        personal_number: str,
+        call_initiator: str,
+        user_visible_data: str,
+        requirement: Dict[str, Any] = None,
+        user_non_visible_data: str = None,
+        user_visible_data_format: str = None,
+    ) -> Dict[str, str]:
+        """Initiates an authentication order when the user is talking to
+        the RP over the phone. The :py:meth:`collect` method
+        is used to query the status of the order.
+
+        Example data returned:
+
+        .. code-block:: json
+
+            {
+                "orderRef": "ee3421ea-2096-4000-8130-82648efe0927"
+            }
+
+        :param personal_number: The personal number of the user. 12 digits.
+        :type personal_number: str
+        :param call_initiator: Indicate if the user or the RP initiated the phone call.
+            "user": user called the RP
+            "RP": RP called the user
+        :type call_initiator: str
+        :param requirement: Requirements on how the sign order must be performed.
+            See the section `Requirements <https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide/graenssnittsbeskrivning/sign>`_ for more details.
+        :type requirement: dict
+        :param user_visible_data: Text to be displayed to the user.
+        :type user_visible_data: str
+        :param user_non_visible_data: Data is not displayed to the user.
+        :type user_non_visible_data: str
+        :param user_visible_data_format: If present, and set to “simpleMarkdownV1”,
+            this parameter indicates that userVisibleData holds formatting characters which
+            potentially make for a more pleasant user experience.
+        :type user_visible_data_format: str
+        :return: The order response.
+        :rtype: dict
+        :raises BankIDError: raises a subclass of this error
+                     when error has been returned from server.
+
+        """
+        if call_initiator not in ["user", "RP"]:
+            raise ValueError("call_initiator must be either 'user' or 'RP'")
+
+        data = self._create_payload(
+            requirement=requirement,
+            user_visible_data=user_visible_data,
+            user_non_visible_data=user_non_visible_data,
+            user_visible_data_format=user_visible_data_format,
+        )
+        data["personalNumber"] = personal_number
+        data["callInitiator"] = call_initiator
+
+        response = await self.client.post(self._phone_sign_endpoint, json=data)
 
         if response.status_code == 200:
             return response.json()

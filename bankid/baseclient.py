@@ -33,7 +33,9 @@ class BankIDClientBaseclass:
             self.verify_cert = resolve_cert_path("appapi2.bankid.com.pem")
 
         self._auth_endpoint = urljoin(self.api_url, "auth")
+        self._phone_auth_endpoint = urljoin(self.api_url, "phone/auth")
         self._sign_endpoint = urljoin(self.api_url, "sign")
+        self._phone_sign_endpoint = urljoin(self.api_url, "phone/sign")
         self._collect_endpoint = urljoin(self.api_url, "collect")
         self._cancel_endpoint = urljoin(self.api_url, "cancel")
 
@@ -63,13 +65,15 @@ class BankIDClientBaseclass:
 
     def _create_payload(
         self,
-        end_user_ip: str,
+        end_user_ip: str = None,
         requirement: Dict[str, Any] = None,
         user_visible_data: str = None,
         user_non_visible_data: str = None,
         user_visible_data_format: str = None,
     ):
-        data = {"endUserIp": end_user_ip}
+        data = {}
+        if end_user_ip:
+            data["endUserIp"] = end_user_ip
         if requirement and isinstance(requirement, dict):
             data["requirement"] = requirement
         if user_visible_data:
