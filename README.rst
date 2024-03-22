@@ -226,4 +226,4 @@ The PyBankID solution can be tested with `pytest <https://pytest.org/>`_:
 
 .. code-block:: bash
 
-    py.test
+    py.test tests/
