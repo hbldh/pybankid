@@ -34,6 +34,7 @@ class InvalidParametersError(BankIDError):
     communicated to the user as a BankID error.
 
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -101,6 +102,7 @@ class UnauthorizedError(BankIDError):
     communicated to the user as a BankID error.
 
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -115,6 +117,7 @@ class NotFoundError(BankIDError):
     communicated to the user as a BankID error.
 
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

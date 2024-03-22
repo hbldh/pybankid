@@ -19,7 +19,7 @@ class BankIdClient(BankIDClientBaseclass):
 
     """
 
-    def __init__(self, certificates: Tuple[str], test_server: bool = False, request_timeout: Optional[int] = None):
+    def __init__(self, certificates: Tuple[str, str], test_server: bool = False, request_timeout: Optional[int] = None):
         super().__init__(certificates, test_server, request_timeout)
 
         kwargs = {

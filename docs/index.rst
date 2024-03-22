@@ -39,9 +39,9 @@ about how the BankID methods are defined and how to use them.
    :maxdepth: 2
 
    get_started
-   api_reference
    certutils
    examples
+   api_reference
 
 
 Indices and tables

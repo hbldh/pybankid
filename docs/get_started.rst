@@ -19,8 +19,8 @@ Dependencies
 
 PyBankID makes use of the following external packages:
 
-* `httpx<https://www.python-httpx.org/>`_
-* `importlib-resources>=5.12.0 <https://importlib-resources.readthedocs.io/>`_
+* `httpx <https://www.python-httpx.org/>`_
+* `importlib-resources >= 5.12.0 <https://importlib-resources.readthedocs.io/>`_
 
 Using the client
 ----------------
@@ -33,7 +33,7 @@ Get started by importing and initializing the client:
 
 .. code-block:: python
 
-    >>> from bankid import AsyncBankIDJSONClient
+    >>> from bankid import BankIdAsyncClient
     >>> client = BankIdAsyncClient(certificates=(
     ...     'path/to/certificate.pem',
     ...     'path/to/key.pem',

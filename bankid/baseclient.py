@@ -11,7 +11,10 @@ from bankid.certutils import resolve_cert_path
 
 
 class BankIDClientBaseclass:
-    """Baseclass for BankID clients."""
+    """Baseclass for BankID clients.
+
+    Both the synchronous and asynchronous clients inherit from this base class and has the methods implemented here.
+    """
 
     def __init__(
         self,
@@ -37,13 +40,6 @@ class BankIDClientBaseclass:
         self.client = None
 
     @staticmethod
-    def _encode_user_data(user_data):
-        if isinstance(user_data, str):
-            return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
-        else:
-            return base64.b64encode(user_data).decode("ascii")
-
-    @staticmethod
     def generate_qr_code_content(qr_start_token: str, start_t: [float, datetime], qr_start_secret: str):
         """Given QR start token, time.time() or UTC datetime when initiated authentication call was made and the
         QR start secret, calculate the current QR code content to display.
@@ -57,6 +53,13 @@ class BankIDClientBaseclass:
             digestmod=hashlib.sha256,
         ).hexdigest()
         return f"bankid.{qr_start_token}.{elapsed_seconds_since_call}.{qr_auth_code}"
+
+    @staticmethod
+    def _encode_user_data(user_data):
+        if isinstance(user_data, str):
+            return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
+        else:
+            return base64.b64encode(user_data).decode("ascii")
 
     def _create_payload(
         self,

@@ -4,26 +4,26 @@
 API Reference
 =============
 
-:mod:`bankid.syncclient` -- Base Client (parent)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Base Client
+~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: bankid.baseclient
    :members:
 
-:mod:`bankid.syncclient` -- Synchronous Client
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Synchronous Client
+~~~~~~~~~~~~~~~~~~
 
 .. automodule:: bankid.syncclient
    :members:
 
-:mod:`bankid.asyncclient` -- Asynchronous Client
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Asynchronous Client
+~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: bankid.asyncclient
    :members:
 
-:mod:`bankid.exceptions` -- Exceptions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exceptions
+~~~~~~~~~~
 .. automodule:: bankid.exceptions
    :members:
 
