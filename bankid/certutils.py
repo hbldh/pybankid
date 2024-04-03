@@ -23,14 +23,14 @@ def resolve_cert_path(file: str) -> str:
         return str(path)
 
 
-def create_bankid_test_server_cert_and_key(destination_path: str) -> Tuple[str]:
+def create_bankid_test_server_cert_and_key(destination_path: str = ".") -> Tuple[str]:
     """Split the bundled test certificate into certificate and key parts and save them
     as separate files, stored in PEM format.
 
     If the environment variable TEST_CERT_FILE is set, use this file
     instead of fetching the P12 certificate.
 
-    :param destination_path: The directory to save certificate and key files to.
+    :param destination_path: The directory to save certificate and key files to. Default is the current directory.
     :type destination_path: str
     :returns: The path tuple ``(cert_path, key_path)``.
     :rtype: tuple
