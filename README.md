@@ -55,7 +55,6 @@ client.sign(
     end_user_ip='194.168.2.25',
     user_visible_data="The information to sign."
 )
-
 {
     'orderRef': 'ee3421ea-2096-4000-8130-82648efe0927',
     'autoStartToken': 'e8df5c3c-c67b-4a01-bfe5-fefeab760beb',
