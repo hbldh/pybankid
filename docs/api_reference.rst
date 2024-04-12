@@ -5,7 +5,7 @@ API Reference
 =============
 
 Base Client
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 .. automodule:: bankid.baseclient
    :members:
@@ -20,6 +20,12 @@ Asynchronous Client
 ~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: bankid.asyncclient
+   :members:
+
+QR Utils
+~~~~~~~~
+
+.. automodule:: bankid.qr
    :members:
 
 Exceptions

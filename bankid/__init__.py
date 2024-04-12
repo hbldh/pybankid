@@ -23,12 +23,14 @@ from bankid.__version__ import __version__, version
 from bankid.certutils import create_bankid_test_server_cert_and_key
 from bankid.syncclient import BankIDClient
 from bankid.asyncclient import BankIDAsyncClient
+from bankid.qr import generate_qr_code_content
 
 __all__ = [
     "BankIDClient",
     "BankIDAsyncClient",
     "exceptions",
     "create_bankid_test_server_cert_and_key",
+    "generate_qr_code_content",
     "__version__",
     "version",
 ]

@@ -1,12 +1,9 @@
 import base64
 from datetime import datetime
-import hashlib
-import hmac
-from math import floor
-import time
 from typing import Tuple, Optional, Dict, Any
 from urllib.parse import urljoin
 
+from bankid.qr import generate_qr_code_content
 from bankid.certutils import resolve_cert_path
 
 
@@ -42,19 +39,8 @@ class BankIDClientBaseclass:
         self.client = None
 
     @staticmethod
-    def generate_qr_code_content(qr_start_token: str, start_t: [float, datetime], qr_start_secret: str):
-        """Given QR start token, time.time() or UTC datetime when initiated authentication call was made and the
-        QR start secret, calculate the current QR code content to display.
-        """
-        if isinstance(start_t, datetime):
-            start_t = start_t.timestamp()
-        elapsed_seconds_since_call = int(floor(time.time() - start_t))
-        qr_auth_code = hmac.new(
-            qr_start_secret.encode(),
-            msg=str(elapsed_seconds_since_call).encode(),
-            digestmod=hashlib.sha256,
-        ).hexdigest()
-        return f"bankid.{qr_start_token}.{elapsed_seconds_since_call}.{qr_auth_code}"
+    def generate_qr_code_content(qr_start_token: str, start_t: [float, datetime], qr_start_secret: str) -> str:
+        return generate_qr_code_content(qr_start_token, start_t, qr_start_secret)
 
     @staticmethod
     def _encode_user_data(user_data):
