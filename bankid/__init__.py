@@ -25,6 +25,7 @@ from bankid.syncclient import BankIDClient
 from bankid.asyncclient import BankIDAsyncClient
 from bankid.baseclient import generate_qr_code_content
 
+
 __all__ = [
     "BankIDClient",
     "BankIDAsyncClient",
