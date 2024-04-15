@@ -20,7 +20,6 @@ Dependencies
 PyBankID makes use of the following external packages:
 
 * `httpx <https://www.python-httpx.org/>`_
-* `importlib-resources >= 5.12.0 <https://importlib-resources.readthedocs.io/>`_
 
 Using the client
 ----------------
