@@ -9,7 +9,8 @@ import os
 import subprocess
 from typing import Tuple
 
-import importlib_resources
+import pathlib
+import importlib.resources
 
 from bankid.certs import get_test_cert_p12
 from bankid.exceptions import BankIDError
@@ -17,10 +18,8 @@ from bankid.exceptions import BankIDError
 _TEST_CERT_PASSWORD = "qwerty123"
 
 
-def resolve_cert_path(file: str) -> str:
-    ref = importlib_resources.files("bankid.certs") / file
-    with importlib_resources.as_file(ref) as path:
-        return str(path)
+def resolve_cert_path(file: str) -> pathlib.Path:
+    return importlib.resources.files("bankid.certs").joinpath(file)
 
 
 def create_bankid_test_server_cert_and_key(destination_path: str) -> Tuple[str]:

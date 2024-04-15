@@ -29,7 +29,7 @@ def test_authentication_and_collect(cert_and_key, ip_address, random_personal_nu
     """Authenticate call and then collect with the returned orderRef UUID."""
 
     c = BankIDClient(certificates=cert_and_key, test_server=True)
-    assert "appapi2.test.bankid.com.pem" in c.verify_cert
+    assert "appapi2.test.bankid.com.pem" in str(c.verify_cert)
     out = c.authenticate(ip_address, random_personal_number)
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
@@ -139,4 +139,4 @@ def test_cancel_with_invalid_uuid(cert_and_key):
 def test_correct_prod_server_urls(cert_and_key, test_server, endpoint):
     c = BankIDClient(certificates=cert_and_key, test_server=test_server)
     assert c.api_url == "https://{0}/rp/v6.0/".format(endpoint)
-    assert "{0}.pem".format(endpoint) in c.verify_cert
+    assert "{0}.pem".format(endpoint) in str(c.verify_cert)
