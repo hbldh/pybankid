@@ -24,7 +24,7 @@ async def test_authentication_and_collect(cert_and_key, ip_address):
     """Authenticate call and then collect with the returned orderRef UUID."""
     c = BankIDAsyncClient(certificates=cert_and_key, test_server=True)
     assert "appapi2.test.bankid.com.pem" in str(c.verify_cert)
-    out = await c.authenticate(ip_address_async)
+    out = await c.authenticate(ip_address)
 
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
