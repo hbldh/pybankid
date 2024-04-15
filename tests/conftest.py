@@ -1,18 +1,13 @@
 import random
-from typing import Awaitable
 
-import httpx
 import pytest
-import pytest_asyncio
 
 from bankid.certs import get_test_cert_and_key
 
 
 @pytest.fixture(scope="session")
 def ip_address() -> str:
-    with httpx.Client() as client:
-        response = client.get("https://httpbin.org/ip")
-        return response.json()["origin"].split(",")[0]
+    return "127.0.0.1"
 
 
 @pytest.fixture()
