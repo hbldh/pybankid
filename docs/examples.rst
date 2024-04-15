@@ -8,7 +8,7 @@ PyBankID can generate QR codes for you. There is an demo application in the
 `examples folder of the repo <https://github.com/hbldh/pybankid/tree/master/examples>`_ where a
 Flask application called ``qrdemo`` shows one way to do authentication with animated QR codes.
 
-The QR code content generation is done with the ``generate_qr_code_content`` method on the BankID Client instances, or diectly
+The QR code content generation is done with the ``generate_qr_code_content`` method on the BankID Client instances, or directly
 through the identically named method in ``bankid.qr`` module.
 
 Below follows the app's README file, for your convenience.
