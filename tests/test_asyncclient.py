@@ -20,11 +20,12 @@ from bankid import BankIDAsyncClient, exceptions
 
 
 @pytest.mark.asyncio
-async def test_authentication_and_collect(cert_and_key, ip_address_async):
+async def test_authentication_and_collect(cert_and_key, ip_address):
     """Authenticate call and then collect with the returned orderRef UUID."""
     c = BankIDAsyncClient(certificates=cert_and_key, test_server=True)
     assert "appapi2.test.bankid.com.pem" in str(c.verify_cert)
     out = await c.authenticate(ip_address_async)
+
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
     uuid.UUID(out.get("orderRef"), version=4)
@@ -34,12 +35,12 @@ async def test_authentication_and_collect(cert_and_key, ip_address_async):
 
 
 @pytest.mark.asyncio
-async def test_sign_and_collect(cert_and_key, ip_address_async):
+async def test_sign_and_collect(cert_and_key, ip_address):
     """Sign call and then collect with the returned orderRef UUID."""
 
     c = BankIDAsyncClient(certificates=cert_and_key, test_server=True)
     out = await c.sign(
-        ip_address_async,
+        ip_address,
         user_visible_data="The data to be signed",
         user_non_visible_data="Non visible data",
     )
@@ -73,32 +74,32 @@ async def test_invalid_orderref_raises_error(cert_and_key):
 
 
 @pytest.mark.asyncio
-async def test_already_in_progress_raises_error(cert_and_key, ip_address_async, random_personal_number):
+async def test_already_in_progress_raises_error(cert_and_key, ip_address, random_personal_number):
     c = BankIDAsyncClient(certificates=cert_and_key, test_server=True)
-    await c.authenticate(ip_address_async, requirement={"personalNumber": random_personal_number})
+    await c.authenticate(ip_address, requirement={"personalNumber": random_personal_number})
     with pytest.raises(exceptions.AlreadyInProgressError):
-        await c.authenticate(ip_address_async, requirement={"personalNumber": random_personal_number})
+        await c.authenticate(ip_address, requirement={"personalNumber": random_personal_number})
 
 
 @pytest.mark.asyncio
-async def test_already_in_progress_raises_error_2(cert_and_key, ip_address_async, random_personal_number):
+async def test_already_in_progress_raises_error_2(cert_and_key, ip_address, random_personal_number):
     c = BankIDAsyncClient(certificates=cert_and_key, test_server=True)
     await c.sign(
-        ip_address_async,
+        ip_address,
         requirement={"personalNumber": random_personal_number},
         user_visible_data="Text to sign",
     )
     with pytest.raises(exceptions.AlreadyInProgressError):
         await c.sign(
-            ip_address_async, requirement={"personalNumber": random_personal_number}, user_visible_data="Text to sign"
+            ip_address, requirement={"personalNumber": random_personal_number}, user_visible_data="Text to sign"
         )
 
 
 @pytest.mark.asyncio
-async def test_authentication_and_cancel(cert_and_key, ip_address_async):
+async def test_authentication_and_cancel(cert_and_key, ip_address):
     """Authenticate call and then cancel it"""
     c = BankIDAsyncClient(certificates=cert_and_key, test_server=True)
-    out = await c.authenticate(ip_address_async)
+    out = await c.authenticate(ip_address)
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
     order_ref = uuid.UUID(out.get("orderRef"), version=4)

@@ -2,9 +2,8 @@
 
 ![Build and Test](https://github.com/hbldh/pybankid/workflows/Build%20and%20Test/badge.svg)
 ![Documentation Status](https://readthedocs.org/projects/pybankid/badge/?version=latest)
-![PyPI Version](http://img.shields.io/pypi/v/pybankid.svg)
-![PyPI License](http://img.shields.io/pypi/l/pybankid.svg)
-![Coverage](https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master)
+![PyPI Version](https://img.shields.io/pypi/v/pybankid)
+![PyPI License](https://img.shields.io/pypi/l/pybankid)
 
 PyBankID is a client for providing BankID services as a Relying Party, i.e., providing authentication and signing functionality to end users. This package provides a simplifying interface for initiating authentication and signing orders and then collecting the results from the BankID servers.
 
@@ -22,7 +21,7 @@ pip install pybankid
 
 ## Usage
 
-PyBankID provides both a synchronous and an asynchronous client for communication with BankID services. The example below will use the asynchronous client, but the synchronous client is used in the same way by merely omitting the `await` keyword.
+PyBankID provides both a synchronous and an asynchronous client for communication with BankID services. The example below will use the synchronous client, but the asynchronous client is used in an identical fashion, only using the `await` keyword before each function call.
 
 ### Synchronous client
 
@@ -36,7 +35,7 @@ client = BankIDClient(certificates=(
 
 Connection to the production server is the default in the client. If a test server is desired, send in the `test_server=True` keyword in the init of the client.
 
-When using the JSON client, authentication and signing calls require the end user's IP address to be included in all calls. An authentication order is initiated as such:
+All authentication and signing calls require the end user's IP address to be included. An authentication order is initiated as such:
 
 ```python
 client.authenticate(end_user_ip='194.168.2.25')
@@ -79,7 +78,7 @@ client.sign(
 }
 ```
 
-If someone else than the one you specified tries to authenticate or sign, the BankID app will state that the request is not intended for the user.
+If someone other than the one you specified tries to authenticate or sign, the BankID app will state that the request is not intended for the user.
 
 The status of an order can then be studied by polling with the `collect` method using the received `orderRef`:
 
@@ -126,20 +125,22 @@ client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
 }
 ```
 
-
 Please note that the `collect` method should be used sparingly: in the [BankID Integration Guide](https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide) it is specified that *"collect should be called every two seconds and must not be called more frequent than once per second"*.
 
-### Asynchronous client
+PyBankID also implements the `phone/auth` and `phone/sign` methods, for performing authentication and signing with
+users that are contacted through phone. For documentation on this, see [PyBankID's Read the Docs page](https://pybankid.readthedocs.io/en/latest/).
 
-The asynchronous client is used in the same way as the synchronous client, but the methods are blocking.
+### Asynchronous client 
+
+The asynchronous client is used in the same way as the synchronous client, with the difference that all request are performed asynchronously.
 
 The synchronous guide above can be used as a reference for the asynchronous client as well, by simply adding the `await` keyword:
 
 ```python
-from bankid import BankIDClientAsync
-client = BankIDClientAsync(certificates=(
-    'path/to/certificate.pem', 
-    'path/to/key.pem', 
+from bankid import BankIDAsyncClient
+client = BankIDAsyncClient(certificates=(
+    'path/to/certificate.pem',
+    'path/to/key.pem',
 ))
 
 await client.authenticate(end_user_ip='194.168.2.25')
@@ -151,10 +152,12 @@ await client.authenticate(end_user_ip='194.168.2.25')
 }
 ```
 
-
 ## PyBankID and QR codes
 
-PyBankID can generate QR codes for you, and there is an example application in the [examples folder of the repo](https://github.com/hbldh/pybankid/tree/master/examples) where a Flask application called `qrdemo` shows one way to do authentication with animated QR codes.
+PyBankID can generate QR codes for you, and there is an example application in the [examples folder of the repo](https://github.com/hbldh/pybankid/tree/master/examples), where a Flask application called `qrdemo` shows one way to do authentication with animated QR codes.
+
+The QR code content generation is done with the `generate_qr_code_content` method on the BankID Client instances, or directly
+through the identically named method in `bankid.qr` module.
 
 ## Certificates
 
