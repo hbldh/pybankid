@@ -40,6 +40,9 @@ jobs:
                     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
                     flake8 ./bankid --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+            -   name: Look for type errors
+                run: mypy
+
             -   name: Test with pytest
                 run: |
                     pytest tests --junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml --cov=bankid --cov-report=xml --cov-report=html
