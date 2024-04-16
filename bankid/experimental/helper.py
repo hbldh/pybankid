@@ -26,10 +26,6 @@ class BankIdSignatureContainer:
         self.raw = signature
 
     @property
-    def signature_value(self):
-        return B64Value(self.root[1].text).decode
-
-    @property
     def signed_data_digest(self):
         return self.root[0][2][2]
 
