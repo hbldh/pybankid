@@ -5,3 +5,4 @@ pytest-asyncio
 pytest-cov
 sphinx
 sphinx-rtd-theme
+mypy
