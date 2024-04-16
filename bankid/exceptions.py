@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+from __future__ import annotations
+import httpx
+from typing import Any, Dict, Union
 
 
-def get_json_error_class(response):
+def get_json_error_class(response: httpx.Response) -> BankIDError:
     data = response.json()
     error_class = _JSON_ERROR_CODE_TO_CLASS.get(data.get("errorCode"), BankIDError)
     return error_class("{0}: {1}".format(data.get("errorCode"), data.get("details")), raw_data=data)
@@ -10,10 +12,10 @@ def get_json_error_class(response):
 class BankIDError(Exception):
     """Parent exception class for all PyBankID errors."""
 
-    def __init__(self, *args, **kwargs):
-        super(BankIDError, self).__init__(*args)
-        self.rfa = None
-        self.json = kwargs.get("raw_data", {})
+    def __init__(self, *args: Any, raw_data: Union[Dict[str, Any], None] = None, **kwargs: Any) -> None:
+        super(BankIDError, self).__init__(*args, **kwargs)
+        self.rfa: Union[int, None] = None
+        self.json = raw_data or {}
 
 
 class BankIDWarning(Warning):
@@ -35,7 +37,7 @@ class InvalidParametersError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
 
@@ -53,7 +55,7 @@ class AlreadyInProgressError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.rfa = 4
 
@@ -71,7 +73,7 @@ class InternalError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.rfa = 5
 
@@ -87,7 +89,7 @@ class MaintenanceError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.rfa = 5
 
@@ -103,7 +105,7 @@ class UnauthorizedError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
 
@@ -118,7 +120,7 @@ class NotFoundError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
 
@@ -133,12 +135,12 @@ class RequestTimeoutError(BankIDError):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.rfa = 5
 
 
-_JSON_ERROR_CODE_TO_CLASS = {
+_JSON_ERROR_CODE_TO_CLASS: Dict[str, type[BankIDError]] = {
     "invalidParameters": InvalidParametersError,
     "alreadyInProgress": AlreadyInProgressError,
     "unauthorized": UnauthorizedError,
