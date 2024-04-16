@@ -28,8 +28,8 @@ PyBankID provides both a synchronous and an asynchronous client for communicatio
 ```python
 from bankid import BankIDClient
 client = BankIDClient(certificates=(
-    'path/to/certificate.pem', 
-    'path/to/key.pem', 
+    'path/to/certificate.pem',
+    'path/to/key.pem',
 ))
 ```
 
@@ -125,12 +125,12 @@ client.collect(order_ref="a9b791c3-459f-492b-bf61-23027876140b")
 }
 ```
 
-Please note that the `collect` method should be used sparingly: in the [BankID Integration Guide](https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide) it is specified that *"collect should be called every two seconds and must not be called more frequent than once per second"*.
+Please note that the `collect` method should be used sparingly: in the [BankID Integration Guide](https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide) it is specified that _"collect should be called every two seconds and must not be called more frequent than once per second"_.
 
 PyBankID also implements the `phone/auth` and `phone/sign` methods, for performing authentication and signing with
 users that are contacted through phone. For documentation on this, see [PyBankID's Read the Docs page](https://pybankid.readthedocs.io/en/latest/).
 
-### Asynchronous client 
+### Asynchronous client
 
 The asynchronous client is used in the same way as the synchronous client, with the difference that all request are performed asynchronously.
 
@@ -181,12 +181,4 @@ print(cert_and_key)
 ['/home/hbldh/certificate.pem', '/home/hbldh/key.pem']
 client = bankid.BankIDClient(
     certificates=cert_and_key, test_server=True)
-```
-
-## Testing
-
-The PyBankID solution can be tested with [pytest](https://pytest.org/):
-
-```bash
-pytest tests/
 ```
