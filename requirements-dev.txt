@@ -6,3 +6,9 @@ pytest-cov
 sphinx
 sphinx-rtd-theme
 mypy
+types-docutils
+types-mock
+types-Pygments
+types-pyOpenSSL
+types-pytz
+types-setuptools
