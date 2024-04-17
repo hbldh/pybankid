@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Dict, Any
+from typing import Any, Dict, Tuple, Union
 
 import httpx
 
@@ -6,7 +6,7 @@ from bankid.baseclient import BankIDClientBaseclass
 from bankid.exceptions import get_json_error_class
 
 
-class BankIDAsyncClient(BankIDClientBaseclass):
+class BankIDAsyncClient(BankIDClientBaseclass[httpx.AsyncClient]):
     """The asynchronous client to use for communicating with BankID servers via the v6 API.
 
     :param certificates: Tuple of string paths to the certificate to use and
@@ -19,25 +19,19 @@ class BankIDAsyncClient(BankIDClientBaseclass):
 
     """
 
-    def __init__(self, certificates: Tuple[str, str], test_server: bool = False, request_timeout: Optional[int] = None):
+    def __init__(self, certificates: Tuple[str, str], test_server: bool = False, request_timeout: int = 5):
         super().__init__(certificates, test_server, request_timeout)
 
-        kwargs = {
-            "cert": self.certs,
-            "headers": {"Content-Type": "application/json"},
-            "verify": self.verify_cert,
-        }
-        if request_timeout:
-            kwargs["timeout"] = request_timeout
-        self.client = httpx.AsyncClient(**kwargs)
+        headers = {"Content-Type": "application/json"}
+        self.client = httpx.AsyncClient(cert=self.certs, headers=headers, verify=str(self.verify_cert), timeout=request_timeout)
 
     async def authenticate(
         self,
         end_user_ip: str,
-        requirement: Dict[str, Any] = None,
-        user_visible_data: str = None,
-        user_non_visible_data: str = None,
-        user_visible_data_format: str = None,
+        requirement: Union[Dict[str, Any], None] = None,
+        user_visible_data: Union[str, None]  = None,
+        user_non_visible_data: Union[str, None]  = None,
+        user_visible_data_format: Union[str, None]  = None,
     ) -> Dict[str, str]:
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
@@ -85,7 +79,7 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         response = await self.client.post(self._auth_endpoint, json=data)
 
         if response.status_code == 200:
-            return response.json()
+            return response.json()  # type: ignore[no-any-return]
         else:
             raise get_json_error_class(response)
 
@@ -93,10 +87,10 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         self,
         personal_number: str,
         call_initiator: str,
-        requirement: Dict[str, Any] = None,
-        user_visible_data: str = None,
-        user_non_visible_data: str = None,
-        user_visible_data_format: str = None,
+        requirement: Union[Dict[str, Any], None] = None,
+        user_visible_data: Union[str, None] = None,
+        user_non_visible_data: Union[str, None] = None,
+        user_visible_data_format: Union[str, None] = None,
     ) -> Dict[str, str]:
         """Initiates an authentication order when the user is talking
         to the RP over the phone. The :py:meth:`collect` method
@@ -150,17 +144,17 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         response = await self.client.post(self._phone_auth_endpoint, json=data)
 
         if response.status_code == 200:
-            return response.json()
+            return response.json()  # type: ignore[no-any-return]
         else:
             raise get_json_error_class(response)
 
     async def sign(
         self,
-        end_user_ip,
+        end_user_ip: str,
         user_visible_data: str,
-        requirement: Dict[str, Any] = None,
-        user_non_visible_data: str = None,
-        user_visible_data_format: str = None,
+        requirement: Union[Dict[str, Any], None] = None,
+        user_non_visible_data: Union[str, None] = None,
+        user_visible_data_format: Union[str, None] = None,
     ) -> Dict[str, str]:
         """Request a signing order. The :py:meth:`collect` method
         is used to query the status of the order.
@@ -206,7 +200,7 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         response = await self.client.post(self._sign_endpoint, json=data)
 
         if response.status_code == 200:
-            return response.json()
+            return response.json()  # type: ignore[no-any-return]
         else:
             raise get_json_error_class(response)
 
@@ -215,9 +209,9 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         personal_number: str,
         call_initiator: str,
         user_visible_data: str,
-        requirement: Dict[str, Any] = None,
-        user_non_visible_data: str = None,
-        user_visible_data_format: str = None,
+        requirement: Union[Dict[str, Any], None] = None,
+        user_non_visible_data: Union[str, None] = None,
+        user_visible_data_format: Union[str, None] = None,
     ) -> Dict[str, str]:
         """Initiates an authentication order when the user is talking to
         the RP over the phone. The :py:meth:`collect` method
@@ -269,7 +263,7 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         response = await self.client.post(self._phone_sign_endpoint, json=data)
 
         if response.status_code == 200:
-            return response.json()
+            return response.json()  # type: ignore[no-any-return]
         else:
             raise get_json_error_class(response)
 
@@ -341,7 +335,7 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         response = await self.client.post(self._collect_endpoint, json={"orderRef": order_ref})
 
         if response.status_code == 200:
-            return response.json()
+            return response.json()  # type: ignore[no-any-return]
         else:
             raise get_json_error_class(response)
 
@@ -362,6 +356,6 @@ class BankIDAsyncClient(BankIDClientBaseclass):
         response = await self.client.post(self._cancel_endpoint, json={"orderRef": order_ref})
 
         if response.status_code == 200:
-            return response.json() == {}
+            return response.json() == {}  # type: ignore[no-any-return]
         else:
             raise get_json_error_class(response)

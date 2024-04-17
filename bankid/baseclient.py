@@ -1,26 +1,31 @@
 import base64
 from datetime import datetime
-from typing import Tuple, Optional, Dict, Any
+from typing import Tuple, Dict, Any, Union, TypeVar, Generic
 from urllib.parse import urljoin
 
 from bankid.qr import generate_qr_code_content
 from bankid.certutils import resolve_cert_path
 
+import httpx
 
-class BankIDClientBaseclass:
+TClient = TypeVar("TClient", httpx.AsyncClient, httpx.Client)
+
+
+class BankIDClientBaseclass(Generic[TClient]):
     """Baseclass for BankID clients.
 
     Both the synchronous and asynchronous clients inherit from this base class and has the methods implemented here.
     """
 
+    client: TClient
+
     def __init__(
         self,
         certificates: Tuple[str, str],
         test_server: bool = False,
-        request_timeout: Optional[int] = None,
+        request_timeout: int = 5,
     ):
         self.certs = certificates
-        self._request_timeout = request_timeout
 
         if test_server:
             self.api_url = "https://appapi2.test.bankid.com/rp/v6.0/"
@@ -36,28 +41,23 @@ class BankIDClientBaseclass:
         self._collect_endpoint = urljoin(self.api_url, "collect")
         self._cancel_endpoint = urljoin(self.api_url, "cancel")
 
-        self.client = None
-
     @staticmethod
-    def generate_qr_code_content(qr_start_token: str, start_t: [float, datetime], qr_start_secret: str) -> str:
+    def generate_qr_code_content(qr_start_token: str, start_t: Union[float, datetime], qr_start_secret: str) -> str:
         return generate_qr_code_content(qr_start_token, start_t, qr_start_secret)
 
     @staticmethod
-    def _encode_user_data(user_data):
-        if isinstance(user_data, str):
-            return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
-        else:
-            return base64.b64encode(user_data).decode("ascii")
+    def _encode_user_data(user_data: str) -> str:
+        return base64.b64encode(user_data.encode("utf-8")).decode("ascii")
 
     def _create_payload(
         self,
-        end_user_ip: str = None,
-        requirement: Dict[str, Any] = None,
-        user_visible_data: str = None,
-        user_non_visible_data: str = None,
-        user_visible_data_format: str = None,
-    ):
-        data = {}
+        end_user_ip: Union[str, None] = None,
+        requirement: Union[Dict[str, Any], None] = None,
+        user_visible_data: Union[str, None] = None,
+        user_non_visible_data: Union[str, None] = None,
+        user_visible_data_format: Union[str, None] = None,
+    ) -> Dict[str, str]:
+        data: Dict[str, Any] = {}
         if end_user_ip:
             data["endUserIp"] = end_user_ip
         if requirement and isinstance(requirement, dict):

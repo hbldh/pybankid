@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import Union
 
 import pytest
 
@@ -18,10 +19,10 @@ import bankid
         (bankid.exceptions.BankIDError, None),
     ],
 )
-def test_exceptions(exception_class, rfa):
+def test_exceptions(exception_class: type[Exception], rfa: Union[int, None]) -> None:
     e = exception_class()
-    assert e.rfa == rfa
     assert isinstance(e, bankid.exceptions.BankIDError)
+    assert e.rfa == rfa
 
 
 @pytest.mark.parametrize(
@@ -37,8 +38,9 @@ def test_exceptions(exception_class, rfa):
         (bankid.exceptions.BankIDError, "Unknown error code"),
     ],
 )
-def test_error_class_factory(exception_class, error_code):
+def test_error_class_factory(exception_class: type[Exception], error_code: str) -> None:
     MockResponse = namedtuple("MockResponse", ["json"])
     response = MockResponse(json=lambda: {"errorCode": error_code})
-    e_class = bankid.exceptions.get_json_error_class(response)
+    # error: Argument 1 to "get_json_error_class" has incompatible type "MockResponse@41"; expected "Response"  [arg-type]
+    e_class = bankid.exceptions.get_json_error_class(response)  # type: ignore[arg-type]
     assert isinstance(e_class, exception_class)
