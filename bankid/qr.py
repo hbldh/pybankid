@@ -1,3 +1,5 @@
+from typing import Union
+
 import hashlib
 import hmac
 import time
@@ -5,7 +7,7 @@ from datetime import datetime
 from math import floor
 
 
-def generate_qr_code_content(qr_start_token: str, start_t: [float, datetime], qr_start_secret: str) -> str:
+def generate_qr_code_content(qr_start_token: str, start_t: Union[float, datetime], qr_start_secret: str) -> str:
     """Given QR start token, time.time() or UTC datetime when initiated authentication call was made and the
     QR start secret, calculate the current QR code content to display.
     """

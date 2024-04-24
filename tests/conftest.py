@@ -1,38 +1,27 @@
 import random
-from typing import Awaitable
 
-import httpx
 import pytest
-import pytest_asyncio
+from typing import List, Tuple
 
 from bankid.certs import get_test_cert_and_key
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def ip_address() -> str:
-    with httpx.Client() as client:
-        response = client.get("https://httpbin.org/ip")
-        return response.json()["origin"].split(",")[0]
-
-
-@pytest_asyncio.fixture()
-async def ip_address_async() -> str:
-    async with httpx.AsyncClient() as client:
-        response = await client.get("https://httpbin.org/ip")
-        return response.json()["origin"].split(",")[0]
+    return "127.0.0.1"
 
 
 @pytest.fixture()
-def cert_and_key():
+def cert_and_key() -> Tuple[str, str]:
     cert, key = get_test_cert_and_key()
     return str(cert), str(key)
 
 
 @pytest.fixture()
-def random_personal_number():
+def random_personal_number() -> str:
     """Simple random Swedish personal number generator."""
 
-    def _luhn_digit(id_):
+    def _luhn_digit(id_: str) -> int:
         """Calculate Luhn control digit for personal number.
 
         Code adapted from `Faker
@@ -46,11 +35,10 @@ def random_personal_number():
 
         """
 
-        def digits_of(n):
+        def digits_of(n: int) -> List[int]:
             return [int(i) for i in str(n)]
 
-        id_ = int(id_) * 10
-        digits = digits_of(id_)
+        digits = digits_of(int(id_) * 10)
         checksum = sum(digits[-1::-2])
         for k in digits[-2::-2]:
             checksum += sum(digits_of(k * 2))

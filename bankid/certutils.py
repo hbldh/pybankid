@@ -7,9 +7,10 @@
 
 import os
 import subprocess
-from typing import Tuple
+from typing import Tuple, Union
 
-import importlib_resources
+import pathlib
+import importlib.resources
 
 from bankid.certs import get_test_cert_p12
 from bankid.exceptions import BankIDError
@@ -17,28 +18,28 @@ from bankid.exceptions import BankIDError
 _TEST_CERT_PASSWORD = "qwerty123"
 
 
-def resolve_cert_path(file: str) -> str:
-    ref = importlib_resources.files("bankid.certs") / file
-    with importlib_resources.as_file(ref) as path:
-        return str(path)
+def resolve_cert_path(file: str) -> pathlib.Path:
+    path = importlib.resources.files("bankid.certs").joinpath(file)
+    assert isinstance(path, pathlib.Path)
+    return path
 
 
-def create_bankid_test_server_cert_and_key(destination_path: str) -> Tuple[str]:
+def create_bankid_test_server_cert_and_key(destination_path: str = ".") -> Tuple[str, str]:
     """Split the bundled test certificate into certificate and key parts and save them
     as separate files, stored in PEM format.
 
     If the environment variable TEST_CERT_FILE is set, use this file
     instead of fetching the P12 certificate.
 
-    :param destination_path: The directory to save certificate and key files to.
+    :param destination_path: The directory to save certificate and key files to. Default is the current directory.
     :type destination_path: str
     :returns: The path tuple ``(cert_path, key_path)``.
     :rtype: tuple
 
     """
-    if os.getenv("TEST_CERT_FILE"):
+    if test_cert_file := os.getenv("TEST_CERT_FILE"):
         certificate, key = split_certificate(
-            os.getenv("TEST_CERT_FILE"), destination_path, password=_TEST_CERT_PASSWORD
+            test_cert_file, destination_path, password=_TEST_CERT_PASSWORD
         )
 
     else:
@@ -49,7 +50,7 @@ def create_bankid_test_server_cert_and_key(destination_path: str) -> Tuple[str]:
     return certificate, key
 
 
-def split_certificate(certificate_path, destination_folder, password=None):
+def split_certificate(certificate_path: str, destination_folder: str, password: Union[str, None] = None) -> Tuple[str, str]:
     """Splits a PKCS12 certificate into Base64-encoded DER certificate and key.
 
     This method splits a potentially password-protected
@@ -65,7 +66,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
     try:
         # Attempt Linux and Darwin call first.
         p = subprocess.Popen(["openssl", "version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        sout, serr = p.communicate()
+        sout, _ = p.communicate()
         openssl_executable_version = sout.decode().lower()
         if not (openssl_executable_version.startswith("openssl") or openssl_executable_version.startswith("libressl")):
             raise BankIDError("OpenSSL executable could not be found. " "Splitting cannot be performed.")
@@ -77,7 +78,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        sout, serr = p.communicate()
+        sout, _ = p.communicate()
         if not sout.decode().lower().startswith("openssl"):
             raise BankIDError("OpenSSL executable could not be found. " "Splitting cannot be performed.")
         openssl_executable = "C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe"
@@ -130,7 +131,7 @@ def split_certificate(certificate_path, destination_folder, password=None):
     return out_cert_path, out_key_path
 
 
-def main(verbose=True):
+def main(verbose: bool = True) -> Tuple[str, str]:
     paths = create_bankid_test_server_cert_and_key(os.path.expanduser("~"))
     if verbose:
         print("Saved certificate as {0}".format(paths[0]))

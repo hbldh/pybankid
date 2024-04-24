@@ -9,14 +9,12 @@ PyBankID Documentation
 .. image:: https://github.com/hbldh/pybankid/workflows/Build%20and%20Test/badge.svg
     :target: https://github.com/hbldh/pybankid/actions?query=workflow%3A%22Build+and+Test%22
 .. image:: https://readthedocs.org/projects/pybankid/badge/?version=latest
-    :target: http://pybankid.readthedocs.org/en/latest/?badge=latest
+    :target: https://pybankid.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
-.. image:: http://img.shields.io/pypi/v/pybankid.svg
+.. image:: https://img.shields.io/pypi/v/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
-.. image:: http://img.shields.io/pypi/l/pybankid.svg
+.. image:: https://img.shields.io/pypi/l/pybankid.svg
     :target: https://pypi.python.org/pypi/pybankid/
-.. image:: https://coveralls.io/repos/github/hbldh/pybankid/badge.svg?branch=master
-    :target: https://coveralls.io/github/hbldh/pybankid?branch=master
 
 PyBankID is a client for providing BankID services as a Relying Party, i.e.
 providing authentication and signing functionality to end users. This package
