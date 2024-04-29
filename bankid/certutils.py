@@ -6,11 +6,15 @@
 """
 
 import os
+import sys
 import subprocess
 from typing import Tuple, Union
 
 import pathlib
-import importlib.resources
+if sys.version_info < (3, 9):
+    import importlib_resources as impres
+else:
+    import importlib.resources as impres
 
 from bankid.certs import get_test_cert_p12
 from bankid.exceptions import BankIDError
@@ -19,7 +23,7 @@ _TEST_CERT_PASSWORD = "qwerty123"
 
 
 def resolve_cert_path(file: str) -> pathlib.Path:
-    path = importlib.resources.files("bankid.certs").joinpath(file)
+    path = impres.files("bankid.certs").joinpath(file)
     assert isinstance(path, pathlib.Path)
     return path
 
