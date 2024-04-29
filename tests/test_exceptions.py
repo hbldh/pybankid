@@ -1,12 +1,16 @@
-from builtins import type as Type
 from collections import namedtuple
+import sys
 from typing import Union
 
 import pytest
 
 import bankid
 
-
+if sys.version_info >= (3, 9):
+    from builtins import type as Type
+else:
+    # Remove once PyBankID no longer support Python 3.8 or lower
+    from typing import Type
 
 
 @pytest.mark.parametrize(
