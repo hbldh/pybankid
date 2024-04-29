@@ -41,7 +41,8 @@ def create_bankid_test_server_cert_and_key(destination_path: str = ".") -> Tuple
     :rtype: tuple
 
     """
-    if test_cert_file := os.getenv("TEST_CERT_FILE"):
+    test_cert_file = os.getenv("TEST_CERT_FILE")
+    if test_cert_file is not None:
         certificate, key = split_certificate(
             test_cert_file, destination_path, password=_TEST_CERT_PASSWORD
         )
