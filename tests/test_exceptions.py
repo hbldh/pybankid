@@ -1,5 +1,5 @@
+from builtins import type as Type
 from collections import namedtuple
-import sys
 from typing import Union
 
 import pytest
@@ -7,10 +7,6 @@ import pytest
 import bankid
 
 
-if sys.version_info < (3, 9):
-    from typing import Type as GenericType
-else:
-    GenericType = type
 
 
 @pytest.mark.parametrize(
@@ -26,7 +22,7 @@ else:
         (bankid.exceptions.BankIDError, None),
     ],
 )
-def test_exceptions(exception_class: GenericType[Exception], rfa: Union[int, None]) -> None:
+def test_exceptions(exception_class: Type[Exception], rfa: Union[int, None]) -> None:
     e = exception_class()
     assert isinstance(e, bankid.exceptions.BankIDError)
     assert e.rfa == rfa
@@ -45,7 +41,7 @@ def test_exceptions(exception_class: GenericType[Exception], rfa: Union[int, Non
         (bankid.exceptions.BankIDError, "Unknown error code"),
     ],
 )
-def test_error_class_factory(exception_class: GenericType[Exception], error_code: str) -> None:
+def test_error_class_factory(exception_class: Type[Exception], error_code: str) -> None:
     MockResponse = namedtuple("MockResponse", ["json"])
     response = MockResponse(json=lambda: {"errorCode": error_code})
     # error: Argument 1 to "get_json_error_class" has incompatible type "MockResponse@41"; expected "Response"  [arg-type]
