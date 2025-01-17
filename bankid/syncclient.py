@@ -22,8 +22,8 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
     def __init__(self, certificates: Tuple[str, str], test_server: bool = False, request_timeout: int = 5):
         super().__init__(certificates, test_server, request_timeout)
 
-        headers= {"Content-Type": "application/json"}
-        self.client = httpx.Client(cert=self.certs, headers=headers, verify=str(self.verify_cert), timeout=request_timeout)
+        headers = {"Content-Type": "application/json"}
+        self.client = httpx.Client(cert=self.certs, headers=headers, verify=self.ctx, timeout=request_timeout)
 
     def authenticate(
         self,

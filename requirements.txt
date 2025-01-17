@@ -1,2 +1,2 @@
-httpx < 0.28
+httpx
 importlib_resources; python_version < "3.9"

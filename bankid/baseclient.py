@@ -1,4 +1,5 @@
 import base64
+import ssl
 from datetime import datetime
 from typing import Tuple, Dict, Any, Union, TypeVar, Generic
 from urllib.parse import urljoin
@@ -33,6 +34,7 @@ class BankIDClientBaseclass(Generic[TClient]):
         else:
             self.api_url = "https://appapi2.bankid.com/rp/v6.0/"
             self.verify_cert = resolve_cert_path("appapi2.bankid.com.pem")
+        self.ctx = ssl.create_default_context(cafile=self.verify_cert)
 
         self._auth_endpoint = urljoin(self.api_url, "auth")
         self._phone_auth_endpoint = urljoin(self.api_url, "phone/auth")

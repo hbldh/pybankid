@@ -23,7 +23,7 @@ class BankIDAsyncClient(BankIDClientBaseclass[httpx.AsyncClient]):
         super().__init__(certificates, test_server, request_timeout)
 
         headers = {"Content-Type": "application/json"}
-        self.client = httpx.AsyncClient(cert=self.certs, headers=headers, verify=str(self.verify_cert), timeout=request_timeout)
+        self.client = httpx.AsyncClient(cert=self.certs, headers=headers, verify=self.ctx, timeout=request_timeout)
 
     async def authenticate(
         self,

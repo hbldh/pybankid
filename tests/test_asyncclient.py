@@ -29,7 +29,7 @@ async def test_authentication_and_collect(cert_and_key: Tuple[str, str], ip_addr
 
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out["orderRef"], version=4)
+    order_ref = uuid.UUID(out["orderRef"])
     collect_status = await c.collect(str(order_ref))
     assert collect_status.get("status") == "pending"
     assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
@@ -47,7 +47,7 @@ async def test_sign_and_collect(cert_and_key: Tuple[str, str], ip_address: str) 
     )
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out["orderRef"], version=4)
+    order_ref = uuid.UUID(out["orderRef"])
     collect_status = await c.collect(str(order_ref))
     assert collect_status.get("status") == "pending"
     assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
@@ -61,7 +61,7 @@ async def test_phone_sign_and_collect(cert_and_key: Tuple[str, str], random_pers
     out = await c.phone_sign(random_personal_number, "RP", user_visible_data="The data to be signed")
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out["orderRef"], version=4)
+    order_ref = uuid.UUID(out["orderRef"])
     collect_status = await c.collect(str(order_ref))
     assert collect_status.get("status") == "pending"
     assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
@@ -103,7 +103,7 @@ async def test_authentication_and_cancel(cert_and_key: Tuple[str, str], ip_addre
     out = await c.authenticate(ip_address)
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out["orderRef"], version=4)
+    order_ref = uuid.UUID(out["orderRef"])
     collect_status = await c.collect(str(order_ref))
     assert collect_status.get("status") == "pending"
     assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
@@ -121,7 +121,7 @@ async def test_phone_authentication_and_cancel(cert_and_key: Tuple[str, str], ra
     out = await c.phone_authenticate(random_personal_number, "user")
     assert isinstance(out, dict)
     # UUID.__init__ performs the UUID compliance assertion.
-    order_ref = uuid.UUID(out["orderRef"], version=4)
+    order_ref = uuid.UUID(out["orderRef"])
     collect_status = await c.collect(str(order_ref))
     assert collect_status.get("status") == "pending"
     assert collect_status.get("hintCode") in ("outstandingTransaction", "noClient")
