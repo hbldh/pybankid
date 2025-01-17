@@ -4,6 +4,15 @@ import httpx
 
 from bankid.baseclient import BankIDClientBaseclass
 from bankid.exceptions import get_json_error_class
+from bankid.responses import (
+    AuthenticateResponse,
+    CollectCompleteResponse,
+    CollectFailedResponse,
+    CollectPendingResponse,
+    PhoneAuthenticateResponse,
+    PhoneSignResponse,
+    SignResponse,
+)
 
 
 class BankIDClient(BankIDClientBaseclass[httpx.Client]):
@@ -32,7 +41,7 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
         user_visible_data: Union[str, None] = None,
         user_non_visible_data: Union[str, None] = None,
         user_visible_data_format: Union[str, None] = None,
-    ) -> Dict[str, str]:
+    ) -> AuthenticateResponse:
         """Request an authentication order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -62,8 +71,8 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
             this parameter indicates that userVisibleData holds formatting characters which
             potentially make for a more pleasant user experience.
         :type user_visible_data_format: str
-        :return: The order response.
-        :rtype: dict
+        :return: The order response parsed to a dict.
+        :rtype: AuthenticateResponse
         :raises BankIDError: raises a subclass of this error
                              when error has been returned from server.
 
@@ -91,7 +100,7 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
         user_visible_data: Union[str, None] = None,
         user_non_visible_data: Union[str, None] = None,
         user_visible_data_format: Union[str, None] = None,
-    ) -> Dict[str, str]:
+    ) -> PhoneAuthenticateResponse:
         """Initiates an authentication order when the user is talking
         to the RP over the phone. The :py:meth:`collect` method
         is used to query the status of the order.
@@ -123,8 +132,8 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
             this parameter indicates that userVisibleData holds formatting characters which
             potentially make for a more pleasant user experience.
         :type user_visible_data_format: str
-        :return: The order response.
-        :rtype: dict
+        :return: The order response parsed to a dict.
+        :rtype: PhoneAuthenticateResponse
         :raises BankIDError: raises a subclass of this error
                              when error has been returned from server.
 
@@ -155,7 +164,7 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
         requirement: Union[Dict[str, Any], None] = None,
         user_non_visible_data: Union[str, None] = None,
         user_visible_data_format: Union[str, None] = None,
-    ) -> Dict[str, str]:
+    ) -> SignResponse:
         """Request a signing order. The :py:meth:`collect` method
         is used to query the status of the order.
 
@@ -183,8 +192,8 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
             this parameter indicates that userVisibleData holds formatting characters which
             potentially make for a more pleasant user experience.
         :type user_visible_data_format: str
-        :return: The order response.
-        :rtype: dict
+        :return: The order response parsed to a dict.
+        :rtype: SignResponse
         :raises BankIDError: raises a subclass of this error
                      when error has been returned from server.
 
@@ -211,7 +220,7 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
         requirement: Union[Dict[str, Any], None] = None,
         user_non_visible_data: Union[str, None] = None,
         user_visible_data_format: Union[str, None] = None,
-    ) -> Dict[str, str]:
+    ) -> PhoneSignResponse:
         """Initiates an authentication order when the user is talking to
         the RP over the phone.  The :py:meth:`collect` method
         is used to query the status of the order.
@@ -241,8 +250,8 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
             this parameter indicates that userVisibleData holds formatting characters which
             potentially make for a more pleasant user experience.
         :type user_visible_data_format: str
-        :return: The order response.
-        :rtype: dict
+        :return: The order response parsed to a dict.
+        :rtype: PhoneSignResponse
         :raises BankIDError: raises a subclass of this error
                      when error has been returned from server.
 
@@ -266,7 +275,7 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
         else:
             raise get_json_error_class(response)
 
-    def collect(self, order_ref: str) -> dict:
+    def collect(self, order_ref: str) -> Union[CollectPendingResponse, CollectCompleteResponse, CollectFailedResponse]:
         """Collects the result of a sign or auth order using the
         ``orderRef`` as reference.
 
@@ -325,8 +334,8 @@ class BankIDClient(BankIDClientBaseclass[httpx.Client]):
 
         :param order_ref: The ``orderRef`` UUID returned from auth or sign.
         :type order_ref: str
-        :return: The CollectResponse parsed to a dictionary.
-        :rtype: dict
+        :return: The order response parsed to a dict.
+        :rtype: Union[CollectPendingResponse, CollectCompleteResponse, CollectFailedResponse]
         :raises BankIDError: raises a subclass of this error
                              when error has been returned from server.
 
