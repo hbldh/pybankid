@@ -1,7 +1,7 @@
 import base64
 import ssl
 from datetime import datetime
-from typing import Tuple, Dict, Any, Union, TypeVar, Generic
+from typing import Any, Dict, Generic, Tuple, TypeVar, Union
 from urllib.parse import urljoin
 
 from bankid.qr import generate_qr_code_content

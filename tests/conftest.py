@@ -11,7 +11,7 @@ def ip_address() -> str:
     return "127.0.0.1"
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def cert_and_key() -> Tuple[str, str]:
     cert, key = get_test_cert_and_key()
     return str(cert), str(key)
