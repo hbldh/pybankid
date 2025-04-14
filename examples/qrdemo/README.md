@@ -49,3 +49,4 @@ There are a few shortcuts taken here:
 ## References
 
 [BankID Integration Guide](https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide/)
+
