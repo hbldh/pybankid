@@ -12,4 +12,3 @@ types-Pygments
 types-pyOpenSSL
 types-pytz
 types-setuptools
-typing-extensions
