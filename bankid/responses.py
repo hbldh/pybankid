@@ -1,4 +1,7 @@
-from typing_extensions import Literal, NotRequired, TypedDict
+try:
+    from typing import Literal, NotRequired, TypedDict
+except ImportError:
+    from typing_extensions import Literal, NotRequired, TypedDict
 
 class SignResponse(TypedDict):
     orderRef: str
